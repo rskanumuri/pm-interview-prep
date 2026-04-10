@@ -34,6 +34,159 @@ Interactive flow:
 6. Offer to create the full narrative in `master_story_repository.md`
 7. Regenerate `story_bank.md`
 
+### `import` — Bulk Import Existing Stories (and Questions)
+
+Onboards stories and questions the user already has prepared — from Google Docs, notes, previous prep, or any format.
+
+#### Input Detection
+
+Accept `$ARGUMENTS` after `import`. If args contain a file path, read that file. Otherwise, prompt:
+
+```
+STORY BANK IMPORT
+
+Paste or point me to your existing prep material. I can handle:
+
+  1. PASTE TEXT    — dump your Google Doc, notes, or prep sheet right here
+  2. FILE PATH    — path to a .md, .txt, or .json file in the repo
+  3. JSON ARRAY   — raw JSON array of story objects
+
+I'll parse stories from any format: STAR bullets, narrative paragraphs,
+tables, numbered lists, or structured JSON.
+
+If your material also contains interview questions, I'll capture those too.
+```
+
+#### Format Detection & Parsing
+
+Read the input and classify format:
+
+| Format | Detection | Parsing Strategy |
+|--------|-----------|-----------------|
+| **Structured JSON** | Valid JSON array where objects have 2+ of: `title`, `situation`, `task`, `action`, `result`, `company`, `year` | Map fields directly to story schema. Fill missing fields with `null`. |
+| **STAR-formatted** | Contains patterns like "Situation:", "Task:", "Action:", "Result:" (case-insensitive, with or without bold/headers) | Split on STAR headers. Each STAR block = one story. |
+| **Numbered/bulleted list** | Lines starting with `1.`, `2.`, `-`, `*` where each item describes an accomplishment with context | Each item = one story. Parse for company, year, metric, and action. |
+| **Narrative paragraphs** | Multi-paragraph text with story-like content (accomplishments, metrics, outcomes) | Use paragraph breaks + topic shifts to segment stories. Each segment = one story. |
+| **Table format** | Markdown or tab-separated table with column headers matching story fields | Map columns to schema fields. Each row = one story. |
+| **Mixed with questions** | Lines ending with `?` or starting with "Tell me about", "How would you", "Describe a time", "Why do you" | Separate questions from stories. Process stories below, questions into `questions.json`. |
+
+#### Story Extraction
+
+For each detected story, extract into this schema:
+
+```json
+{
+  "id": "{snake_case_from_title}",
+  "title": "{Descriptive title — infer if not explicit}",
+  "product": "{Product/Project — extract or null}",
+  "company": "{Company — extract or null}",
+  "year": "{Year — extract or null}",
+  "themes": [],
+  "one_liner": "{One sentence with key metric — generate from content}",
+  "situation": "{Extract or null}",
+  "task": "{Extract or null}",
+  "action": "{Extract or null}",
+  "result": "{Extract or null}",
+  "key_numbers": {},
+  "best_for": [],
+  "company_angles": {},
+  "angles": [],
+  "performance": { "status": "imported", "times_told": 0 }
+}
+```
+
+Extraction rules:
+- **id**: snake_case from title, max 40 chars, unique
+- **title**: If not explicit, generate from the core accomplishment (e.g., "Platform Migration at Acme")
+- **themes**: Auto-tag from the theme taxonomy based on content. Assign 2-4 themes per story.
+- **one_liner**: Always generate — one sentence capturing the story + key metric
+- **key_numbers**: Extract ALL quantified metrics (dollar amounts, percentages, user counts, time savings)
+- **best_for**: Infer question types this story fits (e.g., "leadership", "technical challenge", "conflict", "failure", "impact", "cross-functional", "strategy")
+- **performance.status**: Set to `"imported"` (distinct from `"ready"` which means reviewed/polished)
+
+#### Deduplication
+
+Before writing:
+1. Read existing `story_bank.json`
+2. For each extracted story, check for duplicates:
+   - Same `company` + similar `title` (fuzzy match)
+   - Same `company` + same `year` + overlapping `key_numbers`
+   - Same `one_liner` similarity > 80%
+3. If duplicate found, show both and ask: "This looks similar to existing story '{title}'. Skip, merge, or add as separate?"
+
+#### Question Extraction
+
+If questions are detected in the input:
+1. Extract each question
+2. Classify by type: `behavioral`, `product_sense`, `technical`, `estimation`, `strategy`, `execution`, `leadership`, `analytical`
+3. Tag with source (e.g., "imported from user notes")
+4. Write to `interview_prep/questions.json`
+
+#### Output Flow
+
+1. Show the user what was parsed BEFORE writing:
+
+```
+IMPORT PREVIEW
+
+  STORIES FOUND: {N}
+  ──────────────
+  1. {title} ({company}, {year}) — {one_liner}
+     Themes: {themes}  |  Best for: {best_for}
+     STAR: {✓ complete | ⚠ partial — missing: task, result}
+
+  2. {title} ({company}, {year}) — {one_liner}
+     ...
+
+  {if questions found:}
+  QUESTIONS FOUND: {M}
+  ────────────────
+  1. [{type}] {question text}
+  2. [{type}] {question text}
+  ...
+
+  {if duplicates found:}
+  ⚠ POSSIBLE DUPLICATES: {D} — I'll ask about each one.
+
+Looks right? (yes / edit numbers / remove #N / cancel)
+```
+
+2. Handle user response:
+   - **"yes"** → write all
+   - **"edit"** → interactive corrections for specific stories
+   - **"remove #N"** → drop that story from import
+   - **"cancel"** → abort
+
+3. After confirmation:
+   - Write stories to `story_bank.json` (append to existing `stories[]`, update `metadata.total_stories` and `metadata.last_updated`)
+   - Write questions to `interview_prep/questions.json` (if any)
+   - Regenerate `interview_prep/story_bank.md`
+   - Update `canonical_numbers` in `story_bank.json` with any new key numbers
+
+4. Final report:
+
+```
+IMPORT COMPLETE
+
+  ✓ {N} stories added to story bank ({total} total)
+  {✓ {M} questions added to questions bank | (no questions detected)}
+  {⚠ {D} stories skipped as duplicates}
+
+  Stories marked as "imported" — run /story-bank to review.
+  To polish STAR details: /story-bank add {story_id} (re-opens for editing)
+
+  Next steps:
+  - /story-bank              Review your full story bank
+  - /story-bank sync         Sync with other prep files
+  - /steelman {story_id}     Pressure-test a specific story
+```
+
+5. Offer: "Save everything to git? (`/save-push`)"
+
+#### `import --questions-only`
+
+If the user only has questions (no stories), skip story parsing entirely. Accept a list of questions and write directly to `questions.json`.
+
 ### `sync` — Sync Story Bank with Source Files
 
 This is the KEY freshness mechanism. Run this proactively.

@@ -349,6 +349,7 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 - "debrief interview" → `/debrief` | "prep progress" → `/battle-plan progress`
 - "research X" (without /command) → ask "Want it timed? (default: 10 min)" then route to `/timed-research`
 - "show stories" / "story bank" → `/story-bank` | "story angles" → `/story-bank angles`
+- "import stories" / "onboard prep" / "bulk add stories" → `/story-bank import`
 
 ### Working Style Preferences
 
@@ -430,6 +431,7 @@ Here's what I built for you:
   /scan                     Find PM roles matching your profile
   /pipeline                 See your interview pipeline dashboard
   /story-bank               Browse and manage your STAR stories
+  /story-bank import        Bulk-import stories you already have prepped
   /battle-plan              Plan your daily prep schedule
 
   Tip: Start with /eval on a job you're excited about.

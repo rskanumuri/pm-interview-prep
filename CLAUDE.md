@@ -81,6 +81,7 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 - "debrief interview" → `/debrief` | "prep progress" → `/battle-plan progress`
 - "research X" (without /command) → ask "Want it timed? (default: 10 min)" then route to `/timed-research`
 - "show stories" / "story bank" → `/story-bank` | "story angles" → `/story-bank angles`
+- "import stories" / "onboard prep" / "bulk add stories" → `/story-bank import`
 
 ### Working Style Preferences
 
