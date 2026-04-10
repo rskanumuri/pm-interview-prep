@@ -1,0 +1,10 @@
+{
+  "default": "example",
+  "companies": {
+    "example": {
+      "name": "Example Corp",
+      "keywords": ["example", "demo", "sample company"],
+      "created": "2026-01-01"
+    }
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(pip3 install:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(unzip:*)",
+      "Bash(wc:*)",
+      "Bash(tail:*)",
+      "Bash(mv:*)",
+      "Bash(xxd:*)",
+      "Bash(xargs grep:*)",
+      "Bash(git:*)",
+      "Bash(node:*)",
+      "Bash(python:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(powershell -NoProfile -Command \":*)",
+      "WebSearch",
+      "WebFetch(domain:www.glassdoor.com)",
+      "WebFetch(domain:www.indeed.com)",
+      "WebFetch(domain:www.linkedin.com)",
+      "WebFetch(domain:www.levels.fyi)",
+      "WebFetch(domain:www.teamblind.com)",
+      "WebFetch(domain:www.crunchbase.com)",
+      "WebFetch(domain:news.crunchbase.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:techcrunch.com)",
+      "WebFetch(domain:venturebeat.com)",
+      "WebFetch(domain:www.forbes.com)",
+      "WebFetch(domain:www.reuters.com)",
+      "WebFetch(domain:medium.com)",
+      "WebFetch(domain:www.reddit.com)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:www.google.com)",
+      "WebFetch(domain:www.bing.com)",
+      "WebFetch(domain:bing.com)",
+      "WebFetch(domain:boards.greenhouse.io)",
+      "WebFetch(domain:boards-api.greenhouse.io)",
+      "WebFetch(domain:job-boards.greenhouse.io)",
+      "WebFetch(domain:jobs.lever.co)",
+      "WebFetch(domain:api.lever.co)",
+      "WebFetch(domain:www.lever.co)",
+      "WebFetch(domain:jobs.ashbyhq.com)",
+      "WebFetch(domain:api.ashbyhq.com)",
+      "WebFetch(domain:jobs.smartrecruiters.com)",
+      "WebFetch(domain:wellfound.com)",
+      "WebFetch(domain:builtin.com)",
+      "WebFetch(domain:huntr.co)",
+      "WebFetch(domain:www.tryexponent.com)",
+      "WebFetch(domain:igotanoffer.com)",
+      "WebFetch(domain:www.designgurus.io)",
+      "WebFetch(domain:www.hellointerview.com)",
+      "WebFetch(domain:www.gartner.com)",
+      "WebFetch(domain:www.forrester.com)",
+      "WebFetch(domain:www.idc.com)",
+      "WebFetch(domain:www.g2.com)",
+      "WebFetch(domain:www.peerspot.com)",
+      "WebFetch(domain:www.trustradius.com)",
+      "WebFetch(domain:finance.yahoo.com)",
+      "WebFetch(domain:seekingalpha.com)",
+      "WebFetch(domain:stockanalysis.com)",
+      "WebFetch(domain:www.macrotrends.net)",
+      "WebFetch(domain:companiesmarketcap.com)",
+      "WebFetch(domain:www.cnbc.com)",
+      "WebFetch(domain:www.businessinsider.com)",
+      "WebFetch(domain:www.axios.com)",
+      "WebFetch(domain:www.protocol.com)",
+      "WebFetch(domain:www.zdnet.com)",
+      "WebFetch(domain:www.infoworld.com)",
+      "WebFetch(domain:www.siliconangle.com)",
+      "WebFetch(domain:www.geekwire.com)",
+      "WebFetch(domain:www.theregister.com)",
+      "WebFetch(domain:thenewstack.io)",
+      "WebFetch(domain:www.prnewswire.com)",
+      "WebFetch(domain:www.businesswire.com)",
+      "WebFetch(domain:www.ycombinator.com)",
+      "WebFetch(domain:pitchbook.com)",
+      "WebFetch(domain:theorg.com)",
+      "WebFetch(domain:research.contrary.com)",
+      "WebFetch(domain:greylock.com)",
+      "WebFetch(domain:web.archive.org)",
+      "WebFetch(domain:archive.org)",
+      "WebFetch(domain:aws.amazon.com)",
+      "WebFetch(domain:www.microsoft.com)",
+      "WebFetch(domain:duckduckgo.com)",
+      "WebFetch(domain:html.duckduckgo.com)",
+      "WebFetch(domain:news.google.com)",
+      "WebFetch(domain:blog.google)",
+      "WebFetch(domain:www.quora.com)",
+      "WebFetch(domain:stackshare.io)",
+      "WebFetch(domain:patents.google.com)",
+      "WebFetch(domain:www.comparably.com)",
+      "WebFetch(domain:nextsprints.com)",
+      "mcp__claude_ai_Granola__get_meetings",
+      "mcp__claude_ai_Granola__list_meetings",
+      "mcp__claude_ai_Granola__get_meeting_transcript",
+      "mcp__claude_ai_Granola__query_granola_meetings",
+      "mcp__claude_ai_Gamma__generate"
+    ]
+  },
+  "hooks": {
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./.claude/hooks/log-agent-start.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./.claude/hooks/enforce-agent-time.sh"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./.claude/hooks/cleanup-agent.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

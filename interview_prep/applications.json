@@ -1,0 +1,9 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2026-01-01",
+    "total": 0,
+    "statuses": ["discovered", "evaluating", "ready_to_apply", "applied", "interviewing", "offered", "rejected", "withdrawn", "closed"]
+  },
+  "applications": {}
+}

@@ -1,0 +1,29 @@
+# Personal data — NEVER commit to public forks
+sources/*/
+!sources/inbox/.gitkeep
+!sources/your_name/README.md
+
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated outputs
+*.pdf
+*.docx
+*.xlsx
+output/cv/*
+!output/cv/.gitkeep
+
+# Temp files
+tmp/
+/tmp/
+
+# Claude Code local settings (user-specific overrides)
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.pyc

@@ -1,0 +1,12 @@
+{
+  "name": "pm-interview-prep-tools",
+  "version": "1.0.0",
+  "description": "PDF generation and tooling for PM interview prep",
+  "type": "module",
+  "scripts": {
+    "pdf": "node generate-pdf.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.58.1"
+  }
+}

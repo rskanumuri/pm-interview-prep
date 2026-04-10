@@ -1,0 +1,19 @@
+{
+  "metadata": {
+    "description": "Job board portal configurations for /scan skill",
+    "portal_types": ["greenhouse", "lever", "ashby", "smartrecruiters", "custom"]
+  },
+  "portals": [
+    {
+      "company": "example",
+      "name": "Example Corp",
+      "type": "greenhouse",
+      "board_token": "examplecorp",
+      "filters": {
+        "title_includes": ["product manager", "PM"],
+        "title_excludes": ["project manager", "program manager"],
+        "location_includes": ["Remote", "San Francisco", "New York"]
+      }
+    }
+  ]
+}

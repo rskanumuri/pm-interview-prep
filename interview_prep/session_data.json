@@ -1,0 +1,60 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "last_consolidated": "2026-01-01",
+    "description": "Consolidated master file loaded once per session. Contains all questions, stories, rubric, and company data."
+  },
+  "companies": {},
+  "questions": {
+    "behavioral": [],
+    "product_sense": [],
+    "execution": [],
+    "analytical": [],
+    "technical": [],
+    "general": [
+      {
+        "id": "tmay",
+        "question": "Tell me about yourself",
+        "category": "general",
+        "frequency": "every_interview"
+      },
+      {
+        "id": "why_company",
+        "question": "Why this company?",
+        "category": "general",
+        "frequency": "every_interview"
+      },
+      {
+        "id": "why_pm",
+        "question": "Why product management?",
+        "category": "general",
+        "frequency": "common"
+      }
+    ]
+  },
+  "star_stories": [],
+  "rubric": {
+    "universal": {
+      "delivery": {"weight": 1, "scale": 5, "description": "Clarity, pacing, confidence, conciseness"},
+      "company_fit": {"weight": 1, "scale": 5, "description": "How well the answer maps to this company's values and needs"}
+    },
+    "format_specific": {
+      "behavioral": {
+        "structure": {"weight": 2, "scale": 5, "description": "Clear STAR format with measurable results"},
+        "specificity": {"weight": 2, "scale": 5, "description": "Concrete details, not vague generalizations"},
+        "ownership": {"weight": 2, "scale": 5, "description": "Clear individual contribution, not team attribution"}
+      },
+      "product_sense": {
+        "user_empathy": {"weight": 2, "scale": 5, "description": "Deep understanding of user needs and pain points"},
+        "creativity": {"weight": 2, "scale": 5, "description": "Novel, non-obvious solutions"},
+        "prioritization": {"weight": 2, "scale": 5, "description": "Clear framework for what to build first and why"}
+      },
+      "execution": {
+        "structured_thinking": {"weight": 2, "scale": 5, "description": "MECE breakdown, clear metrics, tradeoff analysis"},
+        "metric_definition": {"weight": 2, "scale": 5, "description": "Right success metrics identified"},
+        "stakeholder_awareness": {"weight": 2, "scale": 5, "description": "Considers cross-functional dependencies"}
+      }
+    }
+  },
+  "insights": {}
+}
