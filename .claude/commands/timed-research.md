@@ -44,6 +44,7 @@ The SubagentStart hook will pick this up and apply it to the next agent spawned.
 Use the Agent tool with these parameters:
 - `run_in_background: true`
 - `subagent_type: "general-purpose"`
+- `model: "sonnet"`
 - `description: "Timed research: <topic>"`
 
 The agent prompt MUST include this preamble:

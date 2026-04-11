@@ -83,6 +83,11 @@ Create `interview_prep/answers/{company}_{interviewer}_debrief_{date}.md` follow
 - **Outcome:** {next steps or "Awaiting"}
 
 **Score Breakdown** — table with columns: Dimension, Score, Notes
+- Domain knowledge | X.0 | {brief assessment}
+- Strategic thinking | X.0 | {brief assessment}
+- Quantitative rigor | X.0 | {brief assessment based on whether numbers landed}
+- Communication precision | X.0 | {based on redirects, clarity}
+- Conviction/presence | X.0 | {energy, confidence, closing}
 
 **Questions Asked** — numbered list with brief note on how each went
 
@@ -98,11 +103,36 @@ Create `interview_prep/answers/{company}_{interviewer}_debrief_{date}.md` follow
 
 **Prediction** — 1-2 sentence honest assessment of likelihood of advancing, based on signals
 
-**Step 4 — Update progress.json**
+**Step 4 — Update progress.json:**
+
+Update the company_readiness entry:
+- Update `status` field with round result and next steps
+- Update `percent` if appropriate
+- Add round-specific fields (score, format, topics, strengths, gaps)
+- Add `lessons_for_next_rounds` array
+- Add entry to `sessions` array with date, duration, focus, completed items
 
 **Step 5 — Update CLAUDE.md**
 
 **Step 6 — Report**
+
+**Step 6.5 — Career Learning Hooks:**
+
+After the report, automatically do TWO things:
+
+1. **Interview lessons update (always):**
+   Read `interview_prep/interview_lessons.md`. Compare this debrief's "what didn't land" and low-scoring dimensions against the "Still Learning" list. Then PROPOSE specific updates:
+   - If a "still learning" pattern appeared in this debrief → update its evidence line. Show: "**{pattern}** still appearing — {evidence from this round}. Keeping in 'still learning.'"
+   - If a "still learning" pattern did NOT appear → propose moving to "learned": "**{pattern}** — didn't appear this round (or last 3 rounds). Move to 'learned'?"
+   - If a NEW pattern appeared that isn't tracked → propose adding it: "**New pattern: {X}** — appeared this round. Add to 'still learning'?"
+   Show the proposed changes as a summary. Write them after user confirms.
+
+2. **Career takeaway extraction (on low scores or rejection):**
+   If the weighted score is ≤ 3.0 OR the round resulted in rejection, read the debrief's "what didn't land" and "key lessons" sections, cross-reference with `interview_prep/career_takeaways.md`, and PROPOSE a specific takeaway:
+   ```
+   "Career takeaway from this round: **{pattern name}** — {the insight}. Add to career_takeaways.md?"
+   ```
+   Extract the insight from the debrief data — don't ask the user to generate it. User reviews and approves.
 
 ### `list` — Show All Debriefs
 
@@ -111,6 +141,29 @@ List all debrief files with dates, companies, interviewers, and scores.
 ### `<company> lessons` — Consolidated Lessons
 
 Compile lessons from all debriefs for a company into one view.
+
+**Steps:**
+1. Find all debrief files for the company: `interview_prep/answers/{company}_*_debrief_*.md`
+2. Extract "Key Lessons" section from each
+3. Read progress.json for `patterns_to_fix` and `lessons_for_next_rounds`
+4. Compile and deduplicate:
+
+## {COMPANY} — LESSONS LEARNED
+
+**From {N} interviews:**
+
+**Round 1** ({interviewer}, {date}):
+- {lesson}
+
+**Round 2** ({interviewer}, {date}):
+- {lesson}
+
+**Patterns across rounds:**
+- {recurring pattern}
+
+**Action items for next round:**
+- {specific thing to practice}
+- {specific thing to prepare}
 
 ## Key Rules
 
