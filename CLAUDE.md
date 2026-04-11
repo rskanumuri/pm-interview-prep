@@ -102,6 +102,7 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 
 - After any `/debrief` or `/debrief-live`, automatically compare this round's patterns against `interview_prep/interview_lessons.md` and PROPOSE specific updates (extract from debrief data, show the proposed change — don't ask the user to generate).
 - When archiving a rejected company, read all debriefs for that company, cross-reference with `interview_prep/career_takeaways.md`, and PROPOSE a specific career takeaway. User reviews and approves.
+- When archiving a rejected company, if `{company}_phantom.md` exists, update it with post-mortem: "The candidate who got this job probably had X." Final version becomes a learning artifact.
 - Living docs: `interview_prep/career_takeaways.md` (career wisdom) + `interview_prep/interview_lessons.md` (learned vs still learning)
 
 ### File Hygiene

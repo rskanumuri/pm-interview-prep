@@ -134,6 +134,24 @@ After the report, automatically do TWO things:
    ```
    Extract the insight from the debrief data — don't ask the user to generate it. User reviews and approves.
 
+3. **Question bank update (always):**
+   Read `interview_prep/question_bank.md`. For each question in this debrief's "Questions Asked" section:
+   - If the question already exists in question_bank.md → add this company/round as another ask, append any new follow-ups as part of the same question unit
+   - If the question is new → add it to the appropriate category with its follow-ups as a single unit
+   - After updating question_bank.md, auto-regenerate `interview_prep/question_bank_clean.md` by stripping personal data:
+     - Company names → industry descriptors (e.g., "[Enterprise Data Protection]")
+     - Interviewer names → role descriptors (e.g., "[HM]", "[VP]", "[Recruiter]")
+     - Score ranges → remove
+     - Personal notes → remove
+   - Show: "Added {N} new questions, updated {N} existing. Question bank: {total} unique questions."
+
+4. **Phantom update (if phantom exists for this company):**
+   Check if `interview_prep/scripts/{company}_phantom.md` exists. If yes, offer:
+   ```
+   "Sharpen the phantom with intel from this round?"
+   ```
+   If yes: read the debrief's "New Intel" section. Update the phantom with what the interviewer revealed — priorities, team challenges, what they're screening for, what other candidates had. Increment the version number. Show: "Phantom V{N} → V{N+1}: added {detail} from {interviewer} intel."
+
 ### `list` — Show All Debriefs
 
 List all debrief files with dates, companies, interviewers, and scores.
