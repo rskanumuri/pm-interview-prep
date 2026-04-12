@@ -85,6 +85,17 @@ Comprehensive fit assessment for a specific company/role.
 
 **Steps:**
 
+0. **Role Taxonomy Pass (MANDATORY — before reading user data):**
+
+   Answer three questions from the JD alone:
+   - **Builder or Owner?** Does the PM ship infrastructure/capabilities, or own a business outcome/strategy?
+   - **Craft or Domain?** Is the primary skill the craft (platform building, ML, experimentation, CI) or domain knowledge?
+   - **Day-30 Deliverable?** What will this PM actually ship in their first month?
+
+   **If any answer is ambiguous, STOP and ask the user about the role.** Frame as: "I'm reading this as {X}. Confirm or correct?" Never cross-reference user profile to calibrate — that corrupts the assessment.
+
+   **Platform PM JDs describe what the platform SERVES, not what the PM OWNS.** Don't conflate the customers of the platform with the PM's scope.
+
 1. **Read all data files** listed above for the target company
 2. **Extract role requirements** from:
    - Insights file → role details, key responsibilities, requirements, "What They're Looking For"
@@ -472,3 +483,5 @@ Always show what's missing and what command would fix it:
 - **No hedging in bridge scripts**: "I would like to think", "hopefully", "if not the same" — NEVER
 - **Debrief evidence overrides pre-interview estimates** — if a gap was exposed in a real interview, escalate its severity regardless of initial assessment
 - **Company key in filenames**: lowercase, underscores for spaces (e.g., `palo_alto_networks`)
+- **Confidence calibration.** Every fit score ships with a confidence number (1-10) and the core assumption that drives it. Example: "4.3/5 STRONG FIT (confidence 7/10, assumes platform build role; if strategy/owner role, drops to 2.9/5)."
+- **Role ambiguity is a stop condition.** If the Role Taxonomy pass flags ambiguity, ask about the role before scoring. Never cross-reference the user's profile to resolve role ambiguity — that corrupts the score.

@@ -32,14 +32,37 @@ Parse `$ARGUMENTS`:
 
 1. **Read company/role data** from insights, rubric, cheat sheet (company intel only), CLAUDE.md company section
 2. **Read the JD** from eval file or cheat sheet role description
-3. **Research** using WebSearch:
+
+3. **Role Taxonomy Pass (MANDATORY — do this before anything else):**
+
+   Before generating the phantom, articulate the role taxonomy in writing. Answer three questions from the JD alone:
+
+   - **Builder or Owner?** Does the PM ship infrastructure/capabilities, or own a business outcome/strategy?
+   - **Craft or Domain?** Is the primary skill the craft (platform building, ML, experimentation, CI) or domain knowledge (auto retail, healthcare, fintech)?
+   - **Day-30 Deliverable?** What will this PM ship in their first month — a strategy deck, a platform capability, a shipped feature, a pricing model, an analysis?
+
+   **If ANY answer is ambiguous from the JD alone, STOP and ask the user about the role.** Frame the question:
+   ```
+   "Before I build the phantom, I'm reading this role as {X}. Is that right, or is it actually {Y}?"
+   ```
+
+   **CRITICAL: Ask about the ROLE, never cross-reference the user's profile to calibrate.** Candidate cross-reference corrupts the phantom's objectivity. The phantom is built from company/role/market data ONLY.
+
+   **Common ambiguity traps:**
+   - "Platform" in the team name could mean infrastructure platform OR business platform. Check the JD bullets — do they describe what gets built or what gets strategized?
+   - **Platform PM JDs describe what the platform SERVES, not what the PM OWNS.** "Spanning new entrants, franchise manufacturers, D2C" describes the customers of the platform, not the PM's scope.
+   - "Special projects" could mean strategy consulting OR platform scaffolding. Look at deliverables.
+   - Domain-heavy language in the JD context (industry terms, market dynamics) doesn't mean domain expertise is required — it may just be describing the business the platform serves.
+
+4. **Research** using WebSearch:
    - "what makes someone successful at {company}"
    - "{company} interview tips {role}"
    - "{role} day in the life"
    - "{company} culture what they look for"
    - "{company} glassdoor interview experience"
    - LinkedIn: typical background of people in this role at this company
-4. **Generate 4-dimension phantom** and write to `interview_prep/scripts/{company}_phantom.md`
+
+5. **Generate 4-dimension phantom** and write to `interview_prep/scripts/{company}_phantom.md`. Include the Role Taxonomy at the top of the file so the archetype is traceable.
 
 **Output format:**
 
@@ -199,3 +222,5 @@ If yes: run `/phantom <company> update`
 - **On the Job must reference real company challenges.** Pull from insights, cheat sheet intel, and web research. "Day 30: ships a Fabric competitive teardown" not "Day 30: builds relationships."
 - **Use Opus** for this skill — it requires judgment, synthesis, and nuance. Never route to Sonnet.
 - **Version tracking.** Every phantom has a version number (V1, V2, V3...) and a "Based on" line showing what intel informed it.
+- **Confidence calibration.** Every phantom ships with a confidence score (1-10) and the core assumption that drives it. Example: "Confidence 7/10, assumes this is a platform build role. If strategy/owner role, archetype flips entirely." If the Role Taxonomy was ambiguous and required user clarification, flag this in the confidence line.
+- **Role ambiguity is a stop condition, not a guess trigger.** If the Role Taxonomy pass flags ambiguity, the skill MUST ask the user about the role before proceeding. Never generate a phantom on a guessed framing.
