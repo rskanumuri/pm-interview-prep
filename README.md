@@ -20,7 +20,7 @@ Then type:
 /setup
 ```
 
-That's it. The wizard reads your resume, extracts your stories and metrics, preps your first company, and configures everything — in about 5 minutes.
+That's it. The wizard reads your resume, extracts your stories and metrics, preps your first company, and configures everything in about 5 minutes.
 
 ## What It Does
 
@@ -36,21 +36,21 @@ That's it. The wizard reads your resume, extracts your stories and metrics, prep
 
 ## How It Works
 
-- **`CLAUDE.md`** — Your brain file. Career thesis, canonical numbers, interview rules. Claude reads this every session.
-- **`/setup`** — One-time setup wizard. Reads your resume, seeds your story bank, builds your first company prep.
-- **26 skills** — Specialized workflows in `.claude/commands/`. Each handles one part of the interview lifecycle.
-- **Hooks** — Agent time enforcement. Background research auto-stops after the time budget.
-- **Data files** — JSON state (`story_bank.json`, `progress.json`, `companies.json`). Skills read and write these to maintain continuity across sessions.
+- **`CLAUDE.md`**. Your brain file. Career thesis, canonical numbers, interview rules. Claude reads this every session.
+- **`/setup`**. One-time setup wizard. Reads your resume, seeds your story bank, builds your first company prep.
+- **26 skills**. Specialized workflows in `.claude/commands/`. Each handles one part of the interview lifecycle.
+- **Hooks**. Agent time enforcement. Background research auto-stops after the time budget.
+- **Data files**. JSON state (`story_bank.json`, `progress.json`, `companies.json`). Skills read and write these to maintain continuity across sessions.
 
 ## Requirements
 
 - [Claude Code](https://claude.ai/code) with a Claude Pro, Team, or Enterprise subscription
-- Node.js (optional — for PDF resume generation via `/cv-gen`)
+- Node.js (optional, for PDF resume generation via `/cv-gen`)
 
 ## Optional Integrations
 
-- **Granola** — Auto-pull interview transcripts for `/debrief-live`
-- **Gamma** — Generate presentation decks
+- **Granola**. Auto-pull interview transcripts for `/debrief-live`
+- **Gamma**. Generate presentation decks
 
 Both are optional. All core workflows work without them.
 
