@@ -13,7 +13,11 @@ Lightweight practice: pull a question, show the prepped answer first, accept the
 - Progress: `interview_prep/progress.json`
 - Session Data: `interview_prep/session_data.json`
 
-## Commands
+## Multi-Role File Keying
+
+When reading company-keyed files for context, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, use role-keyed artifacts, else fall back to `{company}_*`. Read-order on lookups: try role-keyed first, fall back to company-only.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

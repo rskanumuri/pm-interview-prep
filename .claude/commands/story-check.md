@@ -29,7 +29,11 @@ At minimum, the story bank should contain:
 
 If `story_bank.json` does not contain a `canonical_numbers` section, warn the user and offer to build one from CLAUDE.md.
 
-## Commands
+## Multi-Role File Keying
+
+When cross-referencing company-keyed files for consistency checks, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Treat each `{company}_{role_slug}` as a distinct scope. Read-order on lookups: try role-keyed first, fall back to company-only. When drift is detected across two roles at the same company, report each role separately rather than collapsing into one line.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

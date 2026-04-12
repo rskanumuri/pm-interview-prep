@@ -17,7 +17,11 @@ Same as `/eval` + `/cv-gen` combined. This skill orchestrates both.
 - CV PDF: `output/cv/{company}_{active_user}_{date}.pdf`
 - Progress: `interview_prep/progress.json` (if company already exists)
 
-## Commands
+## Multi-Role File Keying
+
+Since this command chains `/eval`, `/company-prep`, and `/fit-check`, it must propagate the `<role>` arg through all three. Follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, every downstream artifact is role-keyed. When omitted, all three chained commands use legacy `{company}_*` naming.
+
+
 
 Parse `$ARGUMENTS`:
 

@@ -63,7 +63,11 @@ If no archetypes are defined in CLAUDE.md, warn the user and suggest they add a 
 | 2.0-2.9 | STRETCH | Skip unless champion or referral exists. |
 | 1.0-1.9 | PASS | Don't waste time. |
 
-## Commands
+## Multi-Role File Keying
+
+When writing eval artifacts, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, eval files are named `evaluations/{company}_{role_slug}_*_eval.json`, else fall back to `evaluations/{company}_*_eval.json` (legacy single-role). Read-order on lookups: try role-keyed first, fall back to company-only.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

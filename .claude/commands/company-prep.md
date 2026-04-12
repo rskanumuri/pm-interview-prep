@@ -20,7 +20,18 @@ Check `progress.json` for the `active_user` field. Load personal info from `sour
 - Story Bank: `interview_prep/story_bank.json` (canonical numbers, story inventory)
 - Evaluation (if exists): `interview_prep/evaluations/{company}_*_eval.json` — if an /eval was run, use its archetype detection, keyword analysis, and JD requirement mapping to seed the cheat sheet's "Fit → JD Mapping" table and inform rubric dimensions
 
-## Commands
+## Multi-Role File Keying
+
+When a company has multiple roles being tracked, files are keyed by `{company}_{role_slug}` instead of `{company}` alone, so two roles at the same company can coexist without overwriting each other.
+
+**`{company_key}` resolution:**
+- `role_slug` = role string lowercased, non-alphanumeric → underscores, collapsed (e.g., "Senior PM, Data Governance" → `senior_pm_data_governance`)
+- If `<role>` argument is provided: `{company_key}` = `{company}_{role_slug}`
+- If `<role>` argument is NOT provided: `{company_key}` = `{company}` (legacy single-role pattern, preserves back-compat)
+
+**All `{company}` references in file paths below should be interpreted as `{company_key}` per this rule.** The human-readable company name still appears in file content; only the filename/registry key changes.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

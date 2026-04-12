@@ -15,7 +15,11 @@ Check `progress.json` for the `active_user` field. Load personal info from `sour
 - Cheat Sheet: `interview_prep/scripts/{company}_cheat_sheet.md` (for pre-interview prep comparison)
 - Session Data: `interview_prep/session_data.json`
 
-## Commands
+## Multi-Role File Keying
+
+When reading/writing company-keyed files (cheat sheet, debrief filename prefix), follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". This command accepts an optional `<role>` arg; when provided, debriefs save as `{company}_{role_slug}_{interviewer}_debrief_*.md`, else fall back to `{company}_*` (legacy single-role). Read-order on lookups: try role-keyed first, fall back to company-only.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

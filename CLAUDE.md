@@ -116,6 +116,13 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 - When a company is done (rejected/accepted), move their files to `sources/<company>/` promptly.
 - Don't create new files when updating existing ones would work.
 
+### Multi-Role File Keying
+- When a company has multiple roles being tracked, files key on `{company}_{role_slug}` instead of `{company}` alone so two roles at one company don't collide.
+- `role_slug` = role string lowercased, non-alphanumeric → underscores (e.g., "Senior PM, Data Governance" → `senior_pm_data_governance`).
+- Commands `/company-prep`, `/fit-check`, `/phantom` accept an optional `<role>` arg. When provided, they write and read role-keyed files. When omitted, they fall back to `{company}_*` (legacy single-role behavior, preserves active pipelines).
+- Read order on lookups: try `{company}_{role_slug}_*` first if role is provided, fall back to `{company}_*` if role-keyed files don't exist.
+- Existing single-role companies keep their current filenames. Migrate only if/when a second role at that company shows up.
+
 ---
 
 ### Pre-Interview Rules

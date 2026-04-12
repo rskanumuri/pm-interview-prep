@@ -15,7 +15,11 @@ Scan company career pages and job boards for PM roles matching your target arche
 - Scan History: `config/scan_history.json` (log scan results)
 - Portals Config: `config/portals.json` (on `add` command)
 
-## Commands
+## Multi-Role File Keying
+
+When returning scan results and updating `companies.json`, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". If two scanned roles match the same company, list them as separate rows (each with its role) rather than deduping by company name.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

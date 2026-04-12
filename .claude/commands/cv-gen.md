@@ -23,7 +23,11 @@ Generate tailored, ATS-optimized resume PDFs per company/role. Reads the user's 
 - PDF Generator: `tools/generate-pdf.mjs` (Playwright Chromium → PDF)
 - Fonts: `tools/fonts/` (self-hosted WOFF2)
 
-## Commands
+## Multi-Role File Keying
+
+When generating a tailored resume, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, the output resume file is keyed `{company}_{role_slug}_resume.*`, else fall back to `{company}_resume.*` (legacy single-role). Two roles at the same company will generate two distinct resume files without overwriting each other.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

@@ -11,7 +11,11 @@ Rigorously pressure-test interview stories against specific criteria. Finds weak
 - Source Materials: `sources/{active_user}/` (for fact-checking)
 - Proof Points: `sources/{active_user}/proof_points_by_role.md` (for company-specific signal verification)
 
-## Commands
+## Multi-Role File Keying
+
+When pressure-testing stories tied to a specific company+role and writing results back, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, store steelman results against the role-keyed angle entries (e.g., "Stripe / ML Foundations") in master_story_repository.md.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

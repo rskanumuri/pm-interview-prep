@@ -22,7 +22,20 @@ The phantom sharpens over rounds: V1 from JD → V2 from recruiter intel → V3 
 
 The phantom is the objective benchmark. Your data enters ONLY in the `gap` subcommand.
 
-## Commands
+## Multi-Role File Keying
+
+When a company has multiple roles being tracked, files are keyed by `{company}_{role_slug}` instead of `{company}` alone, so each role's phantom is distinct.
+
+**`{company_key}` resolution:**
+- `role_slug` = role string lowercased, non-alphanumeric → underscores, collapsed (e.g., "Senior PM, Data Governance" → `senior_pm_data_governance`)
+- If `<role>` argument is provided: `{company_key}` = `{company}_{role_slug}`
+- If `<role>` argument is NOT provided: `{company_key}` = `{company}` (legacy single-role back-compat)
+
+**Read order for file lookups:** try `{company}_{role_slug}_*` first if role provided; fall back to `{company}_*` if role-keyed files don't exist.
+
+**All `{company}` references in file paths below should be interpreted as `{company_key}` per this rule.**
+
+
 
 Parse `$ARGUMENTS`:
 

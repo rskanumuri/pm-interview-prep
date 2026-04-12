@@ -28,7 +28,11 @@ Check `progress.json` for the `active_user` field. Load personal info from `sour
 
 Do NOT hardcode a story list here. Always read the current inventory from story_bank.json at runtime.
 
-## Commands
+## Multi-Role File Keying
+
+When reading/writing company-keyed files (cheat sheet story map section, angles in master_story_repository.md), follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". This command accepts an optional `<role>` arg; when provided, read/update `{company}_{role_slug}` entries, else fall back to `{company}`. When seeding angles in master_story_repository.md, qualify the company column with the role name if role was provided (e.g., "Stripe / ML Foundations").
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

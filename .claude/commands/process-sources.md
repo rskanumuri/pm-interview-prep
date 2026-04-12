@@ -13,7 +13,11 @@ Scan source folders and extract insights into the insights files.
 - Session Data (consolidated cache): `interview_prep/session_data.json`
 - **Companies Registry**: `interview_prep/companies.json`
 
-## Commands
+## Multi-Role File Keying
+
+When reading/writing company-keyed files (insights, rubrics), follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". If a source file's content references a specific role at a company, classify and write to `{company}_{role_slug}_*` artifacts. If role is unclear, fall back to `{company}_*` and flag for the user to confirm.
+
+
 
 Parse `$ARGUMENTS`:
 

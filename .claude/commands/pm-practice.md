@@ -83,7 +83,11 @@ If a company has no insights file yet:
 - Use only `_general` insights
 - Note in hints: "No specific insights for {Company} yet. Add source materials to build knowledge."
 
-## Commands
+## Multi-Role File Keying
+
+When reading company-keyed files (cheat sheet, rubric, session data), follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, use role-keyed artifacts, else fall back to `{company}_*`. Read-order on lookups: try role-keyed first, fall back to company-only.
+
+
 
 Parse the argument `$ARGUMENTS` to determine the command:
 

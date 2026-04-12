@@ -75,7 +75,20 @@ Score based on what the user CAN DO, not just what they DID. When assessing fit:
 - **MEDIUM** — May come up AND bridgeable with adjacent experience
 - **LOW** — Unlikely to be probed OR easy to bridge naturally
 
-## Commands
+## Multi-Role File Keying
+
+When a company has multiple roles being tracked, files are keyed by `{company}_{role_slug}` instead of `{company}` alone.
+
+**`{company_key}` resolution:**
+- `role_slug` = role string lowercased, non-alphanumeric → underscores, collapsed (e.g., "Senior PM, Data Governance" → `senior_pm_data_governance`)
+- If `<role>` argument is provided: `{company_key}` = `{company}_{role_slug}`
+- If `<role>` argument is NOT provided: `{company_key}` = `{company}` (legacy single-role back-compat)
+
+**Read order for file lookups:** try `{company}_{role_slug}_*` first if role provided; fall back to `{company}_*` if role-keyed files don't exist. This keeps existing single-role pipelines working without migration.
+
+**All `{company}` references in file paths below should be interpreted as `{company_key}` per this rule.**
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

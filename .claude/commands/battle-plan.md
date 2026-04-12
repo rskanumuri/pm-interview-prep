@@ -11,7 +11,11 @@ Auto-generates daily prep plan based on interview dates and prep gaps. Tracks ti
 - All cheat sheets: `interview_prep/scripts/{company}_cheat_sheet.md`
 - All answer files: `interview_prep/answers/{company}_*.md`
 
-## Commands
+## Multi-Role File Keying
+
+When reading/writing company-keyed files and rendering the daily plan, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Each role at a company is a distinct pipeline item; show them as separate lines (e.g., "Stripe / ML Foundations"), not collapsed into one company entry. Read-order on lookups: try role-keyed first, fall back to company-only.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

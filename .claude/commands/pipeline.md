@@ -14,7 +14,11 @@ Single source of truth for "where do I stand across all companies?" Reads CLAUDE
 - Rubrics: `interview_prep/rubrics/{company}.md`
 - Debriefs: `interview_prep/answers/{company}_*_debrief_*.md`
 
-## Commands
+## Multi-Role File Keying
+
+When reading company-keyed files and rendering the pipeline, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". For display, show each `{company}_{role_slug}` as its own row with the role name visible (e.g., "Stripe / ML Foundations" and "Stripe / Payments" as separate lines), not collapsed into one company entry. When reading companies.json / progress.json, treat role-keyed entries as distinct pipeline items.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

@@ -6,7 +6,11 @@ Launches background research for company deep-dives, competitive analysis, marke
 
 Formalizes the research pattern: launch research, get results, save to cheat sheet.
 
-## Commands
+## Multi-Role File Keying
+
+When saving research output keyed by company, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, research files save as `{company}_{role_slug}_research.md`, else fall back to `{company}_research.md` (legacy single-role). Read-order on lookups: try role-keyed first, fall back to company-only.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

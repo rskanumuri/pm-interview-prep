@@ -17,7 +17,11 @@ Check `progress.json` for the `active_user` field. Load personal info from `sour
 - Research: `interview_prep/research/`
 - CLAUDE.md: `CLAUDE.md` (project root)
 
-## Commands
+## Multi-Role File Keying
+
+When reading/writing company-keyed files, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". This command accepts an optional `<role>` arg; when provided, use `{company}_{role_slug}` keys, else fall back to `{company}` (legacy single-role). Read-order on lookups: try role-keyed first, fall back to company-only.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

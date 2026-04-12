@@ -15,7 +15,11 @@ Zero-write, read-only skill. Synthesizes all prep artifacts into a focused pre-i
 - CLAUDE.md: `CLAUDE.md` (company context, interview schedule, pre-interview rules, canonical numbers)
 - Personal Docs: `sources/{active_user}/` (performance kit, proof points)
 
-## Commands
+## Multi-Role File Keying
+
+When reading company-keyed files, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". This command accepts an optional `<role>` arg; when provided, use `{company}_{role_slug}` keys, else fall back to `{company}` (legacy single-role). Read-order on lookups: try role-keyed first, fall back to company-only.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

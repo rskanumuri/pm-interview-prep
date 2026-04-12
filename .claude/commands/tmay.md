@@ -12,7 +12,11 @@ Focused TMAY iteration for any company. Show current version, accept the user's 
 - Proof Points: `sources/{active_user}/proof_points_by_role.md` (company-specific signals to weave into TMAY)
 - CLAUDE.md: `CLAUDE.md` (company context, key numbers)
 
-## Commands
+## Multi-Role File Keying
+
+When reading company-keyed files to surface a company-specific TMAY hook, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, use role-keyed artifacts, else fall back to `{company}_*`. Read-order on lookups: try role-keyed first, fall back to company-only.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 

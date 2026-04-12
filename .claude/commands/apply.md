@@ -18,7 +18,11 @@ Generate answers for job application forms using evaluation context, resume, and
 ### Write
 - Applications: `interview_prep/applications.json` (update status to `applied` after use)
 
-## Commands
+## Multi-Role File Keying
+
+When writing application answers, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, answers save as `{company}_{role_slug}_application_*.md`, else fall back to `{company}_application_*.md` (legacy single-role). Read-order on lookups: try role-keyed first, fall back to company-only.
+
+
 
 Parse `$ARGUMENTS`:
 

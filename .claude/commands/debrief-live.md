@@ -12,7 +12,11 @@ Paste a transcript or conversation notes → get instant performance rating, str
 - Rubrics: `interview_prep/rubrics/{company}.md`
 - Master Rubric: `interview_prep/rubric.md`
 
-## Commands
+## Multi-Role File Keying
+
+When reading/writing company-keyed files, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". This command accepts an optional `<role>` arg; when provided, debriefs save as `{company}_{role_slug}_{interviewer}_debrief_*.md`, else fall back to `{company}_*` (legacy single-role). Read-order on lookups: try role-keyed first, fall back to company-only.
+
+
 
 Parse `$ARGUMENTS` to determine the command:
 
