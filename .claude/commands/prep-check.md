@@ -52,6 +52,18 @@ Comprehensive 5-minute pre-interview briefing. Read all artifacts and synthesize
 
 ---
 
+### The Missing Piece (one sentence)
+
+Before walking in, answer this in ONE sentence: **"What specifically gets harder for this team if they don't hire me?"**
+
+Not "what do I bring." Not "why am I a fit." The question is sharper: what breaks, slows, or gets worse if a different candidate walks in instead?
+
+This is the "Why magic" answer. Fit says "I can do the job." Magic says "I'm the specific piece that completes this team." Write it down. Say it aloud. It should be one sentence, specific to this company's current moment, and something a competing candidate would struggle to claim.
+
+Example format: "Without me, {team} takes {N months} longer to {specific outcome} because {specific capability only you bring}."
+
+---
+
 ### Top 3 Stories — Ready to Deploy
 
 **1. {Story name}** — {key number}

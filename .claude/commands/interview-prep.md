@@ -88,6 +88,16 @@ The skill builds CUMULATIVE prep — each stage includes everything from prior s
    - Interview style prediction
    - Rapport hooks
    - Predicted questions (5-8)
+   - **What is this interviewer afraid of in this hire?** (MANDATORY section)
+     - Every interviewer has a fear, and it's usually different from what they'll ask about.
+     - HM fears: hiring the wrong person (reputational cost), hiring someone who can't ramp, hiring someone who won't challenge them enough, hiring someone who's a flight risk.
+     - Skip-level fears: the HM's judgment being wrong, the role's scope being too narrow/broad, the candidate operating below the level.
+     - Eng director fears: someone who ships specs but can't make trade-offs with engineers, someone who moves too slow, someone who "manages down" engineers instead of partnering.
+     - PMM/Marketing fears: someone too technical to talk to customers, someone who overpromises on roadmap, someone who doesn't understand GTM cycles.
+     - Peer PMs fear: someone who creates work for them, someone who won't respect existing ownership boundaries, a political operator.
+     - Derive from: their background (what have THEY been burned by?), their role (what's their job at risk from?), their recent tenure (new to the team = hiring for immediate impact; long-tenured = hiring for culture preservation).
+     - Document ONE sentence per interviewer: "Fear: {specific thing they're afraid of in this hire}."
+     - Use this to shape which stories to lead with and which objections to pre-empt.
    - Write to: `interview_prep/research/{company}_interviewer_profiles.md`
 
 ### Double-Change Assessment:
