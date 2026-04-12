@@ -7,6 +7,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 PM interview preparation workspace. **Run `/setup` to get started — it takes 5 minutes.**
 
+## Operating Principle
+
+**Interviews are research, not performance.** The questions you're asked compound across rounds. The answers you gave don't. This system is built to capture questions (`question_bank.md`), patterns (`interview_lessons.md`), and wisdom (`career_takeaways.md`) so each interview makes the next one easier.
+
 ## Quick Start
 
 1. Type `/setup` in Claude Code

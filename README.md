@@ -1,6 +1,10 @@
 # PM Interview Prep System
 
-AI-powered interview preparation for Product Managers. 25 slash commands covering the full lifecycle: job discovery, company research, story management, mock interviews, and post-interview debrief.
+AI-powered interview preparation for Product Managers. 26 slash commands covering the full lifecycle: job discovery, company research, story management, mock interviews, and post-interview debrief.
+
+## The Operating Principle
+
+**Interviews are research, not performance.** The questions you're asked compound across rounds. The answers you gave don't. This system is built to capture questions, patterns, and wisdom so each interview makes the next one easier.
 
 ## Get Started
 
@@ -25,7 +29,7 @@ That's it. The wizard reads your resume, extracts your stories and metrics, prep
 | **Discover** | `/scan` `/eval` `/auto-pipe` |
 | **Apply** | `/apply` `/cv-gen` |
 | **Research** | `/research` `/timed-research` `/company-prep` `/process-sources` |
-| **Prepare** | `/interview-prep` `/fit-check` `/story-map` `/story-bank` `/story-check` `/steelman` `/tmay` `/prep-check` `/battle-plan` |
+| **Prepare** | `/interview-prep` `/fit-check` `/phantom` `/story-map` `/story-bank` `/story-check` `/steelman` `/tmay` `/prep-check` `/battle-plan` |
 | **Practice** | `/pm-practice` `/drill-rapid` |
 | **Debrief** | `/debrief` `/debrief-live` |
 | **Track** | `/pipeline` `/save-push` `/setup` |
@@ -34,7 +38,7 @@ That's it. The wizard reads your resume, extracts your stories and metrics, prep
 
 - **`CLAUDE.md`** — Your brain file. Career thesis, canonical numbers, interview rules. Claude reads this every session.
 - **`/setup`** — One-time setup wizard. Reads your resume, seeds your story bank, builds your first company prep.
-- **25 skills** — Specialized workflows in `.claude/commands/`. Each handles one part of the interview lifecycle.
+- **26 skills** — Specialized workflows in `.claude/commands/`. Each handles one part of the interview lifecycle.
 - **Hooks** — Agent time enforcement. Background research auto-stops after the time budget.
 - **Data files** — JSON state (`story_bank.json`, `progress.json`, `companies.json`). Skills read and write these to maintain continuity across sessions.
 
