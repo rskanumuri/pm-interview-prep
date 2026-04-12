@@ -1,12 +1,10 @@
-# PM Interview Prep System
+# PM Interview Prep
 
-AI-powered interview preparation for Product Managers. 26 slash commands covering the full lifecycle: job discovery, company research, story management, mock interviews, and post-interview debrief.
+A Claude Code workspace where your resume, stories, and company research accumulate across interviews. Each round is easier than the last.
 
-## The Operating Principle
+## Start
 
-**Interviews are research, not performance.** The questions you're asked compound across rounds. The answers you gave don't. This system is built to capture questions, patterns, and wisdom so each interview makes the next one easier.
-
-## Get Started
+**Requires:** [Claude Code](https://claude.ai/code) with a Pro, Team, or Enterprise plan.
 
 ```
 git clone https://github.com/YOUR_USERNAME/pm-interview-prep.git
@@ -14,46 +12,66 @@ cd pm-interview-prep
 claude
 ```
 
-Then type:
+Inside Claude Code, type:
 
 ```
 /setup
 ```
 
-That's it. The wizard reads your resume, extracts your stories and metrics, preps your first company, and configures everything in about 5 minutes.
+A 5-minute wizard. Paste your resume, answer a few questions, and watch it research your first target company live.
 
-## What It Does
+## Just Want to See It First?
+
+```
+/setup --demo
+```
+
+Same flow with a sample profile and real web research on a public company (Stripe, Notion). When you're ready for the real thing:
+
+```
+/setup reset
+/setup
+```
+
+## Your First 10 Minutes After /setup
+
+```
+/tmay <company>          Practice Tell Me About Yourself, framed for a target
+/eval <paste a JD>       Score a job description in 2 minutes
+/pm-practice <company>   Take a practice question with scored feedback
+```
+
+That's enough to feel how the system works. The other 23 commands compound on top: story refinement, mock interviews, live debriefs, pipeline tracking.
+
+## All 26 Commands
 
 | Phase | Commands |
 |-------|----------|
 | **Discover** | `/scan` `/eval` `/auto-pipe` |
 | **Apply** | `/apply` `/cv-gen` |
 | **Research** | `/research` `/timed-research` `/company-prep` `/process-sources` |
-| **Prepare** | `/interview-prep` `/fit-check` `/phantom` `/story-map` `/story-bank` `/story-check` `/steelman` `/tmay` `/prep-check` `/battle-plan` |
+| **Strategize** | `/fit-check` `/phantom` `/story-map` `/battle-plan` `/prep-check` |
+| **Craft** | `/story-bank` `/story-check` `/steelman` `/tmay` `/interview-prep` |
 | **Practice** | `/pm-practice` `/drill-rapid` |
 | **Debrief** | `/debrief` `/debrief-live` |
-| **Track** | `/pipeline` `/save-push` `/setup` |
+| **Track** | `/pipeline` |
+| **Workspace** | `/setup` `/save-push` |
 
-## How It Works
+## Under the Hood
 
-- **`CLAUDE.md`**. Your brain file. Career thesis, canonical numbers, interview rules. Claude reads this every session.
-- **`/setup`**. One-time setup wizard. Reads your resume, seeds your story bank, builds your first company prep.
-- **26 skills**. Specialized workflows in `.claude/commands/`. Each handles one part of the interview lifecycle.
-- **Hooks**. Agent time enforcement. Background research auto-stops after the time budget.
-- **Data files**. JSON state (`story_bank.json`, `progress.json`, `companies.json`). Skills read and write these to maintain continuity across sessions.
+- **`CLAUDE.md`** — Your brain file. Career thesis, canonical numbers, rules. Claude reads it every session.
+- **Skills** in `.claude/commands/` — 26 specialized workflows.
+- **State** in `interview_prep/*.json` — Story bank, pipeline, progress. Persists across sessions.
 
-## Requirements
-
-- [Claude Code](https://claude.ai/code) with a Claude Pro, Team, or Enterprise subscription
-- Node.js (optional, for PDF resume generation via `/cv-gen`)
+Prefer manual setup? See [SETUP.md](SETUP.md).
 
 ## Optional Integrations
 
-- **Granola**. Auto-pull interview transcripts for `/debrief-live`
-- **Gamma**. Generate presentation decks
+- **Granola** — Auto-pull interview transcripts for `/debrief-live`
+- **Gamma** — Generate presentation decks
 
 Both are optional. All core workflows work without them.
 
 ## License
 
-MIT
+[MIT](LICENSE)
