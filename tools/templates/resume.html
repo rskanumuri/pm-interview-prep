@@ -5,38 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{NAME}} — Resume</title>
 <style>
-  @font-face {
-    font-family: 'Space Grotesk';
-    src: url('./fonts/space-grotesk-latin.woff2') format('woff2');
-    font-weight: 300 700;
-    font-style: normal;
-    font-display: swap;
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-  @font-face {
-    font-family: 'Space Grotesk';
-    src: url('./fonts/space-grotesk-latin-ext.woff2') format('woff2');
-    font-weight: 300 700;
-    font-style: normal;
-    font-display: swap;
-    unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-  }
-  @font-face {
-    font-family: 'DM Sans';
-    src: url('./fonts/dm-sans-latin.woff2') format('woff2');
-    font-weight: 100 1000;
-    font-style: normal;
-    font-display: swap;
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-  @font-face {
-    font-family: 'DM Sans';
-    src: url('./fonts/dm-sans-latin-ext.woff2') format('woff2');
-    font-weight: 100 1000;
-    font-style: normal;
-    font-display: swap;
-    unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-  }
+  /*
+    Typography is driven by the user's resume_prefs.json (see /cv-gen).
+    Only BODY size is user-chosen. All headings scale via em multipliers.
+    Do not hard-code heading sizes. The skill injects:
+      {{FONT_FACE_IMPORTS}} — @font-face or @import for web fonts (empty for system fonts)
+      {{FONT_STACK}}        — e.g. "Calibri", "Helvetica Neue", Arial, sans-serif
+      {{BODY_SIZE}}         — e.g. 10px, 11px
+  */
+  {{FONT_FACE_IMPORTS}}
 
   * {
     margin: 0;
@@ -50,8 +27,8 @@
   }
 
   body {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
+    font-family: {{FONT_STACK}};
+    font-size: {{BODY_SIZE}};
     line-height: 1.5;
     color: #1a1a2e;
     background: #ffffff;
@@ -68,15 +45,16 @@
 
   /* === HEADER === */
   .header {
-    margin-bottom: 16px;
+    margin-bottom: 14px;
+    text-align: center;
   }
 
   .header h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 24px;
+    font-family: inherit;
+    font-size: 2.2em; /* scales with body */
     font-weight: 700;
     color: #1a1a2e;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     margin-bottom: 4px;
   }
 
@@ -90,9 +68,10 @@
   .contact-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 16px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 10px;
+    justify-content: center;
+    gap: 6px 14px;
+    font-family: inherit;
+    font-size: 0.9em;
     color: #555;
   }
 
@@ -107,25 +86,39 @@
 
   /* === SECTIONS === */
   .section {
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 
   .section-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
+    font-family: inherit;
+    font-size: 1.2em;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: hsl(187, 74%, 32%);
     border-bottom: 1px solid #e5e5e5;
     padding-bottom: 3px;
-    margin-bottom: 8px;
+    margin-bottom: 7px;
+    text-align: center;
   }
 
-  /* === PROFESSIONAL SUMMARY === */
+  /* Prevent single-word widows without hurting readability.
+     text-wrap: pretty lands evenly-balanced line breaks.
+     Supported in modern Chromium/WebKit/Gecko; graceful fallback otherwise. */
+  .summary-text,
+  .job li,
+  .skills-line,
+  .skill-item,
+  .edu-item,
+  .project-desc {
+    text-wrap: pretty;
+    hyphens: none;
+  }
+
+  /* === SUMMARY === */
   .summary-text {
-    font-size: 11px;
-    line-height: 1.6;
+    font-size: 1em;
+    line-height: 1.55;
     color: #333;
   }
 
@@ -137,71 +130,67 @@
   .competencies-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 5px;
   }
 
   .competency-tag {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 10px;
+    font-family: inherit;
+    font-size: 1em;
     font-weight: 500;
     color: hsl(187, 74%, 28%);
     background: hsl(187, 40%, 95%);
-    padding: 3px 10px;
+    padding: 3px 9px;
     border-radius: 3px;
     border: 1px solid hsl(187, 40%, 88%);
   }
 
   /* === WORK EXPERIENCE === */
   .job {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
-  .job-header {
+  /* Single-line job header. All elements same size as body.
+     Company bolded for emphasis; role/location inline after. Period right-aligned. */
+  .job-line {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    gap: 12px;
+    font-size: 1em;
     margin-bottom: 2px;
   }
 
-  .job-company {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    color: hsl(270, 70%, 45%);
+  .job-details {
+    flex: 1;
+    font-size: 1em;
+    color: #333;
+  }
+
+  .job-details strong {
+    font-weight: 700;
+    color: #1a1a2e;
   }
 
   .job-period {
-    font-size: 10px;
-    color: #777;
+    font-size: 1em;
+    color: #555;
     white-space: nowrap;
   }
 
-  .job-role {
-    font-size: 11px;
-    font-weight: 500;
-    color: #444;
-    margin-bottom: 4px;
-  }
-
-  .job-location {
-    font-size: 10px;
-    color: #888;
-  }
-
   .job ul {
-    padding-left: 16px;
-    margin-top: 4px;
+    padding-left: 14px;
+    margin-top: 2px;
   }
 
   .job li {
-    font-size: 10.5px;
-    line-height: 1.5;
+    font-size: 1em;
+    line-height: 1.45;
     color: #333;
     margin-bottom: 2px;
   }
 
   .job li strong {
-    font-weight: 600;
+    font-weight: 700;
   }
 
   /* === PROJECTS === */
@@ -210,14 +199,14 @@
   }
 
   .project-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
+    font-family: inherit;
+    font-size: 1.05em;
+    font-weight: 700;
     color: hsl(270, 70%, 45%);
   }
 
   .project-badge {
-    font-size: 9px;
+    font-size: 0.85em;
     font-weight: 500;
     color: hsl(187, 74%, 32%);
     background: hsl(187, 40%, 95%);
@@ -227,20 +216,21 @@
   }
 
   .project-desc {
-    font-size: 10.5px;
+    font-size: 1em;
     color: #444;
     margin-top: 2px;
   }
 
   .project-tech {
-    font-size: 9.5px;
+    font-size: 0.9em;
     color: #888;
     margin-top: 2px;
   }
 
   /* === EDUCATION === */
   .edu-item {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
+    font-size: 1em;
   }
 
   .edu-header {
@@ -251,22 +241,21 @@
 
   .edu-title {
     font-weight: 600;
-    font-size: 11px;
     color: #333;
   }
 
   .edu-org {
     color: hsl(270, 70%, 45%);
-    font-weight: 500;
+    font-weight: 700;
   }
 
   .edu-year {
-    font-size: 10px;
+    font-size: 0.9em;
     color: #777;
   }
 
   .edu-desc {
-    font-size: 10px;
+    font-size: 0.9em;
     color: #666;
   }
 
@@ -279,7 +268,7 @@
   }
 
   .cert-title {
-    font-size: 10.5px;
+    font-size: 1em;
     font-weight: 500;
     color: #333;
   }
@@ -289,7 +278,7 @@
   }
 
   .cert-year {
-    font-size: 10px;
+    font-size: 0.9em;
     color: #777;
   }
 
@@ -297,18 +286,24 @@
   .skills-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px 12px;
+    gap: 4px 10px;
   }
 
   .skill-item {
-    font-size: 10.5px;
+    font-size: 1em;
     color: #444;
   }
 
   .skill-category {
-    font-weight: 600;
+    font-weight: 700;
     color: #333;
-    font-size: 10.5px;
+    font-size: 1em;
+  }
+
+  .skills-line {
+    font-size: 1em;
+    color: #333;
+    line-height: 1.55;
   }
 
   /* === PRINT === */
@@ -335,39 +330,27 @@
     <h1>{{NAME}}</h1>
     <div class="header-gradient"></div>
     <div class="contact-row">
-      <span>{{EMAIL}}</span>
-      <span class="separator">|</span>
-      <a href="{{LINKEDIN_URL}}">{{LINKEDIN_DISPLAY}}</a>
-      <span class="separator">|</span>
-      <span>{{LOCATION}}</span>
+      {{CONTACT_ROW}}
     </div>
   </div>
 
   <!-- PROFESSIONAL SUMMARY -->
   <div class="section">
-    <div class="section-title">Professional Summary</div>
+    <div class="section-title">Summary</div>
     <div class="summary-text">{{SUMMARY_TEXT}}</div>
   </div>
 
-  <!-- CORE COMPETENCIES -->
-  <div class="section">
-    <div class="section-title">Core Competencies</div>
-    <div class="competencies-grid">
-      {{COMPETENCIES}}
-    </div>
-  </div>
+  <!-- CORE COMPETENCIES (optional; skill omits if empty) -->
+  {{COMPETENCIES_SECTION}}
 
   <!-- WORK EXPERIENCE -->
   <div class="section">
-    <div class="section-title">Work Experience</div>
+    <div class="section-title">Experience</div>
     {{EXPERIENCE}}
   </div>
 
-  <!-- PROJECTS -->
-  <div class="section avoid-break">
-    <div class="section-title">Key Projects</div>
-    {{PROJECTS}}
-  </div>
+  <!-- PROJECTS (optional; skill omits if empty) -->
+  {{PROJECTS_SECTION}}
 
   <!-- EDUCATION -->
   <div class="section avoid-break">
