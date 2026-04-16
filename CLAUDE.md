@@ -109,12 +109,20 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 - When archiving a rejected company, if `{company}_phantom.md` exists, update it with post-mortem: "The candidate who got this job probably had X." Final version becomes a learning artifact.
 - Living docs: `interview_prep/career_takeaways.md` (career wisdom) + `interview_prep/interview_lessons.md` (learned vs still learning)
 
+### Outreach Drafting Discipline
+
+- Before drafting any cold email, "I'm Interested" note, or LinkedIn DM, confirm the brief in ONE upfront exchange if unclear: voice (application not essay), length (~60-80 words), anchor = product opinion not marketing critique, ranking-trap scan (never lead with their number when ours is smaller). See `memory/feedback_outreach_brief_discipline.md`.
+- Poster visibility ≠ HM. When a role has a visible poster or talent contact, default framing is "poster, possibly HM, could be a Director on their team" until explicit evidence says otherwise. See `memory/feedback_outreach_hm_signals.md`.
+- When two similar-spelling names appear for the same company (e.g., Sam vs Saam), pause and disambiguate with ONE question before drafting anything named.
+- Product opinion = what they should DO (build, ship, change). Marketing critique = commenting on what their claims SAY (accuracy-percent claims, "industry-leading"). Never anchor outreach on the latter.
+
 ### File Hygiene
 
 - One battle plan at a time. Archive old ones immediately.
 - Company-specific content stays in company folders, not scattered.
 - When a company is done (rejected/accepted), move their files to `sources/<company>/` promptly.
 - Don't create new files when updating existing ones would work.
+- Every intel file in `sources/<company>/` (podcast notes, call summaries, DM logs, emails) opens with a **Source:** line naming the channel (public podcast + episode/date, private call + attendees, LinkedIn DM thread, etc.). Affects how we reference it in follow-ups.
 
 ### Multi-Role File Keying
 - When a company has multiple roles being tracked, files key on `{company}_{role_slug}` instead of `{company}` alone so two roles at one company don't collide.

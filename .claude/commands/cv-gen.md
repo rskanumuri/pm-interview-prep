@@ -144,7 +144,9 @@ Parse `$ARGUMENTS` to determine the command:
    - If user requests edits, apply them to the HTML file and re-preview. The browser tab auto-refreshes on file change if user has the tab open.
 
 7. **Generate PDF (only after HTML approval):**
+   - **File-lock pre-check:** if a prior PDF exists at the target output path, it may be open in Preview/Chrome/Acrobat. Playwright will fail with `EBUSY` on Windows if the file is locked by a viewer. BEFORE running the generator, ask the user: "Close any open copy of the previous PDF at `{output_path}` so regeneration can write to it?" Wait for confirmation (or for the user to indicate the path is free) before proceeding.
    - Run: `node tools/generate-pdf.mjs output/cv/{company}_resume_{date}.html output/cv/{company}_resume_{date}.pdf --format=letter`
+   - If the command fails with `EBUSY` or similar file-lock error, ask the user to close the PDF viewer and re-run. Do NOT work around by writing to a new filename.
    - If command fails (Playwright not installed), inform user:
      "PDF generation failed — Playwright may not be installed. Run `cd tools && npm install && npx playwright install chromium` to set up."
      "In the meantime, open the HTML file in Chrome and Print → Save as PDF."
