@@ -15,7 +15,7 @@ PM interview preparation workspace. **Run `/setup` to get started. Takes 5 minut
 
 1. Type `/setup` in Claude Code
 2. Follow the wizard (paste your resume, answer a few questions)
-3. Start prepping with 24 slash commands
+3. Start prepping with 26 slash commands
 
 If you prefer manual setup, see `SETUP.md`.
 
@@ -94,6 +94,10 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 - "research X" (without /command) → ask "Want it timed? (default: 10 min)" then route to `/timed-research`
 - "show stories" / "story bank" → `/story-bank` | "story angles" → `/story-bank angles`
 - "import stories" / "onboard prep" / "bulk add stories" → `/story-bank import`
+- "prep for company" / "company prep" → `/company-prep` | "build prep for interview" / "stage prep" → `/interview-prep`
+- "who am I up against" / "competitor for this role" → `/phantom` | "map stories to company" → `/story-map`
+- "show pipeline" / "interview dashboard" → `/pipeline` | "mock interview" / "practice PM question" → `/pm-practice`
+- "pre-interview check" / "am I ready" → `/prep-check`
 
 ### Working Style Preferences
 

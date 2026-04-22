@@ -44,7 +44,7 @@ Stop here.
 ```
 WELCOME TO PM INTERVIEW PREP
 
-This system has 24 AI-powered commands for every stage of your PM interview journey —
+This system has 26 AI-powered commands for every stage of your PM interview journey —
 from job discovery through post-interview debrief.
 
 Let's get you set up. This takes about 5 minutes.
@@ -325,6 +325,7 @@ Base: {base}+ | Total: {total}+{if visa: | Must sponsor H1B}
 - Two-layer format: Layer 1 = 2-min opener, Layer 2 = deep follow-up details.
 - Show the prepped answer FIRST before practice. Read first, then deliver.
 - Score on /10 scale.
+- **Match the hero to the audience (multi-interviewer loops).** Same story, same facts, different emphasis per interviewer function. Engineering interviewer → their team is the hero (what goal, constraints, and product decisions you gave them; they built from there). Design interviewer → their process is the hero (how you respected their craft). HM → their priorities reflected back. If two versions of the same story sound identical across interviewer functions, the story is interviewer-blind and loses advocate votes in the debrief. Before a loop, rehearse one story rotated across each interviewer's function; if the rotations sound the same, fix it.
 
 ### Story Bank Sync
 
@@ -340,6 +341,13 @@ Base: {base}+ | Total: {total}+{if visa: | Must sponsor H1B}
 - All background research agents MUST use the timed-research pattern
 - Never launch untimed background agents for research tasks
 
+### Cost Optimization: Agent Model Routing
+
+- **Background research agents** → use `model: "sonnet"` (web search, company research, competitive analysis)
+- **Scaffold/file generation agents** → use `model: "sonnet"` (company-prep scaffolding, process-sources)
+- **Keep Opus for**: scoring, debrief analysis, interview coaching, fit-check judgment, story integrity, drill evaluation
+- Rule of thumb: if the agent is gathering/organizing info, use Sonnet. If it's making judgment calls about fit or performance, keep Opus.
+
 ### Skill Nudges
 
 When asked to do something a skill handles, nudge with `(tip: /skill-name does this)`:
@@ -350,6 +358,10 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 - "research X" (without /command) → ask "Want it timed? (default: 10 min)" then route to `/timed-research`
 - "show stories" / "story bank" → `/story-bank` | "story angles" → `/story-bank angles`
 - "import stories" / "onboard prep" / "bulk add stories" → `/story-bank import`
+- "prep for company" / "company prep" → `/company-prep` | "build prep for interview" / "stage prep" → `/interview-prep`
+- "who am I up against" / "competitor for this role" → `/phantom` | "map stories to company" → `/story-map`
+- "show pipeline" / "interview dashboard" → `/pipeline` | "mock interview" / "practice PM question" → `/pm-practice`
+- "pre-interview check" / "am I ready" → `/prep-check`
 
 ### Working Style Preferences
 
@@ -360,12 +372,34 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 - When dates/numbers are corrected, update ALL files, not just the one being discussed.
 - When told "yes, do it" — execute immediately, don't ask clarifying questions.
 
+### Career Learning Hooks
+
+- After any `/debrief` or `/debrief-live`, automatically compare this round's patterns against `interview_prep/interview_lessons.md` and PROPOSE specific updates (extract from debrief data, show the proposed change, don't ask the user to generate).
+- When archiving a rejected company, read all debriefs for that company, cross-reference with `interview_prep/career_takeaways.md`, and PROPOSE a specific career takeaway. User reviews and approves.
+- When archiving a rejected company, if `{company}_phantom.md` exists, update it with post-mortem: "The candidate who got this job probably had X." Final version becomes a learning artifact.
+- Living docs: `interview_prep/career_takeaways.md` (career wisdom) + `interview_prep/interview_lessons.md` (learned vs still learning)
+
+### Outreach Drafting Discipline
+
+- Before drafting any cold email, "I'm Interested" note, or LinkedIn DM, confirm the brief in ONE upfront exchange if unclear: voice (application not essay), length (~60-80 words), anchor = product opinion not marketing critique, ranking-trap scan (never lead with their number when ours is smaller). See `memory/feedback_outreach_brief_discipline.md`.
+- Poster visibility ≠ HM. When a role has a visible poster or talent contact, default framing is "poster, possibly HM, could be a Director on their team" until explicit evidence says otherwise. See `memory/feedback_outreach_hm_signals.md`.
+- When two similar-spelling names appear for the same company (e.g., Sam vs Saam), pause and disambiguate with ONE question before drafting anything named.
+- Product opinion = what they should DO (build, ship, change). Marketing critique = commenting on what their claims SAY (accuracy-percent claims, "industry-leading"). Never anchor outreach on the latter.
+
 ### File Hygiene
 
 - One battle plan at a time. Archive old ones immediately.
 - Company-specific content stays in company folders, not scattered.
 - When a company is done (rejected/accepted), move their files to `sources/<company>/` promptly.
 - Don't create new files when updating existing ones would work.
+- Every intel file in `sources/<company>/` (podcast notes, call summaries, DM logs, emails) opens with a **Source:** line naming the channel (public podcast + episode/date, private call + attendees, LinkedIn DM thread, etc.). Affects how we reference it in follow-ups.
+
+### Multi-Role File Keying
+- When a company has multiple roles being tracked, files key on `{company}_{role_slug}` instead of `{company}` alone so two roles at one company don't collide.
+- `role_slug` = role string lowercased, non-alphanumeric → underscores (e.g., "Senior PM, Data Governance" → `senior_pm_data_governance`).
+- Commands `/company-prep`, `/fit-check`, `/phantom` accept an optional `<role>` arg. When provided, they write and read role-keyed files. When omitted, they fall back to `{company}_*` (legacy single-role behavior, preserves active pipelines).
+- Read order on lookups: try `{company}_{role_slug}_*` first if role is provided, fall back to `{company}_*` if role-keyed files don't exist.
+- Existing single-role companies keep their current filenames. Migrate only if/when a second role at that company shows up.
 
 ---
 
