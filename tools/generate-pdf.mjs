@@ -6,6 +6,7 @@
  * Usage:
  *   node tools/generate-pdf.mjs <input.html> <output.pdf> [--format=letter|a4]
  *
+ * Adapted from career-ops (github.com/santifer/career-ops).
  * Uses Chromium headless to render ATS-optimized resume PDFs.
  */
 
