@@ -28,7 +28,7 @@ A go/no-go verdict with reasons, not a gut call. From there, `/company-prep` bui
 
 **Everything syncs.** Monday's debrief updates the story bank, the question bank, the rubrics, and the phantom. By Wednesday, when you prep for a different company, the system is already using Monday's lessons. You never re-learn the same thing.
 
-**Live debriefs from transcripts.** Optional Granola integration auto-pulls your interview transcript. `/debrief-live` ingests it, extracts what landed vs didn't, updates the story bank, and proposes a career takeaway. Five minutes, not an hour of notes.
+**Live debriefs on your practice sessions.** Optional Granola integration auto-pulls transcripts from mock interviews and coach sessions. `/debrief-live` scores the session against a company rubric, extracts what landed vs didn't, updates your story bank, and proposes lessons. Five minutes, not an hour of notes. (Recording real interviews is frowned upon; use `/debrief` for those, where you answer guided questions from memory.)
 
 ## Full funnel coverage
 
@@ -71,7 +71,7 @@ Every skill is a markdown prompt in `.claude/commands/`. Read, edit, fork. State
 
 ## Optional integrations
 
-- **Granola** auto-pulls interview transcripts for `/debrief-live`. Without it, paste transcripts manually.
+- **Granola** auto-pulls transcripts from your mock interviews and coach sessions for `/debrief-live`. Without it, paste transcripts manually. Do not record actual interviews; use `/debrief` (guided questions from memory) for those.
 - **Gamma** generates presentation decks for loop prep.
 
 Both optional. All core workflows work without them.
