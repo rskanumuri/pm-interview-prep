@@ -1,49 +1,36 @@
 # PM Interview Prep
 
-A Claude Code workspace where your resume, stories, and company research accumulate across interviews. Each round is easier than the last.
+A PM-specific job-search and interview system, built on Claude Code. Full funnel, scan to debrief, with the interview rounds as the center of gravity.
 
-## Start
+It's Sunday, 9pm. You found the JD you actually want. You don't have three hours tonight to tailor a resume, research the company, and draft a cold email. You bookmark it. You don't come back.
 
-**Requires:** [Claude Code](https://claude.ai/code) with a Pro, Team, or Enterprise plan.
+Or you paste it into `/fit-check` right now. Two minutes later you know if it's worth pursuing. Fifteen minutes after that, you have a full prep folder: cheat sheet, rubric, competitive intel, why-script, gap answers.
 
-```
-git clone https://github.com/YOUR_USERNAME/pm-interview-prep.git
-cd pm-interview-prep
-claude
-```
-
-Inside Claude Code, type:
+## Demo
 
 ```
-/setup
+> /fit-check Acme "Senior PM, Data Governance" <paste JD>
+
+4.1 / 5, STRONG FIT. Pursue.
+Bridges: platform builder, RBAC/governance depth, cross-org GTM.
+Gap: hands-on data lineage (MEDIUM, adjacent not direct).
 ```
 
-A 5-minute wizard. Paste your resume, answer a few questions, and watch it research your first target company live.
+A go/no-go verdict with reasons, not a gut call. From there, `/company-prep` builds the rest of the prep folder. `/phantom` sketches the 10/10 reference candidate so you have a bar to calibrate against instead of guessing.
 
-## Just Want to See It First?
+## What makes this different
 
-```
-/setup --demo
-```
+**The phantom.** A composite of the strongest candidate the hiring team could realistically hope to see for this role. Your prep sharpens against an actual yardstick, not a vibe.
 
-Same flow with a sample profile and real web research on a public company (Stripe, Notion). When you're ready for the real thing:
+**Canonical numbers lock.** Your metrics, once set, are frozen. The system blocks drift ("I think it was around 80M...") and blocks purged stories before either reaches an interview room.
 
-```
-/setup reset
-/setup
-```
+**Stage-aware prep.** Recruiter screens get a cheat sheet. HM screens get gap analysis, domain glossary, and a problem-first script. Loops get per-interviewer scripts and a pre-mortem. Never over- or under-prepped for the round you're in.
 
-## Your First 10 Minutes After /setup
+**Everything syncs.** Monday's debrief updates the story bank, the question bank, the rubrics, and the phantom. By Wednesday, when you prep for a different company, the system is already using Monday's lessons. You never re-learn the same thing.
 
-```
-/tmay <company>          Practice Tell Me About Yourself, framed for a target
-/eval <paste a JD>       Score a job description in 2 minutes
-/pm-practice <company>   Take a practice question with scored feedback
-```
+**Live debriefs from transcripts.** Optional Granola integration auto-pulls your interview transcript. `/debrief-live` ingests it, extracts what landed vs didn't, updates the story bank, and proposes a career takeaway. Five minutes, not an hour of notes.
 
-That's enough to feel how the system works. The other 23 commands compound on top: story refinement, mock interviews, live debriefs, pipeline tracking.
-
-## All 26 Commands
+## Full funnel coverage
 
 | Phase | Commands |
 |-------|----------|
@@ -57,20 +44,37 @@ That's enough to feel how the system works. The other 23 commands compound on to
 | **Track** | `/pipeline` |
 | **Workspace** | `/setup` `/save-push` |
 
-## Under the Hood
+26 commands. Top-of-funnel (Discover, Apply) covers what tools like [career-ops](https://github.com/santifer/career-ops) do at industrial scale. The depth advantage lives in Strategize / Craft / Practice / Debrief: the interview rounds themselves.
 
-- **`CLAUDE.md`** — Your brain file. Career thesis, canonical numbers, rules. Claude reads it every session.
-- **Skills** in `.claude/commands/` — 26 specialized workflows.
-- **State** in `interview_prep/*.json` — Story bank, pipeline, progress. Persists across sessions.
+## Start
+
+Requires Claude Code with a Pro, Team, or Enterprise plan.
+
+```
+cd pm-interview-prep
+claude
+```
+
+Inside Claude Code:
+
+```
+/setup
+```
+
+A 5-minute wizard reads your resume, extracts your stories and canonical numbers, and seeds your first target company. Or try `/setup --demo` with a synthetic profile to explore first.
 
 Prefer manual setup? See [SETUP.md](SETUP.md).
 
-## Optional Integrations
+## Under the hood
 
-- **Granola** — Auto-pull interview transcripts for `/debrief-live`
-- **Gamma** — Generate presentation decks
+Every skill is a markdown prompt in `.claude/commands/`. Read, edit, fork. State lives in `interview_prep/*.json` and persists across sessions. Nothing leaves your machine. Your git repo is the database.
 
-Both are optional. All core workflows work without them.
+## Optional integrations
+
+- **Granola** auto-pulls interview transcripts for `/debrief-live`. Without it, paste transcripts manually.
+- **Gamma** generates presentation decks for loop prep.
+
+Both optional. All core workflows work without them.
 
 ## License
 
