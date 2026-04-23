@@ -69,6 +69,7 @@ These rules govern how the system behaves. They apply regardless of your profile
 - **Canonical story index**: `interview_prep/story_bank.json` + `interview_prep/story_bank.md`
 - Before ending any conversation where story-related files were created or modified, offer: "Run `/story-bank sync`?"
 - After any `/debrief`, `/debrief-live`, `/drill-rapid`, or `/pm-practice` session, offer: "Update story bank with this session's data?"
+- When the user tells a story differently (new framing, new bridge), detect and offer to add as a new angle in `story_bank.json`.
 - `story_bank.md` is always auto-generated from JSON. Never hand-edit it.
 
 ### Timed Agents
@@ -102,6 +103,7 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 ### Working Style Preferences
 
 - Be direct. Don't over-explain.
+- Don't spawn research agents for things that can be reviewed inline. Do it directly.
 - When creating content, write it fully. Don't give summaries and ask "should I write it?"
 - Never invent story details. If you don't have the data, say so.
 - When dates/numbers are corrected, update ALL files, not just the one being discussed.
