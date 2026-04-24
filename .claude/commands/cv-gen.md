@@ -227,6 +227,7 @@ Reform real experience with JD vocabulary. Pattern:
 
 ## Key Rules
 
+- **Typography in generated resume content.** Default to NOT using em-dashes (—) or en-dashes (–). Prefer commas, parentheses, colons, or sentence splits. The litmus test: rewrite without the dash first; keep the dash only when the rewrite genuinely loses meaning, creates ambiguity, or weakens a strong appositive. Examples where the dash stays: role-headline scope labels where comma reads as an alternative title (`Senior PM — Platform Infrastructure`, NOT `Senior PM, Platform Infrastructure`), disambiguating commas that would chain confusingly. Examples where the dash goes: parenthetical asides, bullet flourishes, decorative emphasis. Always allowed: hyphenated compound words (cross-functional, AI-native, data-driven, end-to-end), date ranges in Experience (2021–2024 — en-dash standard). Never use a dash as a rhythmic device or to vary sentence shape.
 - **Canonical numbers from story_bank.json** — always exact, never rounded
 - **Education**: pull exactly from the user's master resume; never invent or swap degree types.
 - **Resume must be 1-2 pages max.** If it exceeds 2 pages, cut less relevant content.
