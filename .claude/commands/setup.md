@@ -147,36 +147,75 @@ Ask these questions (present smart defaults if resume was analyzed):
 
 ---
 
-#### Phase 4 — First Company Prep
+#### Phase 4 — First Fit Check
 
 Ask:
 ```
-Last question: What company are you most excited about right now?
+Last question: paste a JD for a role you're excited about — or name the company + role.
 
-I'll build a full prep package for them — research, cheat sheet, scoring rubric.
-You can watch it happen live. (Or say 'skip' to do this later.)
+I'll score how you fit, find the biggest gap, and give you the 90-second answer to deliver if it comes up. (Takes 2-3 quick clarifications. Or say 'skip' to do this later.)
 ```
 
-**If they name a company:**
-1. Add the company to `interview_prep/companies.json`
-2. Run the full `/company-prep` logic inline:
+This phase chains three skills inline. Only the third one's output is shown to the user. The first two run silently to build the inputs the third one needs.
+
+**If they paste a JD (the wow path):**
+
+1. Parse `{company}` and `{role}` from the JD. Sanitize `role_slug` per the Multi-Role File Keying convention.
+2. Add the company to `interview_prep/companies.json`. Save the JD to `sources/{company}/jd_{role_slug}.md`.
+3. **Step A (silent — no console output):** Run the full `/company-prep {company} {role}` logic inline:
    - WebSearch for company overview, products, competitors, recent news
    - Create `interview_prep/insights/{company}.md`
    - Create `interview_prep/scripts/{company}_cheat_sheet.md`
    - Create `interview_prep/rubrics/{company}.md`
-   - Generate TMAY tailored to this company
-   - Generate "Why {Company}?" script
-3. This is the live demo — the user watches real research happening in real-time
+   - Append entry to `interview_prep/scripts/why_company_role_scripts.md`
+4. **Step B (silent — no console output):** Run the full `/eval` logic on the JD inline:
+   - Produce `interview_prep/evaluations/{company}_{role_slug}_eval.json`
+   - This populates the JD requirement mapping that `/fit-check` consumes
+5. **Step C (display — this is the wow):** Run the full `/fit-check {company} {role}` logic inline. Display ONLY:
 
-**If they paste a JD instead of a company name:**
-- Extract company name from JD
-- Save JD to `sources/{company}/jd.md`
-- Run `/eval` logic on the JD (quick score)
-- Then run `/company-prep` logic
-- Show: "Score: X/5 — here's the full breakdown, plus I built your prep package."
+   ```
+   FIT CHECK — {Company} / {Role}
+   ───────────────────────────────
+
+   {VERDICT} — {avg_score}/5
+   (e.g. STRONG FIT — 4.2/5, or FIT WITH GAPS — 3.4/5)
+
+   Top gaps to address:
+     1. {dimension_name} — {severity}/5  ({1-line description})
+     2. {dimension_name} — {severity}/5  ({1-line description})
+
+   Gap-bridging answer for #1 (60-90 sec, ready to deliver):
+   ─────────────────────────────────────────────────────────
+   {full gap-bridging script from /fit-check output}
+
+   Built your full prep package too:
+     interview_prep/scripts/{company}_cheat_sheet.md
+     interview_prep/insights/{company}.md
+     interview_prep/rubrics/{company}.md
+     interview_prep/scripts/{company}_gap_bridging.md
+
+   Numbers will sharpen after Phase 5 seeds your story bank.
+   ```
+
+   This is the live demo — the user watches real research happen, then reads a personalized fit assessment that references their resume from Phase 2.
+
+**If they name a company without a JD:**
+
+1. Reprompt once: "Paste even one paragraph of the role description — I need it to score your fit. Or skip and I'll just build the research package."
+2. If they paste anything role-shaped, treat it as a JD and run the wow path above.
+3. If they decline, fall back to `/company-prep {company}` only (research-only path):
+   - Run Step A from above
+   - Skip Step B and Step C
+   - Note in the closing line: "I built the research package. Once you have a JD, run `/fit-check {company}` to get the personalized fit score and gap-bridging answer."
 
 **If they say "skip":**
 - That's fine. Move to Phase 5.
+
+**Notes for the assistant executing Phase 4:**
+
+- The Role Taxonomy Pass inside `/fit-check` Step 0 may ask the user 1–3 clarifying questions (Builder vs Owner, Craft vs Domain, Day-30 deliverable). This is expected; do not skip it.
+- `/fit-check` reads `story_bank.json` for canonical numbers, but Phase 5 has not seeded it yet at this point. Use resume-extracted numbers; the displayed footer notes that Phase 5 will sharpen them.
+- Suppress all intermediate console output from Steps A and B. The user sees exactly one block of output at the end (the FIT CHECK display).
 
 ---
 
@@ -247,7 +286,8 @@ PM interview preparation workspace for {full_name}.
 
 | Company | Stage | Next Step | Status |
 |---------|-------|-----------|--------|
-{if Phase 4 company exists: | **{Company}** | Research Complete | Run /interview-prep {company} recruiter | Cheat sheet ready. |}
+{if Phase 4 wow path completed: | **{Company}** | Fit Check Complete ({fit_score}/5) | Run /interview-prep {company} recruiter | Top gap: {top_gap}. Gap-bridging answer ready. |}
+{if Phase 4 company-only fallback: | **{Company}** | Research Complete | Run /fit-check {company} once JD is available | Cheat sheet ready; fit not yet scored. |}
 
 ### Career Thesis
 
@@ -451,14 +491,18 @@ Here's what I built for you:
   CLAUDE.md                         Your personalized brain file
   interview_prep/story_bank.json    {N} stories seeded from resume
   interview_prep/story_bank.md      Scannable story index
-  {if company prepped:}
+  {if Phase 4 company prepped:}
   interview_prep/scripts/{co}_cheat_sheet.md
   interview_prep/insights/{co}.md
   interview_prep/rubrics/{co}.md
+  {if Phase 4 wow path completed:}
+  interview_prep/evaluations/{co}_{role_slug}_eval.json
+  interview_prep/scripts/{co}_gap_bridging.md
+  sources/{co}/jd_{role_slug}.md
 
   WHAT YOU CAN DO NEXT
   ────────────────────
-  /eval <paste a JD>        Score a job description — should I apply?
+  /fit-check <company>      Score your fit for another role + get gap-bridging answers
   /company-prep <name>      Build full prep for another company
   /pm-practice <company>    Practice interview questions with scoring
   /tmay <company>           Practice your Tell Me About Yourself
@@ -468,8 +512,8 @@ Here's what I built for you:
   /story-bank import        Bulk-import stories you already have prepped
   /battle-plan              Plan your daily prep schedule
 
-  Tip: Start with /eval on a job you're excited about.
-       It takes 2 minutes and shows you how the system thinks.
+  Tip: Once you have your next JD, run /fit-check on it.
+       Same wow you just saw, for any role you're considering.
 ```
 
 Then ask: "Want me to save everything to git? (`/save-push`)"
@@ -487,7 +531,7 @@ When invoked with `/setup --demo`:
    - Career thesis: "I build developer tools that engineers actually use."
    - Key numbers: Clearly labeled as demo data
    - 3 pre-written STAR stories
-3. Run a real `/company-prep` on a well-known public company (e.g., Stripe or Notion) so the user sees actual research happening
+3. Run a real `/company-prep` on a well-known public company (e.g., Stripe or Notion) so the user sees actual research happening, then run `/fit-check` against a representative JD for that company (use a real public PM JD if findable, otherwise a hard-coded synthetic one in this file) so the user also sees the personalized fit score + gap-bridging answer wow
 4. Mark all created files with `<!-- DEMO DATA — run /setup reset then /setup to replace with your real profile -->` at the top
 5. At the end: "This was demo mode with sample data. When you're ready: `/setup reset` then `/setup` with your real resume."
 
@@ -575,7 +619,7 @@ When extracting from a resume:
 - **This skill is the FIRST IMPRESSION.** Make it smooth, fast, and impressive.
 - **Never ask more than 2 questions at a time.** Keep the conversation flowing.
 - **Show extracted data for confirmation, don't make users type everything.** The resume does the heavy lifting.
-- **Phase 4 (company prep) is the wow moment.** If the user gives a company, make this step shine with real research.
+- **Phase 4 (fit check) is the wow moment.** The personalized fit score + gap-bridging answer is the surprise — not the research package. If the user pastes a JD, run the full chain (company-prep silent → eval silent → fit-check displayed). Research alone is not the wow; tying the user's resume from Phase 2 to a tailored interview answer is.
 - **Every file written must be compatible with all 25 other skills.** Follow exact schemas.
 - **If anything fails, degrade gracefully.** Skip the phase, note what's missing, keep going.
 - **End with clear next steps.** Don't leave the user wondering what to do.
