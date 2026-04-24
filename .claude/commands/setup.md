@@ -147,7 +147,7 @@ Ask these questions (present smart defaults if resume was analyzed):
 
 ---
 
-#### Phase 4 — First Company (The Wow Moment)
+#### Phase 4 — First Company Prep
 
 Ask:
 ```
@@ -576,6 +576,6 @@ When extracting from a resume:
 - **Never ask more than 2 questions at a time.** Keep the conversation flowing.
 - **Show extracted data for confirmation, don't make users type everything.** The resume does the heavy lifting.
 - **Phase 4 (company prep) is the wow moment.** If the user gives a company, make this step shine with real research.
-- **Every file written must be compatible with all 24 other skills.** Follow exact schemas.
+- **Every file written must be compatible with all 25 other skills.** Follow exact schemas.
 - **If anything fails, degrade gracefully.** Skip the phase, note what's missing, keep going.
 - **End with clear next steps.** Don't leave the user wondering what to do.
