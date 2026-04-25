@@ -122,6 +122,7 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 - Poster visibility ≠ HM. When a role has a visible poster or talent contact, default framing is "poster, possibly HM, could be a Director on their team" until explicit evidence says otherwise. See `memory/feedback_outreach_hm_signals.md`.
 - When two similar-spelling names appear for the same company (e.g., Sam vs Saam), pause and disambiguate with ONE question before drafting anything named.
 - Product opinion = what they should DO (build, ship, change). Marketing critique = commenting on what their claims SAY (accuracy-percent claims, "industry-leading"). Never anchor outreach on the latter.
+- For high-stakes outreach (land an interview, bypass a closed funnel, warm a cold HM), pair the note with a built artifact: a clickable prototype, a one-page teardown, a short analysis. Words alone don't signal builder; the artifact does. The artifact choice is bespoke per opportunity, not formulaic. High-stakes outreach rewards a build matched to the role, not a templated drop.
 
 ### File Hygiene
 
