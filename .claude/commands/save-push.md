@@ -34,7 +34,7 @@ Analyze the staged changes and generate a concise commit message that:
 - Summarizes WHAT changed (not HOW)
 - Uses present tense ("update X", "add Y", "fix Z")
 - Is 1 line, under 72 characters
-- Ends with `Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>`
+- Ends with `Co-Authored-By: Claude <noreply@anthropic.com>`
 
 ### Step 4 — Commit and Push
 

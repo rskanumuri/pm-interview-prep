@@ -153,7 +153,7 @@ The skill builds CUMULATIVE prep — each stage includes everything from prior s
 ## Key Rules
 
 ### Always Do:
-- **Check Granola first** — query for ALL meetings with this company before building anything
+- **Check Granola first** — query for ALL meetings with this company before building anything. If Granola is unavailable or unauthenticated, note "Granola not connected — proceeding without prior-round intel" and continue prep; never let a missing connection block the build.
 - **Check what exists** — don't rebuild what's already there. Update, don't overwrite.
 - **Load the company rubric** — if it doesn't exist, create it
 - **Assess single vs double change** — company + domain change needs 3x the glossary and gap analysis work

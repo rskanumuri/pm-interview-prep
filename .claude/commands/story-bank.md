@@ -201,6 +201,7 @@ This is the KEY freshness mechanism. Run this proactively.
    - Scores not captured
 4. Read company cheat sheets — check for story maps not reflected in `company_angles`
 5. Report all diffs found
+   - **Canonical-number conflicts:** if a source file's number disagrees with `canonical_numbers` (in `story_bank.json` / CLAUDE.md), FLAG it for the user and ask which is correct. Never silently overwrite a canonical number from a narrative source — the canonical set is the locked source of truth.
 6. Offer to update JSON with each change
 7. After updates, regenerate `story_bank.md`
 

@@ -34,10 +34,10 @@ Sanitize the topic into a filename:
 
 Run this bash command BEFORE launching the agent:
 ```
-mkdir -p interview_prep/research && echo <seconds> > /tmp/claude_agent_next_timeout
+mkdir -p interview_prep/research && echo <seconds> > "${TMPDIR:-/tmp}/claude_agent_next_timeout"
 ```
 
-The SubagentStart hook will pick this up and apply it to the next agent spawned.
+The SubagentStart hook will pick this up and apply it to the next agent spawned. The hook reads from the same `${TMPDIR:-/tmp}` location, so the writer and reader stay aligned regardless of platform.
 
 ### 4. Launch Agent
 

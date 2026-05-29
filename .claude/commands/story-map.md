@@ -60,6 +60,8 @@ Create a Story Map table mapping the user's stories to the company's interview t
 
 7. **Display the Story Map:**
 
+> **Bridge** = the single sentence that connects a story's accomplishment to this company's specific problem (what they should DO, not a metric restatement). A strong bridge makes the story feel chosen for them, not reused.
+
 ## STORY MAP — {Company}
 
 | Theme / Likely Question | Primary Story | Backup Story |

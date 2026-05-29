@@ -111,7 +111,7 @@ Parse `$ARGUMENTS` to determine the command:
      - `{{PAGE_WIDTH}}` → "8.5in" (letter) or "210mm" (A4)
      - `{{FONT_FACE_IMPORTS}}` → if the chosen font is a Google/web font, inject `@import url('https://fonts.googleapis.com/css2?family=...')` or `@font-face` blocks. For system fonts (Calibri, Georgia, Arial), leave empty.
      - `{{FONT_STACK}}` → e.g. `"Calibri", "Helvetica Neue", Arial, sans-serif` (from prefs)
-     - `{{BODY_SIZE}}` → e.g. `10px`, `11px` (from prefs; this is the ONLY size placeholder — all headings scale via `em` in CSS)
+     - `{{BODY_SIZE}}` → e.g. `10pt`, `11pt` (from prefs; pt not px — see the print-unit rule above; this is the ONLY size placeholder, all headings scale via `em` in CSS)
      - `{{NAME}}` → from resume header
      - `{{CONTACT_ROW}}` → HTML for email / phone / LinkedIn / website / location, separated by `<span class="separator">&bull;</span>`
      - `{{SUMMARY_TEXT}}` → tailored summary
