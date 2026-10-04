@@ -42,9 +42,9 @@ A go/no-go verdict with reasons, not a gut call. From there, `/company-prep` bui
 | **Practice** | `/pm-practice` `/drill-rapid` |
 | **Debrief** | `/debrief` `/debrief-live` |
 | **Track** | `/pipeline` |
-| **Workspace** | `/setup` `/save-push` |
+| **Workspace** | `/setup` `/start-over` `/save-push` |
 
-26 commands. Top-of-funnel (Discover, Apply) covers what tools like [career-ops](https://github.com/santifer/career-ops) do at industrial scale. The depth advantage lives in Strategize / Craft / Practice / Debrief: the interview rounds themselves.
+27 commands. Top-of-funnel (Discover, Apply) covers what tools like [career-ops](https://github.com/santifer/career-ops) do at industrial scale. The depth advantage lives in Strategize / Craft / Practice / Debrief: the interview rounds themselves.
 
 ## Start
 

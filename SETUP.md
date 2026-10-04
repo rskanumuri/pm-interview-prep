@@ -90,4 +90,5 @@ Paste your transcript or notes. The system scores your performance, extracts les
 - Type `/pipeline` to see your full interview dashboard
 - Type `/battle-plan` to plan your daily prep
 - Type `/setup status` to check your configuration
+- Type `/start-over` to wipe all personal data and begin again (backs up first; `--dry-run` previews)
 - See `README.md` for the full command reference

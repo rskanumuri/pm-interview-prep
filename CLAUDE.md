@@ -15,7 +15,7 @@ PM interview preparation workspace. **Run `/setup` to get started. Takes 5 minut
 
 1. Type `/setup` in Claude Code
 2. Follow the wizard (paste your resume, answer a few questions)
-3. Start prepping with 26 slash commands
+3. Start prepping with 27 slash commands
 
 If you prefer manual setup, see `SETUP.md`.
 

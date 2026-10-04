@@ -33,7 +33,8 @@ Parse `$ARGUMENTS` to determine the command:
 ```
 This workspace is already configured for {name}.
 
-- /setup reset  — Start over (preserves resume and company research)
+- /setup reset  — Soft reset (preserves resume and company research)
+- /start-over   — Full wipe of all personal data (backs up first)
 - /setup status — Show current configuration
 - /setup --demo — Explore with sample data
 ```
@@ -44,7 +45,7 @@ Stop here.
 ```
 WELCOME TO PM INTERVIEW PREP
 
-This system has 26 AI-powered commands for every stage of your PM interview journey —
+This system has 27 AI-powered commands for every stage of your PM interview journey —
 from job discovery through post-interview debrief.
 
 Let's get you set up. This takes about 5 minutes.
@@ -622,6 +623,6 @@ When extracting from a resume:
 - **Never ask more than 2 questions at a time.** Keep the conversation flowing.
 - **Show extracted data for confirmation, don't make users type everything.** The resume does the heavy lifting.
 - **Phase 4 (fit check) is the wow moment.** The personalized fit score + gap-bridging answer is the surprise — not the research package. If the user pastes a JD, run the full chain (company-prep silent → eval silent → fit-check displayed). Research alone is not the wow; tying the user's resume from Phase 2 to a tailored interview answer is.
-- **Every file written must be compatible with all 25 other skills.** Follow exact schemas.
+- **Every file written must be compatible with all 26 other skills.** Follow exact schemas.
 - **If anything fails, degrade gracefully.** Skip the phase, note what's missing, keep going.
 - **End with clear next steps.** Don't leave the user wondering what to do.
