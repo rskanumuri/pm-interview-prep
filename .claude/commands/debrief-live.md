@@ -50,7 +50,7 @@ Read in parallel:
 
 From the pasted content, extract and score:
 
-| Dimension | Score /10 | Evidence |
+| Dimension (company rubric if one exists, else these six) | Score (1-5) | Evidence |
 |-----------|-----------|----------|
 | Domain Knowledge | X | {specific moment from transcript} |
 | Strategic Thinking | X | {evidence} |
@@ -60,7 +60,7 @@ From the pasted content, extract and score:
 | Story Quality | X | {STAR structure, attribution, depth} |
 | **Overall** | **X** | **{1-sentence verdict}** |
 
-Score on /10 scale.
+Score on the company rubric's 1-5 dimensions (`interview_prep/rubrics/{company}.md`); fall back to the master rubric (`interview_prep/rubric.md`) if none exists.
 
 **Step 4 — Extract Key Moments**
 
@@ -95,7 +95,7 @@ Create `interview_prep/answers/{company}_{interviewer}_debrief_{YYYY-MM-DD}.md`
 
 ## LIVE DEBRIEF — {Company} ({Interviewer})
 
-**Score:** {X}/10
+**Score:** {X}/5
 
 - **Landed:** {top moment}
 - **Missed:** {top miss}
@@ -105,7 +105,7 @@ Create `interview_prep/answers/{company}_{interviewer}_debrief_{YYYY-MM-DD}.md`
 
 ## Key Rules
 
-- Score on /10 scale (not /5)
+- Score on the company rubric (1-5); use the master rubric if none exists
 - Be honest — don't sugarcoat
 - Always compare to what was prepped (cheat sheet vs what actually happened)
 - Extract DIRECT QUOTES from transcript when available

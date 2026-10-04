@@ -369,7 +369,7 @@ Base: {base}+ | Total: {total}+{if visa: | Must sponsor H1B}
 - Always include year and context in openers (e.g., "In 2021, during X launch...").
 - Two-layer format: Layer 1 = 2-min opener, Layer 2 = deep follow-up details.
 - Show the prepped answer FIRST before practice. Read first, then deliver.
-- Score on /10 scale.
+- Score rapid practice (`/drill-rapid`, `/tmay`) on /10. Score debriefs and `/pm-practice` on the 1-5 rubric dimensions (see Scoring).
 - **Match the hero to the audience (multi-interviewer loops).** Same story, same facts, different emphasis per interviewer function. Engineering interviewer → their team is the hero (what goal, constraints, and product decisions you gave them; they built from there). Design interviewer → their process is the hero (how you respected their craft). HM → their priorities reflected back. If two versions of the same story sound identical across interviewer functions, the story is interviewer-blind and loses advocate votes in the debrief. Before a loop, rehearse one story rotated across each interviewer's function; if the rotations sound the same, fix it.
 
 ### Story Bank Sync
