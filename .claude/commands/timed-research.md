@@ -1,3 +1,7 @@
+---
+description: "Launch a time-boxed background research agent that writes findings incrementally. Usage is /timed-research topic [10m]."
+---
+
 # /timed-research — Time-Constrained Background Research
 
 Usage: `/timed-research <topic> [time]`
@@ -50,12 +54,9 @@ Use the Agent tool with these parameters:
 The agent prompt MUST include this preamble:
 
 ```
-CRITICAL INSTRUCTION — INCREMENTAL WRITES:
-You MUST write your output file to <output_path> immediately after your first
-round of research. Then keep enriching it with additional findings. Prioritize
-having a COMPLETE file over having a PERFECT file. Every time you learn something
-new, UPDATE the file. If you are stopped at any point, the file must contain
-your best work so far.
+Write your output file to <output_path> right after your first round of research,
+then keep enriching it as you learn more. You can be stopped at any point, and the
+file must always hold your best work so far, so a complete file beats a perfect one.
 
 Your time budget: <time>. Work efficiently.
 

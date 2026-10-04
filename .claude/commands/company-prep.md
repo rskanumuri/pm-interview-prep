@@ -1,3 +1,7 @@
+---
+description: "Scaffold all prep artifacts for a new company or role, including cheat sheet, insights, rubric, why script, and registry entry."
+---
+
 # Company Prep Scaffolder
 
 Full-service company prep automation. One command generates all interview artifacts for a new company.
@@ -85,7 +89,7 @@ Generate all interview prep artifacts for a new company. If the company already 
    - Follow exact format: Why {Company}? (30 sec), Why This Role? (15 sec), Three Beats, Rules
    - Number as next entry
 
-9. **Update CLAUDE.md** — append `### {Company}-Specific Context` section under Active Sprint, following existing company section patterns (role, team, key details, bridge strategy, honest gaps)
+9. **Update CLAUDE.md** — add or update this company's row in the Active Pipeline section (company, role, stage, files). Keep company detail (team, bridge strategy, honest gaps) in the company's own files, not in CLAUDE.md.
 
 10. **Update progress.json** — add company_readiness entry:
    ```json
@@ -104,7 +108,7 @@ Generate all interview prep artifacts for a new company. If the company already 
 
 Refresh prep with new intel (e.g., after recruiter call).
 
-1. Read existing artifacts (cheat sheet, insights, rubric, CLAUDE.md section)
+1. Read existing artifacts (cheat sheet, insights, rubric, CLAUDE.md pipeline row)
 2. Ask user what new intel they have (recruiter notes, role changes, interview details, company news)
 3. Update all relevant files with new information
 4. Regenerate session_data.json
@@ -112,7 +116,7 @@ Refresh prep with new intel (e.g., after recruiter call).
 
 ### `<company> status` — Prep Completeness Check
 
-Show what prep artifacts exist vs what's missing. Check: cheat sheet, insights, rubric, registry entry, why script, CLAUDE.md section, progress entry, debrief files. For existing files check content completeness (TMAY, Story Map, Q&A, dimensions, etc). Display matrix with checkmarks and recommendations.
+Show what prep artifacts exist vs what's missing. Check: cheat sheet, insights, rubric, registry entry, why script, CLAUDE.md pipeline row, progress entry, debrief files. For existing files check content completeness (TMAY, Story Map, Q&A, dimensions, etc). Display matrix with checkmarks and recommendations.
 
 ### `list` — All Companies Prep Matrix
 

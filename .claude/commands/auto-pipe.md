@@ -1,3 +1,7 @@
+---
+description: "Paste a JD URL or text to evaluate it, tailor a CV, and register it in the pipeline in one pass."
+---
+
 # Auto-Pipe — One-Shot JD Processing Pipeline
 
 Paste a JD URL or text and get everything in one shot: evaluation, tailored CV, pipeline entry, and next steps. This is the "paste and go" workflow for PM interview prep.

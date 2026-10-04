@@ -1,3 +1,7 @@
+---
+description: "Wipe all personal data for a from-scratch restart, with a dry-run listing, a typed RESET, and a verified backup zip first."
+---
+
 # Start Over — Full Workspace Wipe
 
 Returns the workspace to a clean, never-configured state so you can start from scratch (new job search, new career chapter, or handing the repo to someone else). Deletes ALL personal data. System files (skills, hooks, tools, templates, master rubric) are never touched.

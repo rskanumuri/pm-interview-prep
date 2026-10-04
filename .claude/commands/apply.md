@@ -1,3 +1,7 @@
+---
+description: "Generate application-form answers and cover letters from the eval, resume, and story bank."
+---
+
 # Apply — Application Form Answer Generator
 
 Generate answers for job application forms using evaluation context, resume, and story bank. Reads the form questions and produces copy-paste-ready responses tailored to the specific role.

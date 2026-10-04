@@ -1,3 +1,7 @@
+---
+description: "Stage, commit, and push all changes to the git remote. Use for save everything."
+---
+
 # Save & Push to Git Remote
 
 One-command workflow that stages, commits, and pushes all changes to git remote. Eliminates the need to say "save everything to git remote" repeatedly.

@@ -1,3 +1,7 @@
+---
+description: "Launch deep company, pricing, product, or market research and save the brief to insights."
+---
+
 # Research — Deep Company & Market Research Agent
 
 Launches background research for company deep-dives, competitive analysis, market sizing, and product teardowns. Runs asynchronously so the user can keep prepping while research completes.

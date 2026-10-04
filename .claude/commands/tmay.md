@@ -1,3 +1,7 @@
+---
+description: "Practice loop for the Tell Me About Yourself answer that shows it, rates it, fixes it, and updates the cheat sheet."
+---
+
 # TMAY — Tell Me About Yourself Practice Loop
 
 Focused TMAY iteration for any company. Show current version, accept the user's verbal attempt, rate it, suggest fixes, update the file.

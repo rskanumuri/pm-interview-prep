@@ -1,3 +1,7 @@
+---
+description: "Generate a tailored ATS-optimized resume (HTML and PDF) for a company or role from the master resume and eval."
+---
+
 # CV Gen — ATS-Optimized Resume Generator
 
 Generate tailored, ATS-optimized resume PDFs per company/role. Reads the user's master resume, injects keywords from JD evaluations, reorders experience by relevance, and renders via Playwright.
@@ -231,7 +235,7 @@ Reform real experience with JD vocabulary. Pattern:
 - **Canonical numbers from story_bank.json** — always exact, never rounded
 - **Education**: pull exactly from the user's master resume; never invent or swap degree types.
 - **Resume must be 1-2 pages max.** If it exceeds 2 pages, cut less relevant content.
-- **Design**: Space Grotesk headings, DM Sans body. Cyan section headers, purple company names. Clean, professional.
+- **Design**: fonts come from `resume_prefs.json` (Step 0). Cyan section headers, purple company names. Clean, professional.
 - **Letter format default** (US market). Use A4 only if targeting non-US roles.
 
 ## Integration with Other Skills

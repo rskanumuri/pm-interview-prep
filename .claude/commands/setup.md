@@ -1,3 +1,7 @@
+---
+description: "First-time setup wizard that interviews the user and builds their personal prep workspace and CLAUDE.md."
+---
+
 # Setup — First-Time Setup Wizard
 
 One-command onboarding for new users. Gets you from fresh clone to fully configured in ~5 minutes — no manual file editing required.

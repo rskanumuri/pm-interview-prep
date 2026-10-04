@@ -1,3 +1,7 @@
+---
+description: "Audit story files against the canonical numbers and purged-story list. Use for check numbers."
+---
+
 # Story Consistency Checker
 
 Audits all story files for number conflicts, date mismatches, reuse collisions, and factual drift. Maintains a canonical truth registry and flags when any file diverges.

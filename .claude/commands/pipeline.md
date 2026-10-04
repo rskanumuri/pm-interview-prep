@@ -1,10 +1,14 @@
+---
+description: "Pipeline dashboard and status updates across companies. Use for show pipeline or interview dashboard."
+---
+
 # Pipeline Dashboard & Schedule Manager
 
-Single source of truth for "where do I stand across all companies?" Reads CLAUDE.md schedule tables and progress.json to synthesize pipeline status.
+Single source of truth for "where do I stand across all companies?" Reads CLAUDE.md's Active Pipeline section (stage, status) and progress.json (`interview_dates`, readiness) to synthesize pipeline status.
 
 ## Data Files
 
-- CLAUDE.md: `CLAUDE.md` (project root) — schedule tables, company context sections
+- CLAUDE.md: `CLAUDE.md` (project root) — Active Pipeline section (stage, status, files)
 - Progress: `interview_prep/progress.json` — company_readiness, scores, sessions
 - Companies Registry: `interview_prep/companies.json`
 - Applications: `interview_prep/applications.json` — top-of-funnel pipeline (if exists)
@@ -48,7 +52,7 @@ Read CLAUDE.md and progress.json, then display:
 
 ## Key Rules
 
-- **CLAUDE.md is the source of truth** for interview schedules and company context
+- **progress.json is the source of truth** for interview dates; CLAUDE.md's Active Pipeline section holds stage and status
 - **progress.json is the source of truth** for readiness percentages and scores
 - **applications.json is the source of truth** for top-of-funnel — only read if the file exists
 - **Always update both CLAUDE.md and progress.json** when making changes

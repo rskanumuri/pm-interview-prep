@@ -1,3 +1,7 @@
+---
+description: "Interactive post-interview debrief that saves a structured file and updates progress and lessons."
+---
+
 # Post-Interview Debrief
 
 Interactive guided debrief after each interview. Claude asks structured questions, the user answers conversationally, Claude formats everything into a structured debrief document.

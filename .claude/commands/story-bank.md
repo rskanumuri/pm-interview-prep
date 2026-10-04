@@ -1,3 +1,7 @@
+---
+description: "Manage the canonical story bank with index, add, sync, angles, performance, and round allocation."
+---
+
 # Story Bank — Central Story Management
 
 Manages the user's canonical story bank. The story bank is the single source of truth for story metadata, angles, performance data, and company mappings.

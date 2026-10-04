@@ -1,3 +1,7 @@
+---
+description: "Read-only pre-interview briefing with TMAY, stories, numbers, gaps, and questions. Use for am I ready."
+---
+
 # Pre-Interview Readiness Briefing
 
 Zero-write, read-only skill. Synthesizes all prep artifacts into a focused pre-interview briefing. Run this 30-60 minutes before an interview.
@@ -12,7 +16,7 @@ Zero-write, read-only skill. Synthesizes all prep artifacts into a focused pre-i
 - Company Rubric: `interview_prep/rubrics/{company}.md`
 - Why Scripts: `interview_prep/scripts/why_company_role_scripts.md`
 - Debriefs: `interview_prep/answers/{company}_*_debrief_*.md` (lessons from prior rounds)
-- CLAUDE.md: `CLAUDE.md` (company context, interview schedule, pre-interview rules, canonical numbers)
+- CLAUDE.md: `CLAUDE.md` (pipeline stage and status, pre-interview rules, canonical numbers; interview dates are in progress.json)
 - Personal Docs: `sources/{active_user}/` (performance kit, proof points)
 
 ## Multi-Role File Keying

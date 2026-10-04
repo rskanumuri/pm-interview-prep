@@ -1,3 +1,7 @@
+---
+description: "Pressure-test interview stories for attribution, numbers, opener, probe resilience, and senior-level signal."
+---
+
 # Steelman — Pressure Test Stories
 
 Rigorously pressure-test interview stories against specific criteria. Finds weak links, rates survivability under 20-minute grilling, and suggests fixes.

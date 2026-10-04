@@ -1,6 +1,10 @@
+---
+description: "Build stage-aware prep (recruiter, hm, loop, final) with gap analysis, glossary, interviewer profiles, and answer scripts."
+---
+
 # Interview Prep — Stage-Aware Prep Builder
 
-On-demand interview preparation that scales with the interview stage. Checks Granola transcripts for prior round intel, builds what's missing, and ensures every interview has the right level of prep.
+On-demand interview preparation that scales with the interview stage. Checks saved transcripts (then Granola) for prior round intel, builds what's missing, and ensures every interview has the right level of prep.
 
 ## Active User
 
@@ -43,9 +47,10 @@ The skill builds CUMULATIVE prep — each stage includes everything from prior s
 3. **Why Company** — 3 specific beats (not generic "AI-first, collaborative, customer-first")
 4. **Extraction goals** — what to learn from this call (HM identity, team size, process, visa, comp, timeline)
 5. **Recruiter Q&A** — 5 likely questions with scripted answers
+6. **Phantom V1 (offer)** — offer `/phantom <company> [role]` (V1 from JD + company research); skip if a phantom already exists
 
 ### Granola Check:
-- Query Granola for any prior meetings with this company
+- Check `sources/<company>/` for saved transcripts first; query Granola only for meetings not saved locally (save new pulls there)
 - If found: extract intel and incorporate into prep
 
 ### Output:
@@ -153,7 +158,7 @@ The skill builds CUMULATIVE prep — each stage includes everything from prior s
 ## Key Rules
 
 ### Always Do:
-- **Check Granola first** — query for ALL meetings with this company before building anything. If Granola is unavailable or unauthenticated, note "Granola not connected — proceeding without prior-round intel" and continue prep; never let a missing connection block the build.
+- **Check saved transcripts first, then Granola.** Look in `sources/<company>/` for saved transcripts; query Granola only for meetings not saved locally, and save new pulls there. If Granola is unavailable or unauthenticated, note "Granola not connected — proceeding without prior-round intel" and continue prep; never let a missing connection block the build.
 - **Check what exists** — don't rebuild what's already there. Update, don't overwrite.
 - **Load the company rubric** — if it doesn't exist, create it
 - **Assess single vs double change** — company + domain change needs 3x the glossary and gap analysis work
@@ -161,7 +166,7 @@ The skill builds CUMULATIVE prep — each stage includes everything from prior s
 
 ### Never Do:
 - **Never use generic dimensions** when a company rubric exists
-- **Never build prep without checking Granola** for prior round transcripts
+- **Never build prep without checking saved transcripts** (and Granola for anything not saved) for prior rounds
 - **Never skip the gap analysis for HM screens** — it's mandatory
 - **Never fake domain expertise** — use AI to DO domain work, not pretend you have experience you don't
 

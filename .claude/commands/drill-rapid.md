@@ -1,3 +1,7 @@
+---
+description: "Quick Q&A drill that pulls a question, shows the prepped answer, rates delivery, and saves progress."
+---
+
 # Drill Rapid — Quick Q&A Without Full Mock
 
 Lightweight practice: pull a question, show the prepped answer first, accept the user's attempt, rate, save. Faster than `/pm-practice` — no full mock simulation, no 18-minute grilling.
@@ -72,7 +76,7 @@ After the user delivers, provide quick scoring:
 
 **Delta from prep:** {what the user changed vs the prepped answer -- good or bad}
 
-Keep feedback to 5 lines max. This is rapid drill, not deep analysis.
+Feedback is a quick read between reps: lead with the score, then only the points that would change the next delivery.
 
 **Step 4 — Quick Save**
 
@@ -108,7 +112,7 @@ Drill questions mapped to a specific LP (e.g., `/drill-rapid amazon lp customer-
 ## Key Rules
 
 - **Show answer first, ALWAYS** — the user learns by reading then delivering. Never quiz cold without showing prep.
-- **Keep feedback SHORT** — this is rapid drill, not deep coaching. Max 5 lines of feedback.
+- **Keep feedback short.** Rapid drill, not deep coaching.
 - **Score on /10**
 - **Don't repeat questions** already drilled in this session
 - **Track progress** — update progress.json with drilled questions and scores

@@ -1,3 +1,7 @@
+---
+description: "Score a JD against the target archetypes with a 6-block A-F evaluation to decide whether to apply. Use for evaluate role or check this JD."
+---
+
 # Eval — JD Evaluation & Role Scoring
 
 Evaluate a job description against your experience using a 6-block A-F scoring framework. Answers "should I apply?" before committing prep time. This is top-of-funnel triage — complementary to `/fit-check` (which is deeper, interview-prep-oriented).

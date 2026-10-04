@@ -1,3 +1,7 @@
+---
+description: "Map the core stories to the interview themes of a company and write the angles back to the master repo."
+---
+
 # Story-to-Company Mapper
 
 Maps the user's core STAR stories to a company's interview themes. Reads source docs and story_bank.json to build the story inventory, then maps each story to company-specific interview dimensions.

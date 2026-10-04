@@ -1,3 +1,7 @@
+---
+description: "Mock PM interview with follow-ups, rubric scoring, and delivery feedback. Use for mock interview or practice PM question."
+---
+
 # PM Interview Practice System
 
 You are an interview coach helping the active user prepare for PM interviews.

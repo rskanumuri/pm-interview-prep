@@ -1,3 +1,7 @@
+---
+description: "Role fit scorecard and gap-bridging scripts for a company. Use for fit for role."
+---
+
 # Fit Check — Role Fit Assessment & Gap-Bridging
 
 Unified fit assessment tool. Answers "should I pursue this?" and "how do I bridge my gaps?" for any company. Reads existing artifacts, synthesizes a structured fit scorecard, and generates gap-bridging scripts.
@@ -305,7 +309,7 @@ Compare fit scores across all active pipeline companies. Read-only — no writes
 **Steps:**
 
 1. **Read progress.json** for all companies with `company_readiness` entries
-2. **Read CLAUDE.md** for pipeline status (Active, Awaiting, Closed)
+2. **Read CLAUDE.md** for pipeline status (Active Pipeline section)
 3. **For each active company**, check for `fit_score` in progress.json
    - If exists, use it
    - If not, read insights file for ad-hoc fit rating and convert to 1-5 scale

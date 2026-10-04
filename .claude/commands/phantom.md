@@ -1,3 +1,7 @@
+---
+description: "Generate the competing candidate for a role from company and market data only, then compare with the gap subcommand."
+---
+
 # /phantom — The Invisible Competitor You're Up Against
 
 Generates the candidate who gets the job if you don't. Built purely from company, team, role, and market data — zero influence from your resume or background.

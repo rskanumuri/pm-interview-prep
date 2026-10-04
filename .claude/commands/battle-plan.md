@@ -1,3 +1,7 @@
+---
+description: "Build and track the daily prep plan from interview dates and prep gaps. Use for plan today or what is left."
+---
+
 # Battle Plan — Daily Prep Planning & Tracking
 
 Auto-generates daily prep plan based on interview dates and prep gaps. Tracks time spent, shows completion percentage, rebalances when schedule changes.
@@ -6,7 +10,7 @@ Auto-generates daily prep plan based on interview dates and prep gaps. Tracks ti
 
 - Battle Plan: `interview_prep/battle_plan.md`
 - Progress: `interview_prep/progress.json`
-- CLAUDE.md: `CLAUDE.md` (interview schedule, company context)
+- CLAUDE.md: `CLAUDE.md` (pipeline stage and status; interview dates are in progress.json)
 - Applications (if exists): `interview_prep/applications.json` — for top-of-funnel tasks
 - All cheat sheets: `interview_prep/scripts/{company}_cheat_sheet.md`
 - All answer files: `interview_prep/answers/{company}_*.md`

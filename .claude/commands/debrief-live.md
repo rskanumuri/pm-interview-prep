@@ -1,3 +1,7 @@
+---
+description: "Single-shot debrief from a pasted interview transcript or notes, with scores, key moments, and a saved file."
+---
+
 # Debrief Live — Instant Transcript Debrief
 
 Paste a transcript or conversation notes → get instant performance rating, structured debrief, and saved file. Unlike `/debrief` (interactive Q&A), this is a single-shot: paste content, get analysis.
@@ -85,7 +89,7 @@ Create `interview_prep/answers/{company}_{interviewer}_debrief_{YYYY-MM-DD}.md`
 **Step 6 — Update State**
 
 1. Update progress.json with round data
-2. Update CLAUDE.md interview schedule status
+2. Update the stage in this company's row in CLAUDE.md's Active Pipeline section
 
 **Step 7 — Report**
 

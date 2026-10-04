@@ -1,3 +1,7 @@
+---
+description: "Scan portal career pages for new PM roles matching the title and location filters and add them to the pipeline."
+---
+
 # Scan — Portal Scanner for PM Roles
 
 Scan company career pages and job boards for PM roles matching your target archetypes. Uses WebFetch to pull career pages, title-filters results, deduplicates against existing applications, and adds new discoveries to the pipeline.

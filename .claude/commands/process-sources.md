@@ -1,3 +1,7 @@
+---
+description: "Classify and extract insights from files in sources/ into insights, rubrics, and questions."
+---
+
 # Process Source Materials
 
 Scan source folders and extract insights into the insights files.
