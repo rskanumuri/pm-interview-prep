@@ -6,6 +6,8 @@ description: "Interactive post-interview debrief that saves a structured file an
 
 Interactive guided debrief after each interview. Claude asks structured questions, the user answers conversationally, Claude formats everything into a structured debrief document.
 
+**Read `interview_prep/reference/debrief_core.md` first.** It is the shared rulebook for transcripts, scoring, story-bank write-back, state writes, and career-learning hooks. Where it conflicts with this file, it wins.
+
 ## Active User
 
 Check `progress.json` for the `active_user` field. Load personal info from `sources/{active_user}/`.
@@ -17,7 +19,6 @@ Check `progress.json` for the `active_user` field. Load personal info from `sour
 - CLAUDE.md: `CLAUDE.md` (project root)
 - Companies Registry: `interview_prep/companies.json`
 - Cheat Sheet: `interview_prep/scripts/{company}_cheat_sheet.md` (for pre-interview prep comparison)
-- Session Data: `interview_prep/session_data.json`
 
 ## Multi-Role File Keying
 
@@ -30,6 +31,8 @@ Parse `$ARGUMENTS` to determine the command:
 ### `<company> [interviewer]` — Start Interactive Debrief
 
 Run an interactive guided debrief session. Ask questions one at a time, wait for answers, then compile.
+
+**Step 0 — Transcript (core §0):** check `sources/<company>/` for a saved transcript of this interview before asking anything. If none and a Granola meeting exists, pull it and save it verbatim. If there is no transcript at all, say so in the debrief header.
 
 **Step 1 — Gather Context (ask these one at a time, conversationally):**
 
@@ -75,11 +78,11 @@ Add a "Story Angles Used" section to the debrief output:
 |-------|--------------|---------|-------|
 | {story name} | {frame used} | Yes/Partial/No | {what worked or what to adjust} |
 
-After saving the debrief, offer: "Update master_story_repository.md with these angles?"
+After saving the debrief, write the angles to `story_bank.json` per core §2 (canonical). Offer the mirror edit to `master_story_repository.md`; never reset a prior `tested`/`score`.
 
 **Step 3 — Generate debrief document:**
 
-Create `interview_prep/answers/{company}_{interviewer}_debrief_{date}.md` following this structure:
+Create `interview_prep/answers/{company_key}_{interviewer}_debrief_{date}.md` following this structure:
 
 **File header:**
 - `# {Company} — {Interviewer Name} Debrief`
@@ -87,15 +90,11 @@ Create `interview_prep/answers/{company}_{interviewer}_debrief_{date}.md` follow
 - **Round:** {X of Y}
 - **Duration:** ~{duration} ({used full time? or ended early?})
 - **Format:** {format description}
-- **Overall Score:** {self-score} / 5.0
+- **Overall Score:** {rubric-strict}/5.0 | Self-score: {self-score}/5.0 (see core §1)
+- **Transcript:** {saved path, or "none; the user's recollection only"}
 - **Outcome:** {next steps or "Awaiting"}
 
-**Score Breakdown** — table with columns: Dimension, Score, Notes
-- Domain knowledge | X.0 | {brief assessment}
-- Strategic thinking | X.0 | {brief assessment}
-- Quantitative rigor | X.0 | {brief assessment based on whether numbers landed}
-- Communication precision | X.0 | {based on redirects, clarity}
-- Conviction/presence | X.0 | {energy, confidence, closing}
+**Score Breakdown** — table with columns: Dimension, Weight, Score, Evidence. Rows come from the company rubric (core §1), including unattempted rows scored as such. List penalties applied. Use the generic five-dimension set only as a labeled last-resort fallback.
 
 **Questions Asked** — numbered list with brief note on how each went
 
@@ -113,7 +112,7 @@ Create `interview_prep/answers/{company}_{interviewer}_debrief_{date}.md` follow
 
 **Step 4 — Update progress.json:**
 
-Update the company_readiness entry:
+Show the diff first (core §3), then update the company_readiness entry (this company's keys only):
 - Update `status` field with round result and next steps
 - Update `percent` if appropriate
 - Add round-specific fields (score, format, topics, strengths, gaps)
@@ -122,43 +121,26 @@ Update the company_readiness entry:
 
 **Step 5 — Update CLAUDE.md**
 
-**Step 6 — Report**
+Show the diff, then update only the Stage cell in this company's CLAUDE.md pipeline-table row (e.g., "Round 1 DONE, 3.4/5 rubric-strict, awaiting next steps"). If the company is no longer in the pipeline table (closed), skip this step.
 
-**Step 6.5 — Career Learning Hooks:**
+**Step 6 — Report:**
 
-After the report, automatically do TWO things:
+## DEBRIEF COMPLETE
 
-1. **Interview lessons update (always):**
-   Read `interview_prep/interview_lessons.md`. Compare this debrief's "what didn't land" and low-scoring dimensions against the "Still Learning" list. Then PROPOSE specific updates:
-   - If a "still learning" pattern appeared in this debrief → update its evidence line. Show: "**{pattern}** still appearing — {evidence from this round}. Keeping in 'still learning.'"
-   - If a "still learning" pattern did NOT appear → propose moving to "learned": "**{pattern}** — didn't appear this round (or last 3 rounds). Move to 'learned'?"
-   - If a NEW pattern appeared that isn't tracked → propose adding it: "**New pattern: {X}** — appeared this round. Add to 'still learning'?"
-   Show the proposed changes as a summary. Write them after user confirms.
+**{Company} — {Interviewer}** | {Date} | Score: **{X}/5**
 
-2. **Career takeaway extraction (on low scores or rejection):**
-   If the weighted score is ≤ 3.0 OR the round resulted in rejection, read the debrief's "what didn't land" and "key lessons" sections, cross-reference with `interview_prep/career_takeaways.md`, and PROPOSE a specific takeaway:
-   ```
-   "Career takeaway from this round: **{pattern name}** — {the insight}. Add to career_takeaways.md?"
-   ```
-   Extract the insight from the debrief data — don't ask the user to generate it. User reviews and approves.
+- **Saved:** `interview_prep/answers/{company}_{interviewer}_debrief_{date}.md`
+- **Updated:** progress.json, CLAUDE.md, story_bank.json (after confirmation)
+- **Transcript saved:** {path}
 
-3. **Question bank update (always):**
-   Read `interview_prep/question_bank.md`. For each question in this debrief's "Questions Asked" section:
-   - If the question already exists in question_bank.md → add this company/round as another ask, append any new follow-ups as part of the same question unit
-   - If the question is new → add it to the appropriate category with its follow-ups as a single unit
-   - After updating question_bank.md, auto-regenerate `interview_prep/question_bank_clean.md` by stripping personal data:
-     - Company names → industry descriptors (e.g., "[Enterprise Data Protection]")
-     - Interviewer names → role descriptors (e.g., "[HM]", "[VP]", "[Recruiter]")
-     - Score ranges → remove
-     - Personal notes → remove
-   - Show: "Added {N} new questions, updated {N} existing. Question bank: {total} unique questions."
+**Key lessons captured:**
+1. {lesson 1}
+2. {lesson 2}
+3. {lesson 3}
 
-4. **Phantom update (if phantom exists for this company):**
-   Check if `interview_prep/scripts/{company}_phantom.md` exists. If yes, offer:
-   ```
-   "Sharpen the phantom with intel from this round?"
-   ```
-   If yes: read the debrief's "New Intel" section. Update the phantom with what the interviewer revealed — priorities, team challenges, what they're screening for, what other candidates had. Increment the version number. Show: "Phantom V{N} → V{N+1}: added {detail} from {interviewer} intel."
+**Next:** {confirmed next steps or "Awaiting response"}
+
+**Step 6.5 — Career Learning Hooks:** run the four hooks in core §4 (lessons, takeaway, question bank, phantom). Propose, show, write after the user confirms. Then offer `/save-push`.
 
 ### `list` — Show All Debriefs
 
@@ -197,6 +179,7 @@ Compile lessons from all debriefs for a company into one view.
 - **Conversational tone** — this is a debrief, not an interrogation
 - **Honest assessment** — don't sugarcoat, but be constructive
 - **Compare to prep** — always check what was prepped vs what happened
-- **Update all state** — progress.json, CLAUDE.md, session_data.json must stay in sync
+- **Update state with a diff and a yes** — progress.json and the CLAUDE.md Stage cell; `session_data.json` is a stale cache, leave it alone
+- **Never edit an existing transcript or debrief**
 - **Date format**: YYYY-MM-DD in filenames, human-readable in content
-- **Filename format**: `{company}_{interviewer_firstname}_debrief_{YYYY-MM-DD}.md` (lowercase, underscores)
+- **Filename format**: core §5 (`{company_key}_{interviewer_firstname}_debrief_{YYYY-MM-DD}.md`, never overwrite)

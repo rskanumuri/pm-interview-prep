@@ -1,146 +1,106 @@
 ---
-description: "Audit story files against the canonical numbers and purged-story list. Use for check numbers."
+description: "Audit story files against the canonical numbers, provenance rulings, and purged-story list. Use for check numbers."
 ---
 
 # Story Consistency Checker
 
-Audits all story files for number conflicts, date mismatches, reuse collisions, and factual drift. Maintains a canonical truth registry and flags when any file diverges.
+Audits forward-looking story files for number conflicts, provenance violations, date and duration arithmetic errors, and factual drift. It does not keep its own copy of the numbers (that was the fourth copy and it drifted).
 
-## Data Files
+## Source of truth (read these, do not restate them here)
 
-- **Story Bank JSON**: `interview_prep/story_bank.json` (canonical index — check `key_numbers` per story, `canonical_numbers` registry, `purged_stories` list)
-- Master Story Repository: `interview_prep/scripts/master_story_repository.md`
-- Company Interview Scripts: `interview_prep/scripts/{company}_interview_questions.md`
-- Company Cheat Sheets: `interview_prep/scripts/{company}_cheat_sheet.md`
-- Why Scripts: `interview_prep/scripts/why_company_role_scripts.md`
-- Favorite Product: `interview_prep/scripts/favorite_product.md`
-- Source Materials: `sources/{active_user}/`
-- Answer Files: `interview_prep/answers/*.md`
-- CLAUDE.md: `CLAUDE.md` (canonical numbers)
-- Progress: `interview_prep/progress.json`
+- `interview_prep/story_bank.json` → `canonical_numbers` (the values), `canonical_provenance` (what each value MEANS and how it may be said), `purged_stories`
+- `CLAUDE.md` → "Story Integrity — Canonical Numbers" and the "Provenance rulings" block
+- If the three disagree, flag it and ask the user. Do not pick one.
+- A new ruling gets added to `story_bank.json` (`canonical_numbers` or `canonical_provenance`) and CLAUDE.md, never to this file.
 
-## Canonical Truth Registry
+## Scope
 
-**READ canonical numbers, purged stories, date registry, and product distinctions from `interview_prep/story_bank.json`.**
+**Checked and fixable (forward-looking):** `interview_prep/scripts/` for companies not closed (`why_company_role_scripts.md`, `master_story_repository.md`, `startup_stories_db.md`, `favorite_product.md`, cheat sheets for open roles), `sources/{active_user}/` prep docs, `story_bank.json`.
 
-The story bank's `canonical_numbers` object is GROUND TRUTH. Any file that deviates from these is WRONG and must be flagged.
+**Checked and reported only, NEVER modified (historical record):**
+- Anything in `interview_prep/answers/*` (debriefs)
+- Any `*transcript*` file in `sources/`
+- Any file under `sources/<company>/` for a company in `interview_prep/reference/closed_pipeline.md`
+- `interview_lessons.md`, `career_takeaways.md`, `question_bank*.md`
+Old values in those files were true when written. Report them under "Historical drift (not fixed)" so the user knows, and stop.
 
-At minimum, the story bank should contain:
-- **Products**: distinct products that must never be conflated (e.g., separate user counts, metrics, timelines)
-- **Key Numbers**: canonical values for all metrics used in stories (ARR, conversion rates, timelines, etc.)
-- **Purged Stories**: stories that must NEVER appear in any file
-- **Date Registry**: correct year/timeline for each story or event
+## Method: grep first, then read
 
-If `story_bank.json` does not contain a `canonical_numbers` section, warn the user and offer to build one from CLAUDE.md.
+Do NOT read every file. For each check below, run Grep across the scope, then read only the matching lines with 3 lines of context. A full read of a file happens only when a story name needs surrounding context. (The old "read everything" approach cost roughly 1 MB of tokens per run.)
+
+## Checks
+
+### 1. Number mismatch
+Each `canonical_numbers` value against variants in the files (a retired or older figure, a wrong tenure, a wrong education claim, the same baseline stated per-query in one file and per-opportunity in another).
+
+### 2. Provenance violation (the numbers are right but said wrong)
+Flag any line that breaks a `canonical_provenance` ruling. Typical classes:
+- An audience or reach figure described as current users ("built for N", not "serves N")
+- A percentage without its denominator, or a rate described as a different metric than it is
+- A result stated without the base it was measured on (for example a conversion rate with no pilot count)
+- A baseline without its unit ("per question", "per opportunity")
+- A counterfactual ("would have taken 9 months") told as an outcome ("took 9 months")
+- A figure presented as measured when the ruling says estimated, target, or OPEN
+- Ownership overstated or understated against the ownership ruling; flag both directions for the user to judge, never auto-fix
+
+### 3. Arithmetic (compute, do not string-match)
+- **Tenure**: use the employment dates in `canonical_provenance`. Flag durations that exceed them ("a year at a 9-month job") and any build, launch, and adoption arc that cannot fit inside the window.
+- **Percent and counts**: if a file states both a user count and a percent, compute the implied denominator and flag a contradiction with the ruling. For conversion claims, compute converted/base and flag a percent that does not match the stated base.
+Show the arithmetic in the report line.
+
+### 4. Date mismatch
+Against the story years in `story_bank.json`. Where two sources disagree, report the disagreement; do not fix either.
+
+### 5. Product conflation
+Numbers or claims of one product attributed to another, as recorded in `canonical_provenance`.
+
+### 6. Purged story
+Everything in `story_bank.json` `purged_stories`, including phrasing variants.
+
+### 7. TMAY inconsistency
+Different TMAY versions with conflicting facts.
+
+### 8. Reuse (story_bank.json is the source)
+Round collision (same story, 2+ LPs in one round), overuse (4+ questions), orphan (in the master repo but not in `story_bank.json` `company_angles`). Never auto-fixed.
+
+## Date Registry
+This skill keeps no copy of dates. Story years live in `story_bank.json`; employment windows live in `canonical_provenance`.
 
 ## Multi-Role File Keying
 
-When cross-referencing company-keyed files for consistency checks, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Treat each `{company}_{role_slug}` as a distinct scope. Read-order on lookups: try role-keyed first, fall back to company-only. When drift is detected across two roles at the same company, report each role separately rather than collapsing into one line.
+Follow the `{company_key}` convention in `CLAUDE.md` "Multi-Role File Keying". Treat each `{company}_{role_slug}` as its own scope; report drift per role.
 
-
+## Commands
 
-Parse `$ARGUMENTS` to determine the command:
-
-### (no arguments) — Full Consistency Audit
-
-**Step 1 — Read All Story Files**
-
-Read every file listed in Data Files above. For each file, extract:
-- Every story mentioned (by name/number)
-- Every number/metric cited
-- Every date/year referenced
-- Every product name and associated metrics
-- TMAY versions
-
-**Step 2 — Cross-Reference Against Canonical Registry**
-
-Read `canonical_numbers` from `interview_prep/story_bank.json`. For each extracted fact, check against the canonical registry. Flag:
-- **NUMBER MISMATCH**: File says X, canonical says Y
-- **DATE MISMATCH**: File says year X, canonical says Y
-- **PRODUCT CONFLATION**: Numbers from one product used for another
-- **PURGED STORY**: A purged story appears
-- **TMAY INCONSISTENCY**: Different TMAYs have conflicting facts
-
-**Step 3 — Check Story Reuse**
-
-Build a matrix: which stories appear in which files/questions/LPs/rounds.
-Flag:
-- **ROUND COLLISION**: Same story used for 2+ LPs in the same interview round
-- **OVERUSE**: Story used for 4+ different questions
-- **ORPHAN**: Story exists in master repo but isn't allocated anywhere
-
-**Step 4 — Report**
+### (no arguments) — Full audit
+Run checks 1-8 on the scope above using grep-first. Report:
 
 ## STORY CONSISTENCY AUDIT
 
-**Files scanned:** {N} | **Stories tracked:** {N}
+**Files scanned:** {N} | **Mode:** grep-first
 
----
+Then one section per check, each line `{file}:{line} -- says "{x}", canon "{y}"` (provenance lines name the ruling; arithmetic lines show the math). Then:
 
-### Number Mismatches ({count})
+### Historical drift (not fixed)
+Same format, for the report-only files.
 
-- `{file}:{line}` -- says "{wrong}" should be "{right}"
-- `{file}:{line}` -- says "{wrong}" should be "{right}"
+*If clean:* **ALL CLEAR.** *If issues:* **{N} issues. Run `/story-check fix` to repair the fixable ones.**
 
-### Date Mismatches ({count})
+### `fix` — Repair
+1. Run the audit first, in this same invocation (there is no saved audit to resume).
+2. Fixable = checks 1-6 findings in forward-looking files ONLY, where the right wording is unambiguous from `canonical_provenance`.
+3. Show every exact before/after and wait for the user's yes. Then apply. Never silently fix.
+4. Never touch the report-only files. Never auto-fix reuse, orphan, TMAY, date disagreements, or anything where the canon itself is "OPEN".
+5. After applying, re-grep the changed lines to confirm and report the count.
 
-- `{file}:{line}` -- says "{wrong year}" should be "{right year}"
-
-### Product Conflations ({count})
-
-- `{file}:{line}` -- uses Product A numbers for Product B (or vice versa)
-
-### Purged Stories Found ({count})
-
-- `{file}:{line}` -- Purged story reference MUST BE REMOVED
-
-### TMAY Inconsistencies ({count})
-
-- `{file1}` says "{X}" but `{file2}` says "{Y}"
-
-### Reuse Collisions ({count})
-
-- Story "{name}" used in Round {X} ({LP1}) AND Round {X} ({LP2})
-
-### Overused Stories
-
-- Story "{name}": used {N} times -- consider diversifying
-
-### Orphan Stories
-
-- Story "{name}": in master repo but not allocated to any question
-
----
-
-*If clean:* **ALL CLEAR -- no inconsistencies found.**
-
-*If issues:* **{N} issues found. Run `/story-check fix` to auto-repair.**
-
-### `fix` — Auto-Fix All Flagged Issues
-
-For each flagged issue from the last audit:
-1. Show the exact text that needs changing (before/after)
-2. Apply the fix
-3. Report what was changed
-
-Do NOT fix reuse collisions or orphans automatically — those require the user's judgment. Only fix factual errors (numbers, dates, product names, purged stories).
-
-### `<story_name>` — Check One Story Across All Files
-
-Find every mention of a specific story across all files and verify consistency.
-
-### `numbers` — Numbers-Only Audit
-
-Quick check: just scan all files for the canonical numbers and flag mismatches. Fastest audit mode.
-
-### `reuse` — Reuse Matrix Only
-
-Build and display the full story reuse matrix without running other checks.
+### `<story_name>` — one story across files (grep by story name, then read matches)
+### `numbers` — checks 1 and 2 only
+### `reuse` — check 8 only
 
 ## Key Rules
 
-- The canonical numbers in `interview_prep/story_bank.json` are the source of truth. Period.
-- When in doubt about a number, check `sources/{active_user}/` docs
-- Never silently fix things — always show before/after
-- Run this check BEFORE any interview (integrate into /prep-check)
-- If a new canonical fact is established during a session, the user should say "add to canonical" and story_bank.json should be updated
+- Provenance is part of correctness: a correct number said the wrong way is a finding.
+- Compute, do not string-match, for tenure, arc, percents and counts.
+- Historical files are reported, never edited.
+- Run before any interview and from `/prep-check` (prep-check calls the `numbers` mode and shows the result).
+- If a new ruling is established, the user says "add to canonical"; update `story_bank.json` and CLAUDE.md, not this file.

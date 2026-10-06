@@ -38,10 +38,10 @@ Sanitize the topic into a filename:
 
 Run this bash command BEFORE launching the agent:
 ```
-mkdir -p interview_prep/research && echo <seconds> > "${TMPDIR:-/tmp}/claude_agent_next_timeout"
+mkdir -p interview_prep/research && echo "<seconds> $(date +%s)" >> "${TMPDIR:-/tmp}/claude_agent_next_timeout"
 ```
 
-The SubagentStart hook will pick this up and apply it to the next agent spawned. The hook reads from the same `${TMPDIR:-/tmp}` location, so the writer and reader stay aligned regardless of platform.
+The line is `<seconds> <epoch>` and is APPENDED (a queue): the SubagentStart hook consumes the oldest line written in the last 5 minutes, so parallel launches each get their own limit, and an unlaunched agent's line expires instead of leaking onto a later agent. Launch the agent right after this command. The hook reads from the same `${TMPDIR:-/tmp}` location, so the writer and reader stay aligned.
 
 ### 4. Launch Agent
 
@@ -80,7 +80,7 @@ Write findings to: <output_path>
 After launching, tell the user:
 ```
 Launched timed research: "<topic>"
-⏱ Auto-stops after: <time>
+⏱ Stops researching after: <time> (then it gets a few final writes to save findings, so it must write the output file EARLY and keep enriching it)
 📄 Output: <output_path>
 ```
 

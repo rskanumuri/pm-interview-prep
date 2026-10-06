@@ -34,16 +34,19 @@ Deep-dive pressure test on a single story.
 3. Run the following pressure tests:
 
 **Test 1 — Attribution Clarity (1-5)**
-- Every claim uses "I" not "we" for the user's contribution
+- The user's contribution is stated as "I" with a verb that matches what he did (decided, recommended, built, aligned)
 - Clear separation between what the user did vs team/leadership/org
-- Flag any "we launched" or "we decided" that should be "I recommended" or "I built"
+- Flag any "we launched" or "we decided" that hides the user's part
+- EXCEPTION (CLAUDE.md "match the hero to the audience"): for an engineering interviewer the team is the hero, so "I gave them the goal and constraints, they built it" is correct, not a flaw. Judge against the interviewer function the story is allocated to.
+- Where ownership is contested or a platform lineage predates the user, check the ownership line in `story_bank.json` `canonical_provenance`; flag both overstated and understated claims
 
-**Test 2 — Number Verification (1-5)**
-- Read `canonical_numbers` from `interview_prep/story_bank.json`
-- Cross-reference all numbers in the story against the canonical registry
-- Flag any number that doesn't match the canonical value
-- Flag any number that can't be verified from source docs
-- Check for product conflation (using one product's numbers for another)
+**Test 2 — Number Verification (1-5)** (MANDATORY in every mode, including `all`)
+- Read the values from `story_bank.json` `canonical_numbers` and the meaning from `canonical_provenance`. Do not use a copy in this file.
+- For each number in the story, state: value, unit/denominator ("per question", "of the 1,000+ SE population", "of about 8 pilots"), and how it was measured (measured, estimated, target). A number with no unit or no measurement basis scores WEAK even if it matches canon.
+- Provenance: check the story does not break a recorded ruling in `canonical_provenance` (audience vs actual users, units and denominators, which metric a number belongs to, sample size stated, per-what baselines)
+- Arithmetic: compute implied denominators and durations (percent vs count, tenure dates, any arc described as build, launch, and adoption must fit inside the stated employment window). Show the math.
+- Circularity: `sources/{active_user}/` docs repeat the same claims, so agreement with them is NOT verification. A number counts as verified only if it traces to a measurement (eval set, logs, dashboard) or the user's recorded ruling. Otherwise mark it "asserted, not verified".
+- Flag any number that cannot be traced, and give the probe an interviewer would use on it ("measured how, on what set, by whom?").
 
 **Test 3 — Opener Directness (1-5)**
 - First sentence MUST directly answer the question being asked
@@ -58,7 +61,7 @@ Generate the 5 hardest follow-up questions an interviewer would ask:
 - "If you knew that, why didn't you do it sooner?"
 - "What happened after? Did it sustain?"
 
-For each, assess whether the story has enough detail to survive.
+For each, assess whether the story has enough detail to survive. These five are self-generated, so grade the story's SUPPORT for an answer (is the evidence in the story or the source docs), not an imagined answer. If the support is not on the page, mark the follow-up "UNANSWERED: needs the user's answer" and do not score it as survived. Add at least one probe aimed at the weakest number from Test 2.
 
 **Test 5 — L6/L7 Signal (1-5)**
 - Does this story demonstrate senior-level ownership, strategic thinking, and cross-org influence?
@@ -101,7 +104,7 @@ For each, assess whether the story has enough detail to survive.
 
 ### `all` — Pressure Test All Stories
 
-Run abbreviated pressure test (Tests 1, 3, 5, 6 only) on every story in master_story_repository.md. Output a summary table.
+Run the abbreviated pressure test (Tests 1, 2, 3, 5, 6; Test 2 is never skipped) on every story in `story_bank.json`. Output a summary table. Grep for numbers first; do not read all story files in full.
 
 ### `round <N>` — Pressure Test a Round
 
@@ -113,14 +116,14 @@ Run full pressure test on all stories/answers for a specific company.
 
 ### `fix <story>` — Auto-Fix Flagged Issues
 
-After a steelman run, apply the suggested fixes to the story files. Show before/after for each change. Do NOT apply without showing the user first.
+After a steelman run, apply the suggested fixes to forward-looking story files only. Show before/after for each change and wait for the user's yes. Never edit transcripts, debriefs, or files for closed companies. Fixes that need a fact the user has not supplied are listed as questions, not applied.
 
 ## Key Rules
 
 - Be BRUTAL but grounded in reality — don't manufacture concerns
-- Always cross-reference numbers against `canonical_numbers` in `interview_prep/story_bank.json` and source docs in `sources/{active_user}/`
-- Check `purged_stories` in story_bank.json — if any purged story appears ANYWHERE, flag it
-- Products listed as distinct in story_bank.json must never be conflated
-- Two-layer format: Layer 1 = 2-min opener, Layer 2 = deep follow-up details
-- "Can AI make it faster?" test — if a generic answer could replace yours, flag it
+- Cross-reference numbers against `story_bank.json` canon and provenance first; `sources/{active_user}/` is supporting evidence only (see Test 2, circularity)
+- Flag every entry in `story_bank.json` `purged_stories` (not just one) if it appears ANYWHERE
+- Distinct products and metrics stay distinct; never conflate them (see `canonical_provenance`)
+- Two-layer format: Layer 1 = 2-min opener, Layer 2 = deep follow-up
+- "Can AI make it faster?" test — if a generic answer could replace the user's, flag it
 - When suggesting fixes, provide exact replacement text, not vague guidance

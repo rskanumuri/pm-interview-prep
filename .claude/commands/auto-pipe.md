@@ -17,8 +17,8 @@ Same as `/eval` + `/cv-gen` combined. This skill orchestrates both.
 ### Write
 - Evaluation: `interview_prep/evaluations/{company}_{role_slug}_eval.json`
 - Applications: `interview_prep/applications.json`
-- CV HTML: `output/cv/{company}_{active_user}_{date}.html`
-- CV PDF: `output/cv/{company}_{active_user}_{date}.pdf`
+- CV HTML: `output/cv/{company_key}_resume_{date}.html`
+- CV PDF: `output/cv/{company_key}_resume_{date}.pdf`
 - Progress: `interview_prep/progress.json` (if company already exists)
 
 ## Multi-Role File Keying
@@ -43,19 +43,22 @@ Parse `$ARGUMENTS`:
    - Save evaluation JSON
    - Add to applications.json
 
-3. **Decision gate:**
-   - If overall score >= 3.0: proceed to CV generation
-   - If overall score < 3.0: stop here. Display eval results and recommend skipping.
-     Show: "Score {X}/5 — below threshold. Skip this role? Or run `/cv-gen {company}` to generate CV anyway."
+3. **Decision gate (all must pass before CV generation):**
+   - Title gate = PASS (no "project manager" / "program manager"), from the eval's `gates.title`
+   - H1B gate = SPONSORS (from `gates.h1b`). UNKNOWN: stop and ask the user to confirm transfer sponsorship first. BLOCKED: stop.
+   - Unrounded overall score >= 3.0
+   - If any check fails: stop here. Display eval results and the failed gate(s).
+     Show: "Gate failed: {title / h1b / score X}. Skip this role? Or say 'override' and why to generate a CV anyway." An override is recorded (`gate_override: true`) and never silent.
 
 4. **Run /cv-gen logic (tailored resume):**
    - Generate ATS-optimized HTML
    - Attempt PDF generation via Playwright
-   - If PDF fails, continue with HTML only (not a blocker)
+   - If PDF fails, continue with HTML only (not a blocker), record `cv_file` as the HTML path (never a PDF path that was not produced), and say the PDF failed
+   - The `/cv-gen` staleness gate (1b) and canon reconciliation (1c) apply here too, and HTML approval is still required before PDF; auto-pipe does not skip them
 
 5. **Register in pipeline:**
    - Add/update `applications.json` entry:
-     - status: `ready_to_apply` if score >= 3.0
+     - status: `ready_to_apply` only if all three gate checks passed (title PASS, H1B SPONSORS, score >= 3.0). Otherwise follow `/eval` step 9 rules. Never overwrite `applied`/`interviewing`/`offer`.
      - eval_score, eval_file, cv_file populated
    - If company not in `companies.json`, offer to register
 
@@ -83,8 +86,8 @@ Parse `$ARGUMENTS`:
 
 ### Tailored CV
 
-- **PDF:** `output/cv/{company}_{active_user}_{date}.pdf`
-- **HTML:** `output/cv/{company}_{active_user}_{date}.html`
+- **PDF:** `output/cv/{company_key}_resume_{date}.pdf`
+- **HTML:** `output/cv/{company_key}_resume_{date}.html`
 - **Keywords injected:** {N}
 
 ---
@@ -93,7 +96,7 @@ Parse `$ARGUMENTS`:
 
 - **Status:** ready_to_apply
 - **Eval:** `interview_prep/evaluations/{company}_{slug}_eval.json`
-- **CV:** `output/cv/{company}_{active_user}_{date}.pdf`
+- **CV:** `output/cv/{company_key}_resume_{date}.pdf`
 
 ---
 
@@ -117,7 +120,7 @@ Run only the evaluation step (no CV generation). Same as `/eval <url>` but calle
 ## Key Rules
 
 - **This is a convenience orchestrator.** It calls the same logic as `/eval` and `/cv-gen` — no separate evaluation or CV generation logic.
-- **Score threshold is 3.0/5.** Below that, don't waste time on CV generation unless user insists.
+- **Score threshold is 3.0/5, and title + H1B are hard gates.** Below threshold or a failed gate, don't generate a CV unless the user explicitly overrides in that run.
 - **PDF failure is not a blocker.** If Playwright isn't installed, the HTML is still generated and useful.
 - **Always offer /company-prep** for scores >= 3.0 — this is the natural next step from top-of-funnel to interview prep.
 - **Don't auto-register companies** in companies.json without asking. The user may not want to prep for every role they evaluate.

@@ -29,7 +29,7 @@ Check `progress.json` for the `active_user` field. Load personal info from `sour
 ### Write
 - Evaluation: `interview_prep/evaluations/{company}_{role_slug}_eval.json`
 - Applications: `interview_prep/applications.json` (add/update entry)
-- Progress: `interview_prep/progress.json` (update fit_score if company exists in company_readiness)
+- Progress: `interview_prep/progress.json` (write eval_score/eval_verdict if company exists in company_readiness; never fit_score)
 
 ## Target Archetypes
 
@@ -48,15 +48,17 @@ If no archetypes are defined in CLAUDE.md, warn the user and suggest they add a 
 
 | Grade | Numeric | Meaning |
 |-------|---------|---------|
-| A | 5.0 | Direct match — you have done this exact thing |
-| A- | 4.5 | Very strong — minor gap, easy bridge |
-| B+ | 4.5 | Strong adjacent — natural bridge |
+| A | 5.0 | Direct match — the user has done this exact thing |
+| A- | 4.7 | Very strong — minor gap, easy bridge |
+| B+ | 4.3 | Strong adjacent — natural bridge |
 | B | 4.0 | Good match — some bridging needed |
-| B- | 3.5 | Decent — multiple bridges required |
-| C+ | 3.5 | Borderline — worth applying if other signals strong |
-| C | 3.0 | Stretch — significant gaps |
+| B- | 3.7 | Decent — multiple bridges required |
+| C+ | 3.3 | Borderline — worth applying if other signals strong |
+| C | 2.7 | Stretch — significant gaps (below the 3.0 apply threshold) |
 | D | 2.0 | Weak — major gaps, unlikely to convert |
 | F | 1.0 | Pass — no meaningful fit |
+
+The map is strictly monotonic on purpose (no two grades share a number, and an all-C eval cannot reach the 3.0 threshold). Changed Oct 5, 2026; older evals used A-=B+=4.5 and C=3.0.
 
 ### Overall Verdict (same scale as /fit-check)
 
@@ -96,9 +98,16 @@ Evaluate a JD by URL or pasted text.
    - story_bank.json for canonical numbers and themes
    - CLAUDE.md Job Search Config for comp targets, archetypes, preferences
 
-4. **Check application preferences:**
-   - Does title contain excluded terms (check CLAUDE.md for excluded title keywords)?
-   - Check H1B: use WebSearch for `"{company name}" H1B LCA filings site:h1bdata.info` or similar.
+4. **Run the hard gates BEFORE scoring** (record results in Block A and in the eval JSON under `gates`):
+
+   **Title gate.** If the title contains "project manager" or "program manager" (case-insensitive, including "technical program manager"), gate = `FAIL_TITLE`. The verdict is forced to PASS (cap 1.9), status becomes `closed`, and the eval stops after Block A unless the user says "override" in this run.
+
+   **H1B gate.** The user currently holds an H1B (with the current employer), so any move needs a transfer; "sponsors" here means the employer files H1B transfers. Classify with evidence, and cite it:
+   - `SPONSORS`: JD or careers page says sponsorship/transfer is available, OR recent LCA filings exist for PM-type roles (WebSearch `"{company}" H1B LCA site:h1bdata.info` or similar; cite the filing count and year).
+   - `BLOCKED`: JD says no sponsorship or "must be authorized to work without sponsorship", OR a small/early company with no LCA history and no sponsorship language. Gate = `FAIL_H1B`: the verdict is capped at STRETCH (2.9), status becomes `closed` (reason: h1b), and the eval stops after Block A unless the user says "override".
+   - `UNKNOWN`: no usable evidence. Do not guess. The verdict is capped at FIT WITH GAPS and labeled `CONDITIONAL: confirm transfer sponsorship before applying`; status stays `evaluating` and `ready_to_apply` is NOT set until the user confirms.
+
+   A gate override is recorded as `gate_override: true` with the user's reason. Never override silently.
 
 5. **Run 6-block evaluation:**
 
@@ -113,7 +122,8 @@ Evaluate a JD by URL or pasted text.
 | Level | {IC5/IC6/Lead/Manager — detected from JD signals} |
 | Scope | {team size, revenue, products owned — from JD or inferred} |
 | Location | {remote/hybrid/onsite, city} |
-| H1B Signal | {sponsors / unknown / unlikely — from web search} |
+| H1B Gate | {SPONSORS / UNKNOWN / BLOCKED} — {evidence + source} |
+| Title Gate | {PASS / FAIL_TITLE} |
 | TL;DR | {one-sentence verdict} |
 
 Grade: A-F based on archetype match count, level alignment, location fit.
@@ -136,7 +146,11 @@ Map every JD requirement against the user's experience:
 
 **CRITICAL**: Never invent experience. Only cite what's in the resume and story bank. If a requirement has no match, score it honestly and note the gap.
 
-Grade: weighted average of requirement scores (required > nice-to-have).
+Grade: weighted average of requirement scores. Rules (so the grade cannot be padded):
+- The requirement list is taken verbatim from the JD. Do not add generic requirements.
+- Required/must-have = weight 2, nice-to-have = weight 1.
+- Score each requirement 0-5 from the resume and story bank only. No evidence = 0, not "probably".
+- Show the list, weights and scores so the math can be checked.
 
 #### Block C — Level & Comp Strategy
 
@@ -184,7 +198,9 @@ Grade: based on story arsenal coverage of JD themes.
    - Average of 6 block grades (numeric)
    - Weight Block B (Resume Match) at 2x — it's the strongest predictor
    - Formula: (A + 2*B + C + D + E + F) / 7
-   - Round to 1 decimal
+   - Show 1 decimal, but apply thresholds to the UNROUNDED value (2.95 is STRETCH, not 3.0)
+   - Block F counts only evidence not already counted in Block B (no double counting)
+   - Apply gate caps from step 4 after averaging
 
 7. **Display the evaluation:**
 
@@ -200,7 +216,7 @@ Grade: based on story arsenal coverage of JD themes.
 - **Company:** {name}
 - **Role:** {title}
 - **Level:** {detected} | **Location:** {loc}
-- **Scope:** {scope} | **H1B:** {signal}
+- **Scope:** {scope} | **H1B gate:** {SPONSORS/UNKNOWN/BLOCKED} | **Title gate:** {PASS/FAIL_TITLE}
 - **TL;DR:** {one-liner}
 
 ---
@@ -284,6 +300,7 @@ Grade: based on story arsenal coverage of JD themes.
   "company": "{company}",
   "company_display": "{Company Display Name}",
   "role_title": "{Role Title}",
+  "gates": { "title": "PASS|FAIL_TITLE", "h1b": "SPONSORS|UNKNOWN|BLOCKED", "h1b_evidence": "{source}", "gate_override": false },
   "jd_url": "{url or null}",
   "evaluated_date": "{YYYY-MM-DD}",
   "archetypes": ["{matched archetype IDs}"],
@@ -304,12 +321,12 @@ Grade: based on story arsenal coverage of JD themes.
 
 9. **Update applications.json:**
    - Add or update entry with key `{company}_{role_slug}`
-   - Set status to `evaluating` → `ready_to_apply` (if score >= 3.0) or `closed` (if score < 3.0)
+   - Only set status from `evaluating` or no entry. NEVER overwrite `applied`, `interviewing`, `offer`, or an existing `closed` reason; on a re-eval of those, update eval fields only.
+   - `ready_to_apply`: score >= 3.0 (unrounded) AND title gate PASS AND H1B gate SPONSORS. H1B UNKNOWN stays `evaluating` with a note. Any FAIL gate or score < 3.0 → `closed` with the reason (`title`, `h1b`, or `score`).
    - Set eval_score, eval_file, discovered_date
 
 10. **Update progress.json (if company exists):**
-    - Update `company_readiness.{company}.fit_score` with overall_fit
-    - Update `company_readiness.{company}.fit_verdict` with verdict
+    - Write `company_readiness.{company}.eval_score` and `eval_verdict`. Do NOT overwrite `fit_score`/`fit_verdict`; those belong to `/fit-check` (debrief-informed).
     - Only if company_readiness entry already exists — don't create new ones (that's `/company-prep`'s job)
 
 11. **Offer next steps:**
@@ -385,7 +402,7 @@ Process multiple JDs at once. Input: list of URLs or files in `sources/inbox/jds
 ## Key Rules
 
 - **Never invent experience.** Only cite what's in the resume, story bank, and source docs. If something isn't there, score it as a gap.
-- **H1B is a hard filter.** If company clearly doesn't sponsor, flag prominently but still complete the eval (user may have referral paths).
+- **H1B and title are hard gates (step 4).** BLOCKED / FAIL_TITLE stop the eval after Block A unless the user explicitly overrides in that run. UNKNOWN is never treated as a pass.
 - **Comp research is best-effort.** WebSearch may not find data for every company. Note confidence levels. Never guess comp numbers.
 - **Archetype overlap is the strongest signal.** A JD matching 3+ archetypes is almost certainly a strong fit. A JD matching 0 is almost certainly a pass.
 - **Block B weight is 2x** because resume match is the most objective predictor.

@@ -20,6 +20,7 @@ Check `progress.json` for the `active_user` field. Only load personal info (resu
 3. **Writes**: Batch answer saves and progress updates - don't write after every interaction
 
 ### What's in session_data.json
+(Cache. Check `metadata.created`; if older than 14 days or older than the newest file in `interview_prep/rubrics/` or `interview_prep/insights/`, read those live files instead and tell the user the cache is stale. The cache's rubric keys do not include every company, so for any company missing a key, read `interview_prep/rubrics/{company_key}.md` directly.)
 - `companies`: Company registry with keywords and metadata
 - `questions`: Full question bank with metadata (includes `company` field for each question)
 - `star_stories`: All STAR stories (converted from Excel for fast loading)

@@ -19,8 +19,8 @@ Generate tailored, ATS-optimized resume PDFs per company/role. Reads the user's 
 - Cheat Sheet: `interview_prep/scripts/{company}_cheat_sheet.md`
 
 ### Write
-- HTML: `output/cv/{company}_resume_{date}.html`
-- PDF: `output/cv/{company}_resume_{date}.pdf`
+- HTML: `output/cv/{company_key}_resume_{date}.html`
+- PDF: `output/cv/{company_key}_resume_{date}.pdf`
 
 ### Tools
 - Template: `tools/templates/resume.html` (ATS-safe HTML template)
@@ -73,6 +73,10 @@ Parse `$ARGUMENTS` to determine the command:
 1. **Read the user's resume** from `sources/{active_user}/resume.txt`
    - Parse sections: contact info, summary, experience, education, skills, projects
 
+1b. **Staleness gate (mandatory, before tailoring).** Compare the master resume's most recent role with `CLAUDE.md` "Accepted" (current employer and start date). If the resume shows a role as "Current" that has ended, or has no entry for the current employer, STOP. Say exactly what is out of date and ask the user which version to build: (a) add the current role, or (b) a version that ends at the last role with its true end date. Never output "Current" for an ended role, and never contradict a recorded cover story (see CLAUDE.md "Active Company Context"). Do not guess.
+
+1c. **Canon reconciliation (mandatory).** Check every number and phrase taken from the master resume against `story_bank.json` `canonical_numbers` / `canonical_provenance` (the `/story-check` rules). Typical failures to correct or flag, never copy: a figure that disagrees with the canon, a number labeled with the wrong metric name, wording that conflates two different products or measures, a duration stated differently from the canon, and a number with no source. A resume number with no match in `story_bank.json` is UNVERIFIED: omit it unless the user confirms it in this run. Never carry a purged story.
+
 2. **Read evaluation data** from `interview_prep/evaluations/{company}_*_eval.json` (if exists)
    - Extract: keyword matches from Block B, archetype from Block A, gap list
    - If no eval exists, warn: "No evaluation found for {company}. Run `/eval` first for best keyword targeting. Generating generic tailored version."
@@ -101,11 +105,13 @@ Parse `$ARGUMENTS` to determine the command:
       - Top 3-4 bullets per role, most impactful first
 
    d. **Key Projects**:
-      - Select top 3-4 most relevant to this JD
-      - Reframe descriptions to connect to JD requirements
+      - Select ONLY from projects that already appear in the master resume or are stories in `story_bank.json` with canonical numbers. Do not invent a project, scope, team size, or metric.
+      - Select top 3-4 most relevant to this JD; reframe wording to match JD vocabulary but keep every fact identical to the source.
+      - If the master resume has no projects section and fewer than 3 qualifying stories exist, list fewer; never pad.
+      - Employer-confidential work (deal figures, named colleagues, internal pricing) never goes on a resume.
 
    e. **Education & Skills**:
-      - Keep as-is from master resume (MBA from Carnegie Mellon)
+      - Keep as-is from the master resume
       - Ensure skills section includes JD keyword matches
 
 5. **Generate HTML:**
@@ -124,7 +130,7 @@ Parse `$ARGUMENTS` to determine the command:
      - `{{PROJECTS_SECTION}}` → either a full Projects section block, OR an empty string to omit
      - `{{EDUCATION}}` → HTML for education
      - `{{SKILLS}}` → HTML for skills line or grid
-   - Write to `output/cv/{company}_resume_{date}.html`
+   - Write to `output/cv/{company_key}_resume_{date}.html`. If that file already exists (same company_key and date), do NOT overwrite an approved version: write `..._v2.html` (then `_v3`) and say so. `{company_key}` is role-keyed per CLAUDE.md so a second role at the same company gets its own files.
 
 **Heading scaling reference (em-based in CSS, do not override). All values in pt (the print-native unit):**
 | Element | em multiplier | At 10pt body | At 11pt body | At 12pt body |
@@ -139,9 +145,9 @@ Parse `$ARGUMENTS` to determine the command:
 
 6. **Preview HTML to user BEFORE generating PDF (mandatory):**
    - After writing the HTML file, auto-open it in the user's default browser:
-     - Windows: `start "" "output/cv/{company}_resume_{date}.html"`
-     - macOS: `open output/cv/{company}_resume_{date}.html`
-     - Linux: `xdg-open output/cv/{company}_resume_{date}.html`
+     - Windows: `start "" "output/cv/{company_key}_resume_{date}.html"`
+     - macOS: `open output/cv/{company_key}_resume_{date}.html`
+     - Linux: `xdg-open output/cv/{company_key}_resume_{date}.html`
    - Also show the rendered Summary section and Experience headers as a text preview inline (for users who don't see the browser).
    - Ask: "Does this look right? Any edits before I render the PDF? (PDF generation is compute-heavy; let's get the content right first.)"
    - Only proceed to step 7 (PDF generation) AFTER user explicitly approves the HTML content.
@@ -149,18 +155,18 @@ Parse `$ARGUMENTS` to determine the command:
 
 7. **Generate PDF (only after HTML approval):**
    - **File-lock pre-check:** if a prior PDF exists at the target output path, it may be open in Preview/Chrome/Acrobat. Playwright will fail with `EBUSY` on Windows if the file is locked by a viewer. BEFORE running the generator, ask the user: "Close any open copy of the previous PDF at `{output_path}` so regeneration can write to it?" Wait for confirmation (or for the user to indicate the path is free) before proceeding.
-   - Run: `node tools/generate-pdf.mjs output/cv/{company}_resume_{date}.html output/cv/{company}_resume_{date}.pdf --format=letter`
+   - Run: `node tools/generate-pdf.mjs output/cv/{company_key}_resume_{date}.html output/cv/{company_key}_resume_{date}.pdf --format=letter`
    - If the command fails with `EBUSY` or similar file-lock error, ask the user to close the PDF viewer and re-run. Do NOT work around by writing to a new filename.
-   - If command fails (Playwright not installed), inform user:
-     "PDF generation failed — Playwright may not be installed. Run `cd tools && npm install && npx playwright install chromium` to set up."
-     "In the meantime, open the HTML file in Chrome and Print → Save as PDF."
+   - If the command fails, show the real error line first. Only if it says the module or browser executable is missing (for example "Cannot find module" or "Executable doesn't exist"), suggest: `cd tools && npm install && npx playwright install chromium`. For `EBUSY`, see the file-lock rule above. For a missing output directory, create `output/cv/` and retry once.
+     In the meantime the HTML can be opened in Chrome and printed to PDF.
+   - **Page check (after a successful render):** count the PDF pages. If more than 2, trim the least relevant bullets/projects and re-render, up to 2 times; if still over 2, stop and show the user the page count. Do not save a record claiming a PDF that was not produced.
 
 8. **Display result:**
 
 ## CV GENERATED — {COMPANY}
 
-- **PDF:** `output/cv/{company}_resume_{date}.pdf`
-- **HTML:** `output/cv/{company}_resume_{date}.html`
+- **PDF:** `output/cv/{company_key}_resume_{date}.pdf`
+- **HTML:** `output/cv/{company_key}_resume_{date}.html`
 - **Pages:** {N} | **Size:** {N} KB
 
 ---
@@ -192,7 +198,7 @@ Re-run the Step 0 prompts from the main command and overwrite `sources/{active_u
 
 ### `<company> --preview` — HTML Preview Only
 
-Same as above but skip step 6 (PDF generation). Useful when Playwright isn't installed.
+Same as above but skip step 7 (PDF generation) and keep the step 6 HTML preview and approval. Useful when Playwright isn't installed.
 
 Display the HTML file path and suggest opening in browser.
 

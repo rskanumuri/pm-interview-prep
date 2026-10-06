@@ -44,6 +44,22 @@ Read CLAUDE.md and progress.json, then display:
 ### `schedule <company> <date> <time> <format>` — Add/Update Interview
 ### `advance <company> [details]` — Mark Advancing
 ### `drop <company> [reason]` — Mark Dropped/Rejected
+
+Closing a company changes shared state and triggers learning steps, so it needs a confirmation. Never remove a row silently.
+
+1. Read progress.json, CLAUDE.md, `interview_prep/reference/closed_pipeline.md`, and `applications.json` (if the company is there).
+2. Ask which outcome it is (rejected / withdrew / no decision) and the date if the user knows it; never invent a date ("date not recorded" is fine).
+3. Show the exact before/after for each change and wait for the user's yes:
+   - progress.json `company_readiness` status → "DROPPED — {reason}" or "REJECTED — {reason}" (that company's keys only)
+   - CLAUDE.md: move the row out of the Accepted/Passive table (Stage cell text is not rewritten beyond the move) and update the Closed Companies line and counts
+   - `closed_pipeline.md`: add the row to the right table
+   - `applications.json`: set status `closed` with the reason (never overwrite `applied`/`interviewing` history fields)
+4. After confirmation, run the closing hooks (CLAUDE.md "Career Learning Hooks"), propose-only:
+   - if rejected: read the company's debriefs and `career_takeaways.md`, PROPOSE one career takeaway
+   - if `{company_key}_phantom.md` exists: offer a short post-mortem appended to it
+   - offer (do not do) moving the company's loose files into `sources/{company}/`
+5. Confirm: **{Company} — Closed ({outcome})** | Updated: {files}
+
 ### `prep-gaps` — Pre-Interview Prep Gap Analysis
 ### `full` — Full Funnel View (Top-of-Funnel + Interview Pipeline)
 ### `funnel` — Application Funnel Only

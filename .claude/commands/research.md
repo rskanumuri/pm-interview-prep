@@ -111,7 +111,7 @@ General market research on a topic (e.g., "cloud game streaming", "legal AI", "f
 2. Use WebFetch to pull specific pages for detail
 3. Cross-reference multiple sources for accuracy
 4. Save everything with source URLs
-5. After saving, auto-commit and push
+5. After saving, do NOT git add/commit/push. Offer `/save-push` to the user instead (background research agents must never commit on their own)
 
 ## Key Rules
 

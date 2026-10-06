@@ -8,12 +8,19 @@
  *
  * Adapted from career-ops (github.com/santifer/career-ops).
  * Uses Chromium headless to render ATS-optimized resume PDFs.
+ *
+ * Notes (Oct 2026 fixes):
+ *  - Loads the HTML via a real file:// URL (page.goto) instead of setContent, which has no
+ *    baseURL option, so local fonts were blocked and silently fell back to system fonts.
+ *  - Builds file URLs with pathToFileURL (file:///C:/... on Windows, not file://C:/...).
+ *  - Always closes the browser, even on error. Creates the output directory if missing.
+ *  - Warns when the requested fonts did not load instead of failing silently.
  */
 
 import { chromium } from 'playwright';
 import { resolve, dirname } from 'path';
-import { readFile, writeFile } from 'fs/promises';
-import { fileURLToPath } from 'url';
+import { readFile, writeFile, mkdir, unlink } from 'fs/promises';
+import { fileURLToPath, pathToFileURL } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -50,59 +57,67 @@ async function generatePDF() {
   console.log(`Output: ${outputPath}`);
   console.log(`Format: ${format.toUpperCase()}`);
 
-  // Read HTML and resolve font paths to absolute file:// URLs
+  await mkdir(dirname(outputPath), { recursive: true });
+
+  // Resolve relative font paths to absolute file:// URLs for Chromium
   let html = await readFile(inputPath, 'utf-8');
+  const fontsUrl = pathToFileURL(resolve(__dirname, 'fonts')).href; // file:///C:/.../fonts
+  html = html.replace(/url\((['"]?)\.\/fonts\//g, (_m, q) => `url(${q || "'"}${fontsUrl}/`);
 
-  const fontsDir = resolve(__dirname, 'fonts');
-  // Convert relative font paths to absolute file:// URLs for Chromium
-  html = html.replace(
-    /url\(['"]?\.\/fonts\//g,
-    `url('file://${fontsDir.replace(/\\/g, '/')}/`
-  );
-  html = html.replace(
-    /file:\/\/([^'")]+)\.woff2['"]\)/g,
-    `file://$1.woff2')`
-  );
+  // Render from a temp file next to the input so Chromium treats it as a file:// page
+  // (page.setContent has no baseURL option and loads from about:blank, which blocks file:// fonts).
+  const tmpHtml = resolve(dirname(inputPath), `.__render_${process.pid}.html`);
+  await writeFile(tmpHtml, html, 'utf-8');
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  let browser;
+  try {
+    browser = await chromium.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.goto(pathToFileURL(tmpHtml).href, { waitUntil: 'networkidle' });
 
-  await page.setContent(html, {
-    waitUntil: 'networkidle',
-    baseURL: `file://${dirname(inputPath).replace(/\\/g, '/')}/`,
-  });
+    // Wait for fonts to load, then report any declared font that did not
+    await page.evaluate(() => document.fonts.ready);
+    const failed = await page.evaluate(() =>
+      [...document.fonts].filter((f) => f.status === 'error').map((f) => f.family)
+    );
+    if (failed.length) {
+      console.warn(`WARNING: fonts failed to load, fell back to system fonts: ${[...new Set(failed)].join(', ')}`);
+    }
 
-  // Wait for fonts to load
-  await page.evaluate(() => document.fonts.ready);
+    const pdfBuffer = await page.pdf({
+      format: format,
+      printBackground: true,
+      margin: {
+        top: '0.6in',
+        right: '0.6in',
+        bottom: '0.6in',
+        left: '0.6in',
+      },
+      preferCSSPageSize: false,
+    });
 
-  const pdfBuffer = await page.pdf({
-    format: format,
-    printBackground: true,
-    margin: {
-      top: '0.6in',
-      right: '0.6in',
-      bottom: '0.6in',
-      left: '0.6in',
-    },
-    preferCSSPageSize: false,
-  });
+    await writeFile(outputPath, pdfBuffer);
 
-  await writeFile(outputPath, pdfBuffer);
+    // Page count: prefer the /Count of the page tree; fall back to counting page objects.
+    // Both are approximate when Chromium compresses object streams, so report accordingly.
+    const pdfString = pdfBuffer.toString('latin1');
+    const counts = [...pdfString.matchAll(/\/Type\s*\/Pages[^>]*?\/Count\s+(\d+)/g)].map((m) => Number(m[1]));
+    const pageCount = counts.length
+      ? Math.max(...counts)
+      : (pdfString.match(/\/Type\s*\/Page[^s]/g) || []).length;
 
-  // Approximate page count from PDF structure
-  const pdfString = pdfBuffer.toString('latin1');
-  const pageCount = (pdfString.match(/\/Type\s*\/Page[^s]/g) || []).length;
+    console.log(`PDF generated: ${outputPath}`);
+    console.log(`Pages: ${pageCount} (approximate)`);
+    console.log(`Size: ${(pdfBuffer.length / 1024).toFixed(1)} KB`);
 
-  await browser.close();
+    // Output JSON for Claude Code to parse
+    console.log(JSON.stringify({ status: 'success', outputPath, pageCount, size: pdfBuffer.length, fontsFailed: failed }));
 
-  console.log(`PDF generated: ${outputPath}`);
-  console.log(`Pages: ${pageCount}`);
-  console.log(`Size: ${(pdfBuffer.length / 1024).toFixed(1)} KB`);
-
-  // Output JSON for Claude Code to parse
-  console.log(JSON.stringify({ status: 'success', outputPath, pageCount, size: pdfBuffer.length }));
-
-  return { outputPath, pageCount, size: pdfBuffer.length };
+    return { outputPath, pageCount, size: pdfBuffer.length };
+  } finally {
+    if (browser) await browser.close();
+    await unlink(tmpHtml).catch(() => {});
+  }
 }
 
 generatePDF().catch((err) => {

@@ -12,25 +12,21 @@ Check `progress.json` for the `active_user` field. Load personal info from `sour
 
 ## Data Files
 
-- **Story Bank JSON**: `interview_prep/story_bank.json` (canonical story index — stories with themes, question_types, company_angles. READ THIS FIRST for story inventory instead of scanning multiple source files.)
-- Source Materials: `sources/{active_user}/` (resume, performance kit, STAR stories, LP guides)
+- **Story Bank JSON**: `interview_prep/story_bank.json` (canonical story index — all stories with themes, question_types, company_angles. READ THIS FIRST for story inventory instead of scanning multiple source files.)
+- Performance Kit: `sources/{active_user}/interview_performance_kit_v2.txt` (TMAY, STAR verbal scripts, walkthroughs)
+- Company guides: `sources/{company}/...` (as needed)
+- Resume: `sources/{active_user}/resume.txt`
 - Proof Points: `sources/{active_user}/proof_points_by_role.md` (company meta-skills mapping)
 - Master Stories: `interview_prep/scripts/master_story_repository.md` (full narratives — use for prose, not inventory)
 - Company Insights: `interview_prep/insights/{company}.md`
 - Company Rubric: `interview_prep/rubrics/{company}.md`
 - Company Cheat Sheet: `interview_prep/scripts/{company}_cheat_sheet.md`
 - Progress: `interview_prep/progress.json` (scores, flagged stories)
-- Session Data: `interview_prep/session_data.json`
+- Session Data: stale cache, do not use for the user's stories
 
-## Core Story Inventory
+## Story inventory
 
-**READ from `interview_prep/story_bank.json`.** The story bank contains the full inventory of stories with:
-- Story name and source company
-- Key numbers / metrics
-- Core themes
-- Company-specific angles (if previously mapped)
-
-Do NOT hardcode a story list here. Always read the current inventory from story_bank.json at runtime.
+Do not keep a table here (the old one went stale: wrong count, unverified numbers). Read the inventory from `interview_prep/story_bank.json` (`stories[]` with `key_numbers`, `themes`, `question_types`, `company_angles`, `performance`). Numbers come from `canonical_numbers` and are worded per `canonical_provenance`.
 
 ## Multi-Role File Keying
 
@@ -96,14 +92,14 @@ Create a Story Map table mapping the user's stories to the company's interview t
 
 8. **Optionally inject into cheat sheet** — if `interview_prep/scripts/{company}_cheat_sheet.md` exists and has a Story Map section, offer to update it with this mapping.
 
-9. **Write back Company-Specific Angles to master_story_repository.md** — After generating the story map, offer: "Update master_story_repository.md with these company angles?"
-   - If yes, for each story mapped above:
-     - Open `interview_prep/scripts/master_story_repository.md`
-     - Find the story's `## Company-Specific Angles` table
-     - If the company already has a row, update Frame and Bridge Line
-     - If the company doesn't have a row, append a new row: `| {Company} | {frame from theme mapping} | "{bridge line}" | No | — |`
-     - Set Tested? to "No" (these are prep angles, not yet used in a real interview)
-   - After writing, confirm: "Updated Company-Specific Angles for {N} stories in master_story_repository.md"
+8. **Write back company angles to `story_bank.json` (canonical)** — After generating the story map, offer: "Update story_bank.json with these company angles?"
+   - If yes, for each story mapped above, update `company_angles[{company_key}]` in `story_bank.json`:
+     - New company: add `{frame, bridge, planned_round, tested: false, score: null}` from the mapping.
+     - Company already present: update `frame` and `bridge` ONLY. NEVER reset `tested`, `score` or any tested-round history; a prior "Yes (Round 2)" and its score stay exactly as they are. (The old version of this step reset Tested to No and destroyed scores.)
+   - Show the exact before/after for each changed entry and wait for the user's yes before writing.
+   - Check each bridge against `canonical_provenance` and `purged_stories` before writing. A bridge that breaks one is not written; flag it.
+   - Then offer the mirror edit to the Company-Specific Angles table in `master_story_repository.md` (same rule: never overwrite a tested row), and offer `/story-bank refresh` to regenerate `story_bank.md`.
+   - After writing, confirm: "Updated company angles for {N} stories in story_bank.json"
 
 ### `inventory` — Full Story Inventory
 
@@ -161,10 +157,10 @@ Find interview themes across all active companies that don't have strong story c
 
 ## Key Rules
 
-- **Read story_bank.json** every time — don't rely on stale data
+- **Read `story_bank.json` every time** — it is the inventory; do not rely on memory or a copied table
 - **Score-aware mapping** — prefer stories at 4.0+ target; flag stories below target
 - **Bridge quality matters** — a strong story with a weak bridge is worse than a decent story with a natural bridge
 - **Don't overload one story** — if one story appears in 4+ themes for one company, flag it
 - **Flagged stories** from progress.json should be marked and deprioritized as primaries
-- **Canonical numbers must appear** — every story mapping should include the associated metric from story_bank.json
+- **Numbers come from the canon** — every mapping includes the story's metric from `canonical_numbers`, worded per `canonical_provenance`. If a story's number is marked OPEN there, write "no number to quote" instead of using it
 - **Gap honesty** — if there's no good story for a theme, say so and provide a bridge strategy rather than force-fitting

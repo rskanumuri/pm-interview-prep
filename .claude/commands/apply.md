@@ -19,6 +19,10 @@ Generate answers for job application forms using evaluation context, resume, and
 - Cheat Sheet: `interview_prep/scripts/{company}_cheat_sheet.md`
 - Applications: `interview_prep/applications.json` (current status)
 
+### Gates (check before drafting anything)
+- Read the eval's `gates`. If `title` is FAIL_TITLE, or `h1b` is BLOCKED or UNKNOWN, STOP and say so; draft only if the user overrides in this run.
+- Work authorization: The user holds an H1B (current employer) and needs a transfer. Never answer "No" to "will you require sponsorship" and never claim US citizenship or permanent residency. If a form asks, answer that a transfer of an existing H1B is needed, or leave the field for the user. Never guess an answer to a legal/immigration field.
+
 ### Write
 - Applications: `interview_prep/applications.json` (update status to `applied` after use)
 
@@ -103,7 +107,7 @@ User provides a screenshot or paste of the actual application form.
 3. For each field, generate a tailored answer:
    - Text fields: full written answers
    - Dropdowns: recommend the best option
-   - Yes/No: answer with rationale
+   - Yes/No: answer with rationale. For work authorization, sponsorship, relocation, salary-expectation and any legal field: do NOT answer, flag for the user (see Gates).
    - Salary: range from eval Block D / CLAUDE.md targets
    - URL fields: LinkedIn, portfolio
 4. Display field-by-field answers in copy-paste format

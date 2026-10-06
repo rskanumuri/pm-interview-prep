@@ -84,7 +84,7 @@ Example format: "Without me, {team} takes {N months} longer to {specific outcome
 ---
 
 ### Locked Numbers
-{Read from `story_bank.json` canonical_numbers AND/OR CLAUDE.md "Key Numbers" section. Display the user's canonical metrics.}
+Read `story_bank.json` `canonical_numbers` and `canonical_provenance` and print the headline numbers for the stories chosen above, each with its provenance phrasing (unit, denominator, how to say it). Do not use a hardcoded list. Then run the `/story-check numbers` logic READ-ONLY on the chosen stories' files and list any drift found (do not fix anything). If a ruling is marked OPEN in provenance, print "do not quote" next to it.
 
 ---
 

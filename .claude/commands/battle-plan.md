@@ -8,7 +8,8 @@ Auto-generates daily prep plan based on interview dates and prep gaps. Tracks ti
 
 ## Data Files
 
-- Battle Plan: `interview_prep/battle_plan.md`
+- Battle Plan: `interview_prep/battle_plan.md` (the single ACTIVE plan; create it on first use if missing)
+- Plan discovery: if `interview_prep/battle_plan.md` does not exist, look for the newest of `interview_prep/scripts/battle_plan_*.md` and `sources/general/battle_plan*.md` and say which you found. If more than one candidate looks active, list them and offer to archive the older ones (move only after the user agrees). Never merge or read several plans as one.
 - Progress: `interview_prep/progress.json`
 - CLAUDE.md: `CLAUDE.md` (pipeline stage and status; interview dates are in progress.json)
 - Applications (if exists): `interview_prep/applications.json` — for top-of-funnel tasks
@@ -39,12 +40,14 @@ Read battle_plan.md, progress.json, CLAUDE.md, and applications.json (if exists)
 
 **Step 2 — Calculate Urgency**
 
-For each upcoming interview:
+For each upcoming interview (parse `interview_dates` from progress.json; if a value is prose or unparseable, ask the user for the date instead of guessing):
 ```
-URGENCY = (prep_gaps / hours_until_interview)
+hours = hours_until_interview            # skip entries where hours <= 0 (see below)
+prep_gaps = count of open gap items for that company (company_readiness gaps / lessons_for_next_rounds not yet drilled); if no gap data exists, use (100 - readiness%) / 10
+URGENCY = prep_gaps / max(hours, 1)
 ```
 
-Sort by urgency descending. Interviews within 24 hours get highest priority.
+Sort by urgency descending. Interviews within 24 hours get highest priority. Entries with a date in the past are NOT urgent: list them as "past, debrief due" (offer `/debrief`) or "past, no debrief logged". If there are no upcoming interviews at all, say so plainly ("No scheduled interviews. Pipeline: {passive / none}") and show only top-of-funnel tasks, instead of inventing prep work.
 
 **Step 3 — Generate Today's Plan**
 
@@ -75,7 +78,7 @@ Sort by urgency descending. Interviews within 24 hours get highest priority.
 
 **Step 4 — Save Plan**
 
-Update `interview_prep/battle_plan.md` with today's plan. Archive previous day's plan in the same file (keep last 3 days, delete older).
+Update `interview_prep/battle_plan.md` with today's plan. Archive the previous day's plan under a `## Archive` section in the same file. Keep the archive; do not delete older days (`history` depends on it). If the file grows past about 400 lines, ask the user before trimming and move the trimmed days to `sources/general/battle_plan_archive_{YYYY-MM}.md` rather than deleting them.
 
 ### `done <item>` — Mark Item Complete
 
