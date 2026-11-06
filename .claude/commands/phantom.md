@@ -71,6 +71,8 @@ Parse `$ARGUMENTS`:
    - "Special projects" could mean strategy consulting OR platform scaffolding. Look at deliverables.
    - Domain-heavy language in the JD context (industry terms, market dynamics) doesn't mean domain expertise is required — it may just be describing the business the platform serves.
 
+3.5. **Read the HM-lens MSN** at `interview_prep/evaluations/{company_key}_hm_msn.md` (build V1 per `interview_prep/reference/hm_lens_msn_method.md` if missing). It is company/role/market-only, so phantom objectivity holds. The phantom's resume, numbers and 5 stories must satisfy every Must, and its Day-30/Day-90 must match the MSN's.
+
 4. **Research** using WebSearch:
    - "what makes someone successful at {company}"
    - "{company} interview tips {role}"

@@ -28,6 +28,7 @@ Check `progress.json` for the `active_user` field. Load personal info from `sour
 
 ### Write
 - Evaluation: `interview_prep/evaluations/{company}_{role_slug}_eval.json`
+- HM-lens MSN: `interview_prep/evaluations/{company_key}_hm_msn.md` (method: `interview_prep/reference/hm_lens_msn_method.md`)
 - Applications: `interview_prep/applications.json` (add/update entry)
 - Progress: `interview_prep/progress.json` (write eval_score/eval_verdict if company exists in company_readiness; never fit_score)
 
@@ -109,7 +110,12 @@ Evaluate a JD by URL or pasted text.
 
    A gate override is recorded as `gate_override: true` with the user's reason. Never override silently.
 
-5. **Run 6-block evaluation:**
+4.5. **HM-lens MSN (after the gates pass, before scoring).** Follow `interview_prep/reference/hm_lens_msn_method.md`.
+   - If `interview_prep/evaluations/{company_key}_hm_msn.md` exists, read it. Otherwise build V1 now (JD signals, product, company situation, market, req signals) and save it there.
+   - Derive it BEFORE reading the user's profile for scoring (step 3 inputs are used only after the MSN is written). The MSN describes the HM's need, not the user's fit.
+   - The MSN feeds Block G only. It does not change the Block B requirement list or the overall formula.
+
+5. **Run 6-block evaluation (plus Block G, unscored):**
 
 #### Block A — Role Summary
 
@@ -194,6 +200,14 @@ Grade: based on strength of narrative connection.
 
 Grade: based on story arsenal coverage of JD themes.
 
+#### Block G — HM Lens (MSN, not in the score)
+
+From the MSN artifact (step 4.5): the HM synthesis (trigger, promotion outcome, feared failure), then score the user 1-5 against each Must and Should with resume/story-bank evidence only.
+
+- Any Must not in the JD that the user scores 2 or below: **HIDDEN-MUST GAP**. Add it to the TL;DR as "HIDDEN-MUST GAP: {must}, verify with: {question}".
+- Any JD-stated Must at 2 or below is already a Block B gap; mark it **MUST GAP** here too.
+- If the MSN shows the role is materially different from the JD (different Role Taxonomy, a dominant unwritten Must), say so in one line: "HM lens shifts the read: {how}". The verdict number does not change; the user decides.
+
 6. **Calculate overall score:**
    - Average of 6 block grades (numeric)
    - Weight Block B (Resume Match) at 2x — it's the strongest predictor
@@ -276,6 +290,20 @@ Grade: based on story arsenal coverage of JD themes.
 
 ---
 
+### Block G — HM Lens (not scored) — MSN confidence {N}/10
+
+**Trigger:** {why the req is open now} | **HM wins if:** {promotion outcome} | **HM fears:** {feared failure}
+
+| Must / Should | Tier | You | Evidence or gap |
+|---------------|------|-----|-----------------|
+| M1 {must} | {Stated/Inferred-strong} | {X}/5 | {proof or HIDDEN-MUST GAP + verify question} |
+| S1 {should} | {tier} | {X}/5 | {proof} |
+
+**Unwritten deal-breakers:** {list or none}
+**HM lens shifts the read:** {one line, or "no, JD matches HM need"}
+
+---
+
 ### Recommended Actions
 
 **If score >= 4.0:**
@@ -301,6 +329,7 @@ Grade: based on story arsenal coverage of JD themes.
   "company_display": "{Company Display Name}",
   "role_title": "{Role Title}",
   "gates": { "title": "PASS|FAIL_TITLE", "h1b": "SPONSORS|UNKNOWN|BLOCKED", "h1b_evidence": "{source}", "gate_override": false },
+  "hm_msn": { "path": "interview_prep/evaluations/{company_key}_hm_msn.md", "version": "V1", "confidence": 0, "musts": [{ "must": "{must}", "tier": "Stated|Inferred-strong", "candidate_score": 0 }], "hidden_must_gaps": ["{must}"] },
   "jd_url": "{url or null}",
   "evaluated_date": "{YYYY-MM-DD}",
   "archetypes": ["{matched archetype IDs}"],

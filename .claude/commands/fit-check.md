@@ -123,6 +123,8 @@ Comprehensive fit assessment for a specific company/role.
 
    **Platform PM JDs describe what the platform SERVES, not what the PM OWNS.** Don't conflate the customers of the platform with the PM's scope.
 
+0.5. **HM-lens MSN (before reading user data).** Read `interview_prep/evaluations/{company_key}_hm_msn.md`. If missing, build V1 per `interview_prep/reference/hm_lens_msn_method.md` and save it. If newer recruiter/HM intel exists than the MSN version, run the method's Update step first (V2+).
+
 1. **Read all data files** listed above for the target company
 2. **Extract role requirements** from:
    - Insights file → role details, key responsibilities, requirements, "What They're Looking For"
@@ -132,8 +134,8 @@ Comprehensive fit assessment for a specific company/role.
    - If none exist, warn and offer to run `/company-prep {company}` first
 3. **Read the user's source docs** to inventory available experience and stories
 4. **Score each of the 7 fit dimensions** (1-5) by matching role requirements against the user's experience
-5. **Map each JD requirement** individually — score and cite evidence
-6. **Identify gaps** — any dimension or requirement scoring 3 or below (a fit-check gap needs a bridge SCRIPT; `/eval` calls 2 or below a "major gap". The two thresholds are intentionally different, so do not compare raw gap counts across the two skills)
+5. **Map each JD requirement** individually — score and cite evidence. Then append each MSN Must and Should that is not already a JD requirement as its own row, Source = HM-inferred
+6. **Identify gaps** — any dimension or requirement scoring 3 or below, including HM-inferred Musts (label those HIDDEN-MUST GAP and carry the MSN verify question into the bridge) (a fit-check gap needs a bridge SCRIPT; `/eval` calls 2 or below a "major gap". The two thresholds are intentionally different, so do not compare raw gap counts across the two skills)
 7. **For each gap, draft a one-line bridge strategy**
 8. **Check debrief history** — if debriefs exist, note how gaps played out in real interviews
 9. **If 2+ companies have been fit-checked** (check progress.json for fit_score), show pipeline comparison
@@ -150,12 +152,13 @@ Comprehensive fit assessment for a specific company/role.
 
 ### JD Requirement Mapping
 
-| Requirement | Score | Evidence |
-|-------------|-------|----------|
-| {8+ years B2B SaaS PM} | 5/5 | {specific proof} |
-| {Cloud platform experience} | 5/5 | {specific proof} |
-| {Developer tools experience} | 3/5 | {adjacent, bridge needed} |
-| {Industry domain knowledge} | 2/5 | {no direct experience; bridge needed} |
+| Requirement | Source | Score | Evidence |
+|-------------|--------|-------|----------|
+| {8+ years B2B SaaS PM} | JD | 5/5 | {specific proof} |
+| {Cloud platform experience} | JD | 5/5 | {specific proof} |
+| {Developer tools experience} | JD | 3/5 | {adjacent, bridge needed} |
+| {Industry domain knowledge} | JD | 2/5 | {no direct experience; bridge needed} |
+| {Must from MSN, e.g. migration-under-deadline} | HM-inferred | 2/5 | HIDDEN-MUST GAP; verify: "{question}" |
 
 ---
 

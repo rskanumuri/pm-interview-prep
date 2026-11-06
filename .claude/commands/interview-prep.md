@@ -65,6 +65,8 @@ The skill builds CUMULATIVE prep — each stage includes everything from prior s
 
 ### Required Deliverables (in addition to Stage 1):
 
+0. **HM-lens MSN, updated to V2+** — read `interview_prep/evaluations/{company_key}_hm_msn.md` (build per `interview_prep/reference/hm_lens_msn_method.md` if missing) and run its Update step with the recruiter intel. Its Musts anchor the gap analysis focus, the problem-first play response paths, and the kill risks. Its HM synthesis (feared failure) seeds the "What is this interviewer afraid of" section. Its verify questions become candidate flip questions.
+
 1. **Gap analysis** — research the company's product gaps
    - Search: company docs, changelog/release notes, G2/Gartner Peer Insights reviews, community forums
    - Focus on the team/area the role sits in, NOT the whole company
