@@ -24,7 +24,7 @@ This skill reads live files (there is no session cache). Read them in one batch 
 
 In the rest of this file, `rubric._base` means `interview_prep/rubric.md`, `rubric.{company}` means `interview_prep/rubrics/{company_key}.md`, and `insights.{company}` means `interview_prep/insights/{company_key}.md`. For a closed company whose files moved to `sources/{company}/`, look there.
 
-A listed file that does not exist yet (for example `rubric.md` or `_general.md` in a new workspace) is skipped; the base dimensions in "Scoring Guidelines" below still apply.
+A listed file that does not exist yet (for example `_general.md` in a new workspace) is skipped; the base dimensions in "Scoring Guidelines" below still apply.
 
 **Target company default:** if `companies.json` `default` names a company that is closed (see `interview_prep/reference/closed_pipeline.md`), do not use it silently; show the company selection prompt.
 
