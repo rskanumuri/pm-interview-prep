@@ -377,8 +377,8 @@ Base: {base}+ | Total: {total}+{if visa: | Must sponsor H1B}
 - **Canonical story index**: `interview_prep/story_bank.json` + `interview_prep/story_bank.md`
 - Before ending any conversation where story-related files were created or modified, offer: "Run `/story-bank sync`?"
 - After any `/debrief`, `/drill-rapid`, or `/pm-practice` session, offer: "Update story bank with this session's data?"
-- When you tell a story differently (new framing, new bridge), detect and offer to add as a new angle in `story_bank.json`
-- `story_bank.md` is always auto-generated from JSON — never hand-edit it
+- When the user tells a story differently (new framing, new bridge), detect and offer to add as a new angle in `story_bank.json`.
+- `story_bank.md` is always auto-generated from JSON. Never hand-edit it.
 
 ### Timed Agents
 
@@ -417,18 +417,19 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 ### Working Style Preferences
 
 - Be direct. Don't over-explain.
-- Don't spawn research agents for things that can be reviewed inline — do it directly.
+- Don't spawn research agents for things that can be reviewed inline. Do it directly.
 - When creating content, write it fully. Don't give summaries and ask "should I write it?"
 - Never invent story details. If you don't have the data, say so.
 - When dates/numbers are corrected, update ALL files, not just the one being discussed.
-- When told "yes, do it" — execute immediately, don't ask clarifying questions.
+- When told "yes, do it", execute immediately. Don't ask clarifying questions.
 
 ### Career Learning Hooks
 
 - After any `/debrief`, automatically compare this round's patterns against `interview_prep/interview_lessons.md` and PROPOSE specific updates (extract from debrief data, show the proposed change, don't ask the user to generate).
 - When archiving a rejected company, read all debriefs for that company, cross-reference with `interview_prep/career_takeaways.md`, and PROPOSE a specific career takeaway. User reviews and approves.
 - When archiving a rejected company, if `{company}_phantom.md` exists, update it with post-mortem: "The candidate who got this job probably had X." Final version becomes a learning artifact.
-- Living docs: `interview_prep/career_takeaways.md` (career wisdom) + `interview_prep/interview_lessons.md` (learned vs still learning)
+- After any `/debrief`, also update `interview_prep/question_bank.md` with new questions from this round and regenerate the cleaned version (`question_bank_clean.md`).
+- Living docs: `interview_prep/career_takeaways.md` (career wisdom) + `interview_prep/interview_lessons.md` (learned vs still learning) + `interview_prep/question_bank.md` (raw) + `interview_prep/question_bank_clean.md` (names and scores stripped, shareable)
 
 ### Outreach Drafting Discipline
 
@@ -461,7 +462,7 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 1. **Lead with business impact, not technology.**
 2. **Never introduce a story with what you lack.**
 3. **Never frame a current/recent role as a consolation prize.**
-4. **"Can AI make it faster?" test** — if a generic AI answer could replace yours, be more specific.
+4. **"Can AI make it faster?" test.** If a generic AI answer could replace yours, be more specific.
 5. **End with offer.**
 
 ---
@@ -484,7 +485,7 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 
 ## Inbox
 
-- `sources/inbox/` — Drop anything here, auto-classified by `/process-sources`
+- `sources/inbox/`. Drop anything here, auto-classified by `/process-sources`.
 ```
 
 ---
