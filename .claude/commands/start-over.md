@@ -4,7 +4,7 @@ description: "Wipe all personal data for a from-scratch restart, with a dry-run 
 
 # Start Over — Full Workspace Wipe
 
-Returns the workspace to a clean, never-configured state so you can start from scratch (new job search, new career chapter, or handing the repo to someone else). Deletes ALL personal data. System files (skills, hooks, tools, templates, master rubric) are never touched.
+Returns the workspace to a clean, never-configured state so you can start from scratch (new job search, new career chapter, or handing the repo to someone else). Deletes ALL personal data. System files (skills, hooks, tools, templates) are never touched. The master rubric keeps its system content; only criteria collected from your own sources are cleared.
 
 This is the heavy option. For a lighter reset that keeps your resume and company research, use `/setup reset`.
 
@@ -51,15 +51,16 @@ Build the full list of what will be deleted or reset. Show it grouped, with file
 - `interview_prep/applications.json`, `companies.json`, `progress.json`, `questions.json`, `story_bank.json`
 - `config/portals.json`, `config/scan_history.json`
 - `sources/manifest.json`
+- `interview_prep/rubric.md`: only its `## Collected Criteria` section (see Step 4). `/process-sources` appends criteria from the user's own sources there, so it is personal data.
 - `CLAUDE.md` (see Step 5)
 
 **NEVER TOUCH:**
 - `.claude/` (skills, hooks, settings, `settings.local.json`), `tools/`, `README.md`, `SETUP.md`, `LICENSE`, `.gitignore`, `.git/`
-- `interview_prep/rubric.md` (master rubric, system file)
+- Everything in `interview_prep/rubric.md` above its `## Collected Criteria` heading (master rubric, system content)
 
 **UNRECOGNIZED:** any other file or folder under `sources/`, `interview_prep/`, `config/`, or `output/` that is not matched above (for example a `reference/` folder or a hand-made notes file). Do NOT delete these. List them in a separate "Kept, not recognized" group so the user can decide.
 
-If the inventory is already at seed state (nothing to delete, JSON files match seeds, CLAUDE.md has the unconfigured sentinel), say "Workspace is already clean. Run `/setup` to get started." and stop.
+If the inventory is already at seed state (nothing to delete, JSON files match seeds, the rubric's Collected Criteria section holds only its seed line, CLAUDE.md has the unconfigured sentinel), say "Workspace is already clean. Run `/setup` to get started." and stop.
 
 If `--dry-run`: end here with "Dry run only. Nothing was changed."
 
@@ -85,7 +86,7 @@ Only the exact text `RESET` proceeds. "yes", "y", "ok", or "do it" cancel. Never
 
 ### Step 4 — Wipe
 
-Delete the DELETE group, then write the seed JSON files. Use plain per-path deletes. Do not use broad globs on the repo root, and do not run any `git clean`, `git reset`, or `git checkout` for this. Skip every path in NEVER TOUCH and UNRECOGNIZED. Recreate any missing `.gitkeep` files in `interview_prep/{answers,evaluations,insights,research,rubrics,scripts}`, `output/cv`, and `sources/inbox`.
+Delete the DELETE group, then write the seed JSON files. Use plain per-path deletes. Do not use broad globs on the repo root, and do not run any `git clean`, `git reset`, or `git checkout` for this. Skip every path in NEVER TOUCH and UNRECOGNIZED. In `interview_prep/rubric.md`, replace everything below the `## Collected Criteria` heading with one blank line and the seed line `*General scoring criteria extracted by `/process-sources` are appended here.*`; leave every line above that heading as it is. If the file has no such heading, leave the file alone and list it under "Kept, not recognized". Recreate any missing `.gitkeep` files in `interview_prep/{answers,evaluations,insights,research,rubrics,scripts}`, `output/cv`, and `sources/inbox`.
 
 ### Step 5 — CLAUDE.md back to unconfigured
 
@@ -238,7 +239,7 @@ Write these files exactly. Keep in sync with the files shipped in the repo; when
 - **Nothing is deleted before a verified backup exists.** Backup failure aborts the whole run.
 - **Typed `RESET` only.** No yes/no confirmation.
 - **Never delete what you don't recognize.** Unknown files are kept and reported.
-- **Never touch system files.** Skills, hooks, settings, tools, templates, README, SETUP, LICENSE, `.gitignore`, `.git`, and `interview_prep/rubric.md` are out of scope.
+- **Never touch system files.** Skills, hooks, settings, tools, templates, README, SETUP, LICENSE, `.gitignore`, and `.git` are out of scope. In `interview_prep/rubric.md` only the Collected Criteria section is reset; the rest is system content.
 - **No git operations.** No auto-commit, no push, no `git clean`. The user decides when to commit the clean state.
 - **Dry run writes nothing.**
 - **Skill count in CLAUDE.md Quick Start is computed, not hardcoded.**
