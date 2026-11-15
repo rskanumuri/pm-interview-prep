@@ -1,5 +1,6 @@
 ---
 description: "Audit story files against the canonical numbers, provenance rulings, and purged-story list. Use for check numbers."
+argument-hint: "[fix | numbers | reuse | <story_name>]"
 ---
 
 # Story Consistency Checker
@@ -22,6 +23,7 @@ Audits forward-looking story files for number conflicts, provenance violations, 
 - Any `*transcript*` file in `sources/`
 - Any file under `sources/<company>/` for a company in `interview_prep/reference/closed_pipeline.md`
 - `interview_lessons.md`, `career_takeaways.md`, `question_bank*.md`
+- Recall and timeline files that quote source documents on purpose (any file whose header says it lists source-versus-canon conflicts). Their non-canon numbers are the point of the file.
 Old values in those files were true when written. Report them under "Historical drift (not fixed)" so the user knows, and stop.
 
 ## Method: grep first, then read
@@ -61,14 +63,14 @@ Everything in `story_bank.json` `purged_stories`, including phrasing variants.
 Different TMAY versions with conflicting facts.
 
 ### 8. Reuse (story_bank.json is the source)
-Round collision (same story, 2+ LPs in one round), overuse (4+ questions), orphan (in the master repo but not in `story_bank.json` `company_angles`). Never auto-fixed.
+Round collision (same story, 2+ LPs in one round), overuse (4+ questions inside one company's loop; reuse across companies is fine), orphan (in the master repo but not in `story_bank.json` `company_angles`). Never auto-fixed.
 
 ## Date Registry
 This skill keeps no copy of dates. Story years live in `story_bank.json`; employment windows live in `canonical_provenance`.
 
 ## Multi-Role File Keying
 
-Follow the `{company_key}` convention in `CLAUDE.md` "Multi-Role File Keying". Treat each `{company}_{role_slug}` as its own scope; report drift per role.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Treat each `{company_key}` as its own scope; report drift per role.
 
 ## Commands
 

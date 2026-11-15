@@ -1,5 +1,6 @@
 ---
 description: "Generate application-form answers and cover letters from the eval, resume, and story bank."
+argument-hint: "<company> [role] [screenshot|cover-letter]"
 ---
 
 # Apply — Application Form Answer Generator
@@ -28,7 +29,7 @@ Generate answers for job application forms using evaluation context, resume, and
 
 ## Multi-Role File Keying
 
-When writing application answers, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, answers save as `{company}_{role_slug}_application_*.md`, else fall back to `{company}_application_*.md` (legacy single-role). Read-order on lookups: try role-keyed first, fall back to company-only.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Answers save as `{company_key}_application_*.md`.
 
 
 
@@ -50,7 +51,7 @@ Generate answers for common application form fields.
 
 3. **Generate answers for standard form fields:**
 
-## APPLICATION ANSWERS — {COMPANY} — {Role Title}
+## APPLICATION ANSWERS: {COMPANY}, {Role Title}
 
 ---
 
@@ -138,11 +139,7 @@ Generate a cover letter using evaluation context.
 - **Company-specific details.** Reference their actual products, recent launches, or challenges. If you don't have specifics, say so — don't make them up.
 - **Canonical numbers only.** From story_bank.json. Never approximate.
 - **No hedging.** No "I believe I would be" or "I hope to." Direct: "I built X. I'd bring that to Y."
-- **Pre-interview rules from CLAUDE.md apply:**
-  1. Lead with business impact, not technology
-  2. Never introduce with what you lack
-  3. "Can AI make it faster?" test
-  4. End with offer
+- **Pre-interview rules:** the pre-interview rules in `interview_prep/reference/skills_core.md` §6 are automatic checks on everything this skill writes
 - **Keep it human.** Short sentences. Conversational rhythm. Not resume-bullet prose.
 
 ## Integration with Other Skills

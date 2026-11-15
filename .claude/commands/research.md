@@ -1,10 +1,13 @@
 ---
 description: "Launch deep company, pricing, product, or market research and save the brief to insights."
+argument-hint: "<company> [pricing | product <name> | competitors] | market <topic>"
 ---
 
 # Research — Deep Company & Market Research Agent
 
-Launches background research for company deep-dives, competitive analysis, market sizing, and product teardowns. Runs asynchronously so the user can keep prepping while research completes.
+Company deep-dives, competitive analysis, market sizing, and product teardowns. Runs INLINE in the main session by default (don't spawn research agents for things the user can review inline). If the user wants it in the background, use `/timed-research` instead.
+
+**Insights file format:** `interview_prep/insights/{company_key}.md` is shared with `/company-prep` and `/process-sources`. If the file exists, keep its existing section headings and add findings under them and under "Collected Tips" with a dated `### Source:` block. Use the Research Brief layout below only when creating the file, and include the sections `/company-prep` expects (Mission, Core Values, What Interviewers Look For, Products to Reference, Competitive Landscape, Interview Tips, Collected Tips).
 
 ## Purpose
 
@@ -12,7 +15,7 @@ Formalizes the research pattern: launch research, get results, save to cheat she
 
 ## Multi-Role File Keying
 
-When saving research output keyed by company, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, research files save as `{company}_{role_slug}_research.md`, else fall back to `{company}_research.md` (legacy single-role). Read-order on lookups: try role-keyed first, fall back to company-only.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Accepts an optional `<role>` arg. Research files save as `{company_key}_research.md`.
 
 
 
@@ -35,7 +38,7 @@ Launch a comprehensive research sweep using WebSearch and WebFetch:
 
 Format:
 ```markdown
-# {Company} — Research Brief
+# {Company}: Research Brief
 **Last updated:** {date}
 **Sources:** {list of URLs consulted}
 
@@ -51,7 +54,7 @@ Format:
 | {name} | {how they differ} | {how your experience maps} |
 
 ## Recent News (Last 90 Days)
-- {date}: {headline} — {relevance to interview}
+- {date}: {headline}: {relevance to interview}
 
 ## Technology & Architecture
 {tech stack, infrastructure decisions, open-source, technical culture}

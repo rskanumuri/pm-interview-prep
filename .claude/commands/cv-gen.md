@@ -1,5 +1,6 @@
 ---
 description: "Generate a tailored ATS-optimized resume (HTML and PDF) for a company or role from the master resume and eval."
+argument-hint: "<company> [role] [--preview] | prefs | list"
 ---
 
 # CV Gen — ATS-Optimized Resume Generator
@@ -29,7 +30,7 @@ Generate tailored, ATS-optimized resume PDFs per company/role. Reads the user's 
 
 ## Multi-Role File Keying
 
-When generating a tailored resume, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, the output resume file is keyed `{company}_{role_slug}_resume.*`, else fall back to `{company}_resume.*` (legacy single-role). Two roles at the same company will generate two distinct resume files without overwriting each other.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Output files are keyed by `{company_key}`, so two roles at one company produce two resumes that do not overwrite each other.
 
 ## Commands
 
@@ -188,7 +189,7 @@ Parse `$ARGUMENTS` to determine the command:
 | {keyword} | Yes | Competencies |
 | {keyword} | No (gap) | -- |
 
-8. Offer: "Run `/save-push` to save?"
+9. Offer: "Run `/save-push` to save?"
 
 ---
 

@@ -44,11 +44,11 @@ Build the full list of what will be deleted or reset. Show it grouped, with file
 - `sources/<name>/` for every subfolder EXCEPT `sources/your_name/`. In `sources/your_name/`, delete everything except `README.md`.
 - `sources/inbox/*` except `.gitkeep`
 - `interview_prep/answers/*`, `evaluations/*`, `insights/*`, `research/*`, `rubrics/*`, `scripts/*` (keep each folder's `.gitkeep`)
-- These loose files in `interview_prep/` if present: `story_bank.md`, `question_bank.md`, `question_bank_clean.md`, `interview_lessons.md`, `career_takeaways.md`
+- These loose files in `interview_prep/` if present: `session_data.json` (an old cache, no longer used), `story_bank.md`, `question_bank.md`, `question_bank_clean.md`, `interview_lessons.md`, `career_takeaways.md`
 - `output/*` except `output/cv/.gitkeep` (recreate the `.gitkeep` files if missing)
 
 **RESET to seed (see Seeds):**
-- `interview_prep/applications.json`, `companies.json`, `progress.json`, `questions.json`, `session_data.json`, `story_bank.json`
+- `interview_prep/applications.json`, `companies.json`, `progress.json`, `questions.json`, `story_bank.json`
 - `config/portals.json`, `config/scan_history.json`
 - `sources/manifest.json`
 - `CLAUDE.md` (see Step 5)
@@ -177,55 +177,6 @@ Write these files exactly. Keep in sync with the files shipped in the repo; when
     "sources": []
   },
   "questions": []
-}
-```
-
-`interview_prep/session_data.json`
-```json
-{
-  "metadata": {
-    "version": "1.0",
-    "last_consolidated": "2026-01-01",
-    "description": "Consolidated master file loaded once per session. Contains all questions, stories, rubric, and company data."
-  },
-  "companies": {},
-  "questions": {
-    "behavioral": [],
-    "product_sense": [],
-    "execution": [],
-    "analytical": [],
-    "technical": [],
-    "general": [
-      {"id": "tmay", "question": "Tell me about yourself", "category": "general", "frequency": "every_interview"},
-      {"id": "why_company", "question": "Why this company?", "category": "general", "frequency": "every_interview"},
-      {"id": "why_pm", "question": "Why product management?", "category": "general", "frequency": "common"}
-    ]
-  },
-  "star_stories": [],
-  "rubric": {
-    "universal": {
-      "delivery": {"weight": 1, "scale": 5, "description": "Clarity, pacing, confidence, conciseness"},
-      "company_fit": {"weight": 1, "scale": 5, "description": "How well the answer maps to this company's values and needs"}
-    },
-    "format_specific": {
-      "behavioral": {
-        "structure": {"weight": 2, "scale": 5, "description": "Clear STAR format with measurable results"},
-        "specificity": {"weight": 2, "scale": 5, "description": "Concrete details, not vague generalizations"},
-        "ownership": {"weight": 2, "scale": 5, "description": "Clear individual contribution, not team attribution"}
-      },
-      "product_sense": {
-        "user_empathy": {"weight": 2, "scale": 5, "description": "Deep understanding of user needs and pain points"},
-        "creativity": {"weight": 2, "scale": 5, "description": "Novel, non-obvious solutions"},
-        "prioritization": {"weight": 2, "scale": 5, "description": "Clear framework for what to build first and why"}
-      },
-      "execution": {
-        "structured_thinking": {"weight": 2, "scale": 5, "description": "MECE breakdown, clear metrics, tradeoff analysis"},
-        "metric_definition": {"weight": 2, "scale": 5, "description": "Right success metrics identified"},
-        "stakeholder_awareness": {"weight": 2, "scale": 5, "description": "Considers cross-functional dependencies"}
-      }
-    }
-  },
-  "insights": {}
 }
 ```
 

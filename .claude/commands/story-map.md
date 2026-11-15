@@ -1,5 +1,6 @@
 ---
 description: "Map the core stories to the interview themes of a company and write the angles back to the master repo."
+argument-hint: "<company> [role] | inventory | gaps"
 ---
 
 # Story-to-Company Mapper
@@ -8,7 +9,7 @@ Maps the user's core STAR stories to a company's interview themes. Reads source 
 
 ## Active User
 
-Check `progress.json` for the `active_user` field. Load personal info from `sources/{active_user}/`.
+Rule: `interview_prep/reference/skills_core.md` §4. Read `progress.json` `active_user`; personal material comes only from `sources/{active_user}/` and `interview_prep/story_bank.json`.
 
 ## Data Files
 
@@ -22,7 +23,6 @@ Check `progress.json` for the `active_user` field. Load personal info from `sour
 - Company Rubric: `interview_prep/rubrics/{company}.md`
 - Company Cheat Sheet: `interview_prep/scripts/{company}_cheat_sheet.md`
 - Progress: `interview_prep/progress.json` (scores, flagged stories)
-- Session Data: stale cache, do not use for the user's stories
 
 ## Story inventory
 
@@ -30,7 +30,7 @@ Do not keep a table here (the old one went stale: wrong count, unverified number
 
 ## Multi-Role File Keying
 
-When reading/writing company-keyed files (cheat sheet story map section, angles in master_story_repository.md), follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". This command accepts an optional `<role>` arg; when provided, read/update `{company}_{role_slug}` entries, else fall back to `{company}`. When seeding angles in master_story_repository.md, qualify the company column with the role name if role was provided (e.g., "Stripe / ML Foundations").
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Accepts an optional `<role>` arg. Read and update `{company_key}` entries; when seeding angles in `master_story_repository.md`, qualify the company column with the role name (for example "Stripe / ML Foundations").
 
 
 
@@ -45,9 +45,9 @@ Create a Story Map table mapping the user's stories to the company's interview t
 1. **Read story_bank.json** to get current story inventory with details
 2. **Read the user's source docs** for any stories not yet in the bank
 3. **Read company artifacts:**
-   - `interview_prep/insights/{company}.md` — what interviewers look for
-   - `interview_prep/rubrics/{company}.md` — scoring dimensions
-   - `interview_prep/scripts/{company}_cheat_sheet.md` — if exists, check existing story map
+   - `interview_prep/insights/{company}.md`: what interviewers look for
+   - `interview_prep/rubrics/{company}.md`: scoring dimensions
+   - `interview_prep/scripts/{company}_cheat_sheet.md`: if exists, check existing story map
 4. **Read progress.json** for story scores and flagged items
 5. **Identify company interview themes** from insights and rubric:
    - What dimensions does this company score on?
@@ -62,20 +62,15 @@ Create a Story Map table mapping the user's stories to the company's interview t
 
 > **Bridge** = the single sentence that connects a story's accomplishment to this company's specific problem (what they should DO, not a metric restatement). A strong bridge makes the story feel chosen for them, not reused.
 
-## STORY MAP — {Company}
+## STORY MAP: {Company}
 
 | Theme / Likely Question | Primary Story | Backup Story |
 |------------------------|---------------|--------------|
-| **{Theme 1: e.g., Scale}** | {Story name} -- {key metric} | {Story name} -- {key metric} |
+| **{Theme, from the company's rubric or insights}** | {story name}: {headline number from canon, worded per provenance} | {story name}: {headline number} |
 | | Bridge: {1 line} | Bridge: {1 line} |
-| **{Theme 2: e.g., Technical}** | {Story name} -- {key metric} | {Story name} -- {key metric} |
-| | Bridge: {1 line} | Bridge: {1 line} |
-| **{Theme 3: e.g., Leadership}** | {Story name} -- {key metric} | {Story name} -- {key metric} |
-| | Bridge: {1 line} | Bridge: {1 line} |
-| **{Theme 4: e.g., Customer}** | {Story name} -- {key metric} | {Story name} -- {key metric} |
-| | Bridge: {1 line} | Bridge: {1 line} |
-| **{Theme 5: e.g., Innovation}** | {Story name} -- {key metric} | {Story name} -- {key metric} |
-| | Bridge: {1 line} | Bridge: {1 line} |
+| *(one pair of rows per theme, usually 4 to 6 themes)* | | |
+
+(No example figures are kept in this template on purpose; an example can be copied into output. Every number comes from `story_bank.json`.)
 
 ---
 
@@ -86,11 +81,11 @@ Create a Story Map table mapping the user's stories to the company's interview t
 
 ### Story Usage
 
-- **Most used:** {Story name} (3 themes) -- OK, it's versatile
+- **Most used:** {story} ({N} themes) -- flag only if it would be told to more than one interviewer in the same loop
 - **Unused:** {stories not mapped} -- consider for follow-ups
 - **Flagged:** {stories below target score} -- drill before using
 
-8. **Optionally inject into cheat sheet** — if `interview_prep/scripts/{company}_cheat_sheet.md` exists and has a Story Map section, offer to update it with this mapping.
+8. **Optionally inject into cheat sheet**: if `interview_prep/scripts/{company}_cheat_sheet.md` exists and has a Story Map section, offer to update it with this mapping.
 
 8. **Write back company angles to `story_bank.json` (canonical)** — After generating the story map, offer: "Update story_bank.json with these company angles?"
    - If yes, for each story mapped above, update `company_angles[{company_key}]` in `story_bank.json`:
@@ -106,30 +101,24 @@ Create a Story Map table mapping the user's stories to the company's interview t
 Show all stories with usage count across all companies.
 
 **Steps:**
-1. Read story_bank.json for the full story list
-2. Read all cheat sheets: `interview_prep/scripts/*_cheat_sheet.md`
-3. Read progress.json for scores
-4. Count how many company story maps each story appears in
-5. Display:
+1. Read `interview_prep/story_bank.json` (the inventory; do not rebuild it from cheat sheets). `python -X utf8 tools/gen_story_bank_md.py` prints the computed lists.
+2. For each story: best and latest live score from `performance.interviews[]`, `times_told`, the companies in `company_angles`, and `performance.status`
+3. Display:
 
 ## STORY INVENTORY
 
-| Story | Score | Reps | Used In | Status |
-|-------|-------|------|---------|--------|
-| {Story 1} | 4.3 | 12 | {companies} | Locked |
-| {Story 2} | 4.0 | 5 | {companies} | Ready |
-| {Story 3} | 3.8 | 4 | {companies} | Below target |
-| {Story 4} | 3.5 | 3 | -- | Flagged |
-| {Story 5} | -- | -- | -- | Not drilled |
+| Story | Best / Latest Score | Told Live | Angles For | Status |
+|-------|---------------------|-----------|------------|--------|
+| {story name} | {best} / {latest}, or "untested" | {times_told} | {company keys} | {status} |
 
-**Legend:** At target = 4.0+ | Below target = <4.0 | Flagged = needs work | Not drilled = no reps
+**Legend:** At target = 4.0+ | Below target = under 4.0 | needs_work = flagged in the bank | untested = never told live. Scores are real interview scores (1-5); practice scores are not mixed in.
 
 ### `gaps` — Coverage Gap Analysis
 
 Find interview themes across all active companies that don't have strong story coverage.
 
 **Steps:**
-1. Read all company insights and rubrics for active companies (those in progress.json with status not containing "REJECTED" or "DROPPED")
+1. Read all company insights and rubrics for active companies (those in the CLAUDE.md Active Pipeline table; ignore any progress.json entry with an `outcome` key or a status containing "closed", "rejected", "dropped" or "withdrew" in any letter case)
 2. Compile all interview themes/dimensions across companies
 3. Check which themes have strong story coverage vs weak/no coverage
 4. Display:

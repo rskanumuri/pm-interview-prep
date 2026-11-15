@@ -1,5 +1,6 @@
 ---
 description: "Manage the canonical story bank with index, add, sync, angles, performance, and round allocation."
+argument-hint: "[add <name> | sync | refresh | stale | allocate <company> | performance | angles <story>]"
 ---
 
 # Story Bank — Central Story Management
@@ -218,6 +219,16 @@ Read `story_bank.json` and regenerate `interview_prep/story_bank.md` with:
 4. Performance Dashboard
 5. Health Warnings
 
+Rules for a refresh:
+- **Run the generator first:** `python -X utf8 tools/gen_story_bank_md.py` prints the Quick Index, most-told, lowest and highest scores, never-told list and tested angles by company, computed from the JSON. Paste the Quick Index as printed; use the computed lists as the facts for the Performance Dashboard and By Company. `python -X utf8 tools/gen_story_bank_md.py --check` compares the JSON with the current markdown table and exits non-zero on any difference. The script never writes a file.
+- **Health Warnings live in the JSON** (`health_warnings[]`, each `{id, text}` with markdown text). The generator prints them; paste that section as printed. To add, resolve or reword a warning, edit the JSON entry (text insertion, `interview_prep/reference/skills_core.md` §2), show the before and after, then refresh. Never edit a warning in the markdown, and never drop one. Resolved warnings stay, marked RESOLVED with the date and ruling.
+- **Read the current `story_bank.md` before rewriting it** for the judgment sections (By Question Type notes, By Company prose) so nothing curated there is lost; say what changed.
+- **Quick Index, counts and scores come from the JSON only** (`times_told`, `status`, `performance.interviews[]`). Recount; do not copy the old table.
+- **By Company:** list companies in the CLAUDE.md Active Pipeline table first, with planned rounds. With no active pipeline, say "No active pipeline as of {date}" and list closed companies most recent first with their final tellings and scores. Fix any section header that still says a closed company is awaiting next steps.
+- **Never-told list:** every story with at least one `company_angles` entry and `times_told` 0.
+- **Header:** today's date plus the JSON `last_updated`.
+- Check each story's `headline_number` against `canonical_provenance`; a mismatch becomes a Health Warning and a question for the user, not a silent edit.
+
 ### `stale` — Show Stale Stories
 
 Read `story_bank.json`. Show stories where:
@@ -238,7 +249,7 @@ Read `story_bank.json`. For the given company:
 
 Read `story_bank.json`. Show:
 1. **Tested stories**: sorted by score (lowest first = needs most work)
-2. **Most-used stories**: sorted by `times_told` (flag overuse > 3)
+2. **Most-used stories**: sorted by `times_told`. Reuse across companies is NOT a problem and is not flagged. Flag only a story told more than once to interviewers in the same loop, or more than twice inside one call
 3. **Never-told stories**: with company angles but never used live
 4. **Angles by story**: stories with 2+ proven angles
 5. **Score trend**: any stories getting better or worse over time
@@ -253,7 +264,7 @@ Show:
 
 ## Angle Extraction — How New Angles Get Captured
 
-When the user tells a story during `/drill-rapid`, `/pm-practice`, `/debrief`, or `/debrief-live`:
+When the user tells a story during `/drill-rapid`, `/pm-practice`, or `/debrief`:
 
 1. Identify which story was told (match against story names in bank)
 2. Compare the user's framing against stored `angles[]` entries
@@ -287,7 +298,7 @@ team_morale, influence_without_authority, initiative, analytical
 ## Standing Rules
 
 1. **Before ending any conversation** where story-related files were modified, offer: "Run `/story-bank sync`?"
-2. **After any `/debrief`, `/debrief-live`, `/drill-rapid`, or `/pm-practice`**, offer: "Update story bank with this session's data?"
+2. **After any `/debrief`, `/drill-rapid`, or `/pm-practice`**, offer: "Update story bank with this session's data?"
 3. **Canonical numbers in JSON must match CLAUDE.md** — if they diverge, flag immediately
 4. **Never include purged stories** in any output
 5. **story_bank.md is ALWAYS auto-generated** — never hand-edit it

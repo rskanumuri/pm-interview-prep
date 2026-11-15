@@ -1,5 +1,6 @@
 ---
 description: "Paste a JD URL or text to evaluate it, tailor a CV, and register it in the pipeline in one pass."
+argument-hint: "<jd-url-or-text> [--eval-only]"
 ---
 
 # Auto-Pipe — One-Shot JD Processing Pipeline
@@ -23,7 +24,7 @@ Same as `/eval` + `/cv-gen` combined. This skill orchestrates both.
 
 ## Multi-Role File Keying
 
-Since this command chains `/eval`, `/company-prep`, and `/fit-check`, it must propagate the `<role>` arg through all three. Follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, every downstream artifact is role-keyed. When omitted, all three chained commands use legacy `{company}_*` naming.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Pass the `<role>` arg through to the `/eval` and `/cv-gen` logic so every artifact is role-keyed.
 
 
 
@@ -64,7 +65,7 @@ Parse `$ARGUMENTS`:
 
 6. **Display combined results:**
 
-## AUTO-PIPE COMPLETE — {COMPANY} — {Role Title}
+## AUTO-PIPE COMPLETE: {COMPANY}, {Role Title}
 
 ---
 
@@ -75,12 +76,12 @@ Parse `$ARGUMENTS`:
 **Block Grades:** A:{grade} B:{grade} C:{grade} D:{grade} E:{grade} F:{grade}
 
 **Top matches:**
-- {requirement} — {score}/5 — {evidence}
-- {requirement} — {score}/5 — {evidence}
-- {requirement} — {score}/5 — {evidence}
+- {requirement}: {score}/5, {evidence}
+- {requirement}: {score}/5, {evidence}
+- {requirement}: {score}/5, {evidence}
 
 **Gaps:**
-- {gap} — {severity}
+- {gap}: {severity}
 
 ---
 

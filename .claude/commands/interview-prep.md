@@ -1,14 +1,28 @@
 ---
 description: "Build stage-aware prep (recruiter, hm, loop, final) with gap analysis, glossary, interviewer profiles, and answer scripts."
+argument-hint: "<company> <recruiter|technical|hm|loop|final> [interviewer...] | <company> status"
 ---
 
 # Interview Prep — Stage-Aware Prep Builder
 
 On-demand interview preparation that scales with the interview stage. Checks saved transcripts (then Granola) for prior round intel, builds what's missing, and ensures every interview has the right level of prep.
 
+## Rules that must hold (kept at the top because a context compaction keeps only the start of a skill)
+
+- **Clock and schedule check first** (`interview_prep/reference/skills_core.md` §1).
+- **Saved transcripts first, then Granola;** save new pulls verbatim. A missing connection never blocks the build.
+- **Check what exists; update, don't overwrite.** Every file written carries `{company_key}` in its name, including files under `interview_prep/research/`.
+- **Prepare for the question that gets asked:** recruiter and technical screens at technical companies often ask for a system walkthrough instead of a TMAY (Stage 1, deliverable 7). The story is chosen by the nouns in the question, result first.
+- **Company rubric exists before any round;** prep focuses on the 2x dimensions.
+- **Never fake domain expertise;** use AI to do domain work in deliverables. Frame product gaps as questions.
+- **Insider intel is marked DO NOT CITE IN INTERVIEWS.**
+- **Current-employer firewall:** prep writes the safe answer, not just a warning (Stage 1, deliverable 9).
+- **Numbers and stories come from canon** (`skills_core.md` §5); first line of every scripted answer answers the question.
+- **Research runs inline by default;** background agents only when the user asks.
+
 ## Active User
 
-Check `progress.json` for the `active_user` field. Load personal info from `sources/{active_user}/`.
+Rule: `interview_prep/reference/skills_core.md` §4. Read `progress.json` `active_user`; personal material comes only from `sources/{active_user}/` and `interview_prep/story_bank.json`.
 
 ## Data Files
 
@@ -23,7 +37,7 @@ Check `progress.json` for the `active_user` field. Load personal info from `sour
 
 ## Multi-Role File Keying
 
-When reading/writing company-keyed files, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". This command accepts an optional `<role>` arg; when provided, use `{company}_{role_slug}` keys, else fall back to `{company}` (legacy single-role). Read-order on lookups: try role-keyed first, fall back to company-only.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Accepts an optional `<role>` arg. Every file this skill writes carries `{company_key}` in its name, including files under `interview_prep/research/`.
 
 
 
@@ -31,9 +45,11 @@ Parse `$ARGUMENTS` to determine the command:
 
 ### `<company> <stage> [interviewer(s)]` — Build Stage-Appropriate Prep
 
-**Stages:** `recruiter`, `hm`, `loop`, `final`
+**Stages:** `recruiter`, `technical`, `hm`, `loop`, `final`
 
 The skill builds CUMULATIVE prep — each stage includes everything from prior stages plus new deliverables.
+
+**Before any stage:** run the clock and schedule check in `interview_prep/reference/skills_core.md` §1.
 
 ---
 
@@ -48,6 +64,18 @@ The skill builds CUMULATIVE prep — each stage includes everything from prior s
 4. **Extraction goals** — what to learn from this call (HM identity, team size, process, visa, comp, timeline)
 5. **Recruiter Q&A** — 5 likely questions with scripted answers
 6. **Phantom V1 (offer)** — offer `/phantom <company> [role]` (V1 from JD + company research); skip if a phantom already exists
+7. **System walkthrough** (required when the role is AI, platform, infrastructure or otherwise technical; optional elsewhere). Recruiters at technical companies often skip the TMAY and ask "walk me through a complex system you built end to end". Prepare one 4-minute answer for the single story that best matches the nouns in the JD (LLM, agentic, platform, pricing engine, and so on), in this order:
+   - Result in the first 30 seconds (the canonical number, worded per `canonical_provenance`)
+   - Business problem
+   - The layers or components, named
+   - Three decisions with the trade-off for each
+   - How quality was measured (evaluation, guardrails, human review)
+   - What was unsolved or what the candidate would do differently
+   - Result again, one sentence
+   Rules: pick the story by fit to the question, not by size; scale proof from another job gets one sentence at the end; never open by listing what the story does not cover. If the story's underlying work is more than six months old, build or refresh its recall file first (`/drill-rapid recall <story>` builds it).
+8. **Format-unknown fallback** — a recruiter screen can be a TMAY, a system walkthrough, or an AI-fluency question. The cheat sheet opens with a three-line "if they ask X, start with Y" card covering all three.
+9. **Safe builder answer** (when the user is currently employed elsewhere) — a scripted answer to "how do you use AI tools day to day" that leads with work from the user's own repos and tools, and describes current-employer work in one neutral sentence with no internal tooling, team or deal detail. A warning line is not enough; write the answer.
+10. **Application trail** (inbound roles) — if mail tools are connected, search for the original application or confirmation and which resume was sent; record what was found, or "no trail found", in the cheat sheet and add "which resume do you have?" to the questions list.
 
 ### Granola Check:
 - Check `sources/<company>/` for saved transcripts first; query Granola only for meetings not saved locally (save new pulls there)
@@ -59,13 +87,29 @@ The skill builds CUMULATIVE prep — each stage includes everything from prior s
 
 ---
 
+## Stage 1.5: Technical or Peer Screen (`/interview-prep <company> technical <interviewer_name>`)
+
+Some processes put a 30 to 45 minute screen with an engineer, TPM or peer PM between the recruiter and the hiring manager. It usually repeats the system-walkthrough question at more depth.
+
+### Required Deliverables (in addition to Stage 1):
+1. **System walkthrough, deep version** — the Stage 1 walkthrough plus a second layer for each of the three decisions (what was measured, what the alternative would have cost, who disagreed).
+2. **Recall pass** — run the recall questions in the story's recall file out loud; every blank is either filled by the user or marked "I don't recall the exact figure".
+3. **Source-versus-canon check** — list every place a primary document words a fact differently from `canonical_provenance` (ownership, dates, metric definitions) and write the one sentence the user will say if probed.
+4. **Interviewer profile** — function decides the hero: for an engineer or TPM, the engineering team is the hero (goal, constraints and product decisions given to them).
+5. **Five technical follow-ups** the interviewer is likely to ask, each with what the story can and cannot support.
+
+### Output:
+- Report: "Technical screen prep ready. Walkthrough: {story}. Open gaps: [list]."
+
+---
+
 ## Stage 2: HM Screen (`/interview-prep <company> hm <interviewer_name>`)
 
 **4 mandatory deliverables. No exceptions.**
 
 ### Required Deliverables (in addition to Stage 1):
 
-0. **HM-lens MSN, updated to V2+** — read `interview_prep/evaluations/{company_key}_hm_msn.md` (build per `interview_prep/reference/hm_lens_msn_method.md` if missing) and run its Update step with the recruiter intel. Its Musts anchor the gap analysis focus, the problem-first play response paths, and the kill risks. Its HM synthesis (feared failure) seeds the "What is this interviewer afraid of" section. Its verify questions become candidate flip questions.
+0. **HM-lens MSN, updated to V2+**: read `interview_prep/evaluations/{company_key}_hm_msn.md` (build per `interview_prep/reference/hm_lens_msn_method.md` if missing) and run its Update step with the recruiter intel. Its Musts anchor the gap analysis focus, the problem-first play response paths, and the kill risks. Its HM synthesis (feared failure) seeds the "What is this interviewer afraid of" section. Its verify questions become candidate flip questions.
 
 1. **Gap analysis** — research the company's product gaps
    - Search: company docs, changelog/release notes, G2/Gartner Peer Insights reviews, community forums

@@ -1,5 +1,6 @@
 ---
 description: "Scan portal career pages for new PM roles matching the title and location filters and add them to the pipeline."
+argument-hint: "[<company>] | add <company> <url> | history | filters"
 ---
 
 # Scan — Portal Scanner for PM Roles
@@ -21,7 +22,7 @@ Scan company career pages and job boards for PM roles matching your target arche
 
 ## Multi-Role File Keying
 
-When returning scan results and updating `companies.json`, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". If two scanned roles match the same company, list them as separate rows (each with its role) rather than deduping by company name.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Two scanned roles at one company are separate rows, each with its role; never dedupe by company name alone.
 
 
 
@@ -41,7 +42,7 @@ Scan every portal in `config/portals.json` for new PM roles.
 2. **For each portal in portals.json:**
    a. Fetch the career page URL via WebFetch
    b. Parse the response for job listings:
-      - **Greenhouse** (`job-boards.greenhouse.io/{slug}`): Parse JSON API at `https://boards-api.greenhouse.io/v1/boards/{slug}/jobs` — returns structured JSON with title, location, URL per job
+      - **Greenhouse** (`job-boards.greenhouse.io/{slug}`): Parse JSON API at `https://boards-api.greenhouse.io/v1/boards/{slug}/jobs`: returns structured JSON with title, location, URL per job
       - **Lever** (`jobs.lever.co/{slug}`): Parse HTML for job listing cards
       - **Ashby** (`jobs.ashbyhq.com/{slug}`): Parse HTML/JSON for listings
       - **Custom**: Parse HTML for role listings — look for links containing keywords like "product", "PM", "career"
@@ -57,7 +58,7 @@ Scan every portal in `config/portals.json` for new PM roles.
 
 4. **Display results:**
 
-## SCAN RESULTS — {date} — {N} portals scanned
+## SCAN RESULTS: {date}, {N} portals scanned
 
 ---
 
@@ -71,8 +72,8 @@ Scan every portal in `config/portals.json` for new PM roles.
 
 ### Skipped ({N})
 
-- {Company} — {Role} — duplicate (already in pipeline)
-- {Company} — {Role} — title filter (excluded: "project manager")
+- {Company}: {Role}, duplicate (already in pipeline)
+- {Company}: {Role}, title filter (excluded: "project manager")
 
 ---
 
@@ -122,7 +123,7 @@ Add a new company portal to the config.
    - Otherwise → type: `custom`
 3. Add entry to portals array
 4. Write updated `config/portals.json`
-5. Confirm: "Added {company} ({type}) — {url}. Run `/scan {company}` to scan now."
+5. Confirm: "Added {company} ({type}): {url}. Run `/scan {company}` to scan now."
 
 ---
 

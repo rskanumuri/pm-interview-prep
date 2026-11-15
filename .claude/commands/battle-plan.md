@@ -1,5 +1,6 @@
 ---
 description: "Build and track the daily prep plan from interview dates and prep gaps. Use for plan today or what is left."
+argument-hint: "[today | done <item> | add <company> <date> <time> | rebalance | progress | history]"
 ---
 
 # Battle Plan — Daily Prep Planning & Tracking
@@ -18,7 +19,7 @@ Auto-generates daily prep plan based on interview dates and prep gaps. Tracks ti
 
 ## Multi-Role File Keying
 
-When reading/writing company-keyed files and rendering the daily plan, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Each role at a company is a distinct pipeline item; show them as separate lines (e.g., "Stripe / ML Foundations"), not collapsed into one company entry. Read-order on lookups: try role-keyed first, fall back to company-only.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Each role at a company is its own line in the plan (for example "Stripe / ML Foundations"), never collapsed into one company entry.
 
 
 
@@ -51,13 +52,13 @@ Sort by urgency descending. Interviews within 24 hours get highest priority. Ent
 
 **Step 3 — Generate Today's Plan**
 
-## BATTLE PLAN — {Date}
+## BATTLE PLAN: {Date}
 
 ---
 
 ### Next 48 Hours
 
-- **{date time}** — **{Company}** ({Interviewer}, {Format})
+- **{date time}**: **{Company}** ({Interviewer}, {Format})
   - Readiness: {X}% | Gaps: {list top 3 gaps}
   - **PRIORITY:** {HIGH/MEDIUM/LOW}
 
@@ -65,9 +66,9 @@ Sort by urgency descending. Interviews within 24 hours get highest priority. Ent
 
 ### Today's Schedule
 
-- **{time block 1}:** {activity} — {company} — {what specifically}
-- **{time block 2}:** {activity} — {company} — {what specifically}
-- **{time block 3}:** {activity} — {company} — {what specifically}
+- **{time block 1}:** {activity}: {company}, {what specifically}
+- **{time block 2}:** {activity}: {company}, {what specifically}
+- **{time block 3}:** {activity}: {company}, {what specifically}
 
 ---
 
@@ -90,7 +91,7 @@ Add a new interview to the schedule. Recalculate urgency and rebalance the plan.
 
 ### `drop <company>` — Remove Interview
 
-Mark company as done/rejected/dropped. Remove from active plan. Archive prep.
+Remove the company from today's plan only. Closing the company itself (status, pipeline tables, file moves, learning hooks) is done by `/pipeline drop <company>`; run that, do not repeat its steps here.
 
 ### `rebalance` — Recalculate Everything
 
@@ -101,7 +102,7 @@ When interviews get added, cancelled, or rescheduled, recalculate the entire pla
 
 ### `progress` — Show Overall Progress
 
-## PREP PROGRESS — {Date}
+## PREP PROGRESS: {Date}
 
 | Company | Interview | Readiness | TMAY | Stories | Drills | Cheat Sheet |
 |---------|-----------|-----------|------|---------|--------|-------------|
@@ -119,5 +120,5 @@ Display archived daily plans with completion rates.
 - Never allocate time to companies that are rejected/done
 - Time blocks should be realistic — don't schedule 16 hours of prep
 - When the user asks "what's left for today" or "how's my prep going", run this skill
-- Always check the actual date/time before generating plans
+- Always check the actual date/time before generating plans. Full procedure, including checking the newest invite for reschedules: `interview_prep/reference/skills_core.md` §1
 - Saturday/Sunday are active prep days — don't skip weekends

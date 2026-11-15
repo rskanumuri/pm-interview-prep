@@ -28,7 +28,7 @@ A go/no-go verdict with reasons, not a gut call. From there, `/company-prep` bui
 
 **Everything syncs.** Monday's debrief updates the story bank, the question bank, the rubrics, and the phantom. By Wednesday, when you prep for a different company, the system is already using Monday's lessons. You never re-learn the same thing.
 
-**Live debriefs on your practice sessions.** Optional Granola integration auto-pulls transcripts from mock interviews and coach sessions. `/debrief-live` scores the session against a company rubric, extracts what landed vs didn't, updates your story bank, and proposes lessons. Five minutes, not an hour of notes. (Recording real interviews is frowned upon; use `/debrief` for those, where you answer guided questions from memory.)
+**Live debriefs on your practice sessions.** Optional Granola integration auto-pulls transcripts from mock interviews and coach sessions. `/debrief` scores the session against a company rubric, extracts what landed vs didn't, updates your story bank, and proposes lessons. Five minutes, not an hour of notes. (Recording real interviews is frowned upon; for those, run `/debrief` without a transcript and answer guided questions from memory.)
 
 ## Full funnel coverage
 
@@ -40,11 +40,11 @@ A go/no-go verdict with reasons, not a gut call. From there, `/company-prep` bui
 | **Strategize** | `/fit-check` `/phantom` `/story-map` `/battle-plan` `/prep-check` |
 | **Craft** | `/story-bank` `/story-check` `/steelman` `/tmay` `/interview-prep` |
 | **Practice** | `/pm-practice` `/drill-rapid` |
-| **Debrief** | `/debrief` `/debrief-live` |
+| **Debrief** | `/debrief` |
 | **Track** | `/pipeline` |
 | **Workspace** | `/setup` `/start-over` `/save-push` |
 
-27 commands. Top-of-funnel (Discover, Apply) covers what tools like [career-ops](https://github.com/santifer/career-ops) do at industrial scale. The depth advantage lives in Strategize / Craft / Practice / Debrief: the interview rounds themselves.
+26 commands. Top-of-funnel (Discover, Apply) covers what tools like [career-ops](https://github.com/santifer/career-ops) do at industrial scale. The depth advantage lives in Strategize / Craft / Practice / Debrief: the interview rounds themselves.
 
 ## Start
 
@@ -71,7 +71,7 @@ Every skill is a markdown prompt in `.claude/commands/`. Read, edit, fork. State
 
 ## Optional integrations
 
-- **Granola** auto-pulls transcripts from your mock interviews and coach sessions for `/debrief-live`. Without it, paste transcripts manually. Do not record actual interviews; use `/debrief` (guided questions from memory) for those.
+- **Granola** auto-pulls transcripts from your mock interviews and coach sessions for `/debrief`. Without it, paste transcripts manually. Do not record actual interviews; for those, run `/debrief` without a transcript (guided questions from memory).
 - **Gamma** generates presentation decks for loop prep.
 
 Both optional. All core workflows work without them.

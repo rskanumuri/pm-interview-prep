@@ -1,16 +1,17 @@
 ---
-description: "Interactive post-interview debrief that saves a structured file and updates progress and lessons."
+description: "Post-interview debrief from a saved, Granola or pasted transcript (or from recollection) that saves a structured file and updates progress and lessons. Use for debrief interview or paste transcript."
+argument-hint: "<company> [role] [interviewer] [pasted transcript or notes] | list | <company> lessons"
 ---
 
 # Post-Interview Debrief
 
-Interactive guided debrief after each interview. Claude asks structured questions, the user answers conversationally, Claude formats everything into a structured debrief document.
+One debrief skill for every source. It works from a saved transcript, a Granola transcript, text the user pastes (transcript, notes, or relayed feedback), or, when none of those exists, a short guided interview of the user's recollection. (`/debrief-live` was merged into this skill; pasting content here does what it did.)
 
 **Read `interview_prep/reference/debrief_core.md` first.** It is the shared rulebook for transcripts, scoring, story-bank write-back, state writes, and career-learning hooks. Where it conflicts with this file, it wins.
 
 ## Active User
 
-Check `progress.json` for the `active_user` field. Load personal info from `sources/{active_user}/`.
+Rule: `interview_prep/reference/skills_core.md` §4. Read `progress.json` `active_user`; personal material comes only from `sources/{active_user}/` and `interview_prep/story_bank.json`.
 
 ## Data Files
 
@@ -22,7 +23,7 @@ Check `progress.json` for the `active_user` field. Load personal info from `sour
 
 ## Multi-Role File Keying
 
-When reading/writing company-keyed files (cheat sheet, debrief filename prefix), follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". This command accepts an optional `<role>` arg; when provided, debriefs save as `{company}_{role_slug}_{interviewer}_debrief_*.md`, else fall back to `{company}_*` (legacy single-role). Read-order on lookups: try role-keyed first, fall back to company-only.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Debriefs save as `{company_key}_{interviewer}_debrief_*.md`; the cheat sheet is read by the same key.
 
 
 
@@ -30,11 +31,23 @@ Parse `$ARGUMENTS` to determine the command:
 
 ### `<company> [interviewer]` — Start Interactive Debrief
 
-Run an interactive guided debrief session. Ask questions one at a time, wait for answers, then compile.
+Pick the path from what is available, in this order: pasted content, saved transcript, Granola, recollection.
 
-**Step 0 — Transcript (core §0):** check `sources/<company>/` for a saved transcript of this interview before asking anything. If none and a Granola meeting exists, pull it and save it verbatim. If there is no transcript at all, say so in the debrief header.
+**Step 0 — Source (core §0):**
+- **Pasted content** (in the same message or the next one): this is the record. Decide what it is: a full transcript, bullet notes, relayed feedback from a recruiter or interviewer, or the user's own self-assessment. Save it verbatim BEFORE any analysis: a transcript to `sources/<company>/<interviewer>_<type>_transcript_<date>.md`, anything else to `sources/<company>/<interviewer>_notes_<date>.md`, each with a `**Source:**` line ("pasted by the user, {date}"). Say in the debrief header which kind it was. Feedback relayed from the company is ground truth: weight it above the transcript's apparent signals and above the self-score.
+- **No paste:** check `sources/<company>/` for a saved transcript of this interview before asking anything. If none and a Granola meeting exists, pull it and save it verbatim.
+- **Nothing anywhere:** say so in the debrief header ("no transcript; the user's recollection only") and use the recollection path below.
 
-**Step 1 — Gather Context (ask these one at a time, conversationally):**
+Read in one batch for comparison: the cheat sheet, the company rubric, progress.json for prior rounds, and the CLAUDE.md pipeline row.
+
+**Step 1 — Gather Context**
+
+**If Step 0 produced a transcript or pasted content (transcript-first path):** do NOT ask questions 1 to 10; the record answers them. If the paste is short notes, score what it supports and list the rest as "no evidence" (core §1); ask the user only for what is needed to fill a rubric row that was clearly attempted. Read it, then:
+- Give a first read in the same turn: format of the call, what landed, what did not, number drift against canon, new intel, process and next steps. Quote the transcript; label speaker names and spellings from an auto-transcript as unverified.
+- Ask only questions 11 and 12 (self-score, redo moment), together, in that same message.
+- If the user answers only one, record the other as "not given" and continue. Do not ask again.
+
+**If there is no transcript (recollection path), ask these one at a time, conversationally:**
 
 Let's debrief your {Company} interview. I'll ask a few questions and then compile everything.
 
@@ -85,12 +98,13 @@ After saving the debrief, write the angles to `story_bank.json` per core §2 (ca
 Create `interview_prep/answers/{company_key}_{interviewer}_debrief_{date}.md` following this structure:
 
 **File header:**
-- `# {Company} — {Interviewer Name} Debrief`
+- `# {Company}: {Interviewer Name} Debrief`
 - **Date:** {date}
 - **Round:** {X of Y}
 - **Duration:** ~{duration} ({used full time? or ended early?})
 - **Format:** {format description}
 - **Overall Score:** {rubric-strict}/5.0 | Self-score: {self-score}/5.0 (see core §1)
+- **What the two numbers mean:** one line, always present. Rubric-strict measures execution against the prep and the rubric. The self-score is the user's read of the round. Neither is the chance of advancing; that goes in Prediction as a percent with a confidence.
 - **Transcript:** {saved path, or "none; the user's recollection only"}
 - **Outcome:** {next steps or "Awaiting"}
 
@@ -127,7 +141,7 @@ Show the diff, then update only the Stage cell in this company's CLAUDE.md pipel
 
 ## DEBRIEF COMPLETE
 
-**{Company} — {Interviewer}** | {Date} | Score: **{X}/5**
+**{Company}: {Interviewer}** | {Date} | Score: **{X}/5**
 
 - **Saved:** `interview_prep/answers/{company}_{interviewer}_debrief_{date}.md`
 - **Updated:** progress.json, CLAUDE.md, story_bank.json (after confirmation)
@@ -156,7 +170,7 @@ Compile lessons from all debriefs for a company into one view.
 3. Read progress.json for `patterns_to_fix` and `lessons_for_next_rounds`
 4. Compile and deduplicate:
 
-## {COMPANY} — LESSONS LEARNED
+## {COMPANY}: LESSONS LEARNED
 
 **From {N} interviews:**
 
@@ -175,11 +189,12 @@ Compile lessons from all debriefs for a company into one view.
 
 ## Key Rules
 
-- **Interactive first** — ask questions one at a time, don't dump a form
+- **Record first, questions second** — with a transcript or paste, analyze and ask only for the self-score and redo moment; with nothing, ask the recollection questions one at a time, don't dump a form
+- **Quote the record** — direct quotes when a transcript exists; anything recalled is labeled as recalled
 - **Conversational tone** — this is a debrief, not an interrogation
 - **Honest assessment** — don't sugarcoat, but be constructive
 - **Compare to prep** — always check what was prepped vs what happened
-- **Update state with a diff and a yes** — progress.json and the CLAUDE.md Stage cell; `session_data.json` is a stale cache, leave it alone
+- **Update state with a diff and a yes:** progress.json and the CLAUDE.md Stage cell only
 - **Never edit an existing transcript or debrief**
 - **Date format**: YYYY-MM-DD in filenames, human-readable in content
 - **Filename format**: core §5 (`{company_key}_{interviewer_firstname}_debrief_{YYYY-MM-DD}.md`, never overwrite)

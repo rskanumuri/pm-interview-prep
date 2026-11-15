@@ -78,7 +78,7 @@ Repeat for 3-5 core stories. Or run `/setup` later to auto-extract from your res
 ## After Your First Interview
 
 ```
-/debrief-live <company> <interviewer>
+/debrief <company> <interviewer>
 ```
 
 Paste your transcript or notes. The system scores your performance, extracts lessons, and updates your story bank.

@@ -1,5 +1,7 @@
 ---
 description: "Read-only pre-interview briefing with TMAY, stories, numbers, gaps, and questions. Use for am I ready."
+argument-hint: "<company> [role] [quick]"
+disallowed-tools: Write, Edit, NotebookEdit
 ---
 
 # Pre-Interview Readiness Briefing
@@ -16,12 +18,14 @@ Zero-write, read-only skill. Synthesizes all prep artifacts into a focused pre-i
 - Company Rubric: `interview_prep/rubrics/{company}.md`
 - Why Scripts: `interview_prep/scripts/why_company_role_scripts.md`
 - Debriefs: `interview_prep/answers/{company}_*_debrief_*.md` (lessons from prior rounds)
+- Interview Lessons: `interview_prep/interview_lessons.md` ("Lessons Still Learning": surface the 3 most relevant to this round's format under Patterns to Watch)
+- HM-lens MSN (if exists): `interview_prep/evaluations/{company_key}_hm_msn.md` (Musts and the feared failure feed "What They're Looking For")
 - CLAUDE.md: `CLAUDE.md` (pipeline stage and status, pre-interview rules, canonical numbers; interview dates are in progress.json)
 - Personal Docs: `sources/{active_user}/` (performance kit, proof points)
 
 ## Multi-Role File Keying
 
-When reading company-keyed files, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". This command accepts an optional `<role>` arg; when provided, use `{company}_{role_slug}` keys, else fall back to `{company}` (legacy single-role). Read-order on lookups: try role-keyed first, fall back to company-only.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Accepts an optional `<role>` arg.
 
 
 
@@ -33,10 +37,11 @@ Comprehensive 5-minute pre-interview briefing. Read all artifacts and synthesize
 
 **Steps:**
 
+0. Run the clock and schedule check (`interview_prep/reference/skills_core.md` §1). This skill is read-only, so report a missing or mismatched date; do not write it. If the interview is under 2 hours away, give the Quick Card first and offer the full briefing after.
 1. Read all data files listed above for the target company
 2. Display the full briefing using **markdown headers, bold, and bullets — NEVER code blocks or fixed-width ASCII art**:
 
-## PRE-INTERVIEW BRIEFING — {COMPANY}
+## PRE-INTERVIEW BRIEFING: {COMPANY}
 **{Date} | {Time} | {Format} | {Interviewer}**
 
 ---
@@ -47,7 +52,7 @@ Comprehensive 5-minute pre-interview briefing. Read all artifacts and synthesize
 ---
 
 ### Your TMAY ({time} sec)
-{Full TMAY from cheat sheet — read it aloud once before the call}
+{Full TMAY from cheat sheet, read it aloud once before the call}
 
 ---
 
@@ -70,13 +75,13 @@ Example format: "Without me, {team} takes {N months} longer to {specific outcome
 
 ### Top 3 Stories — Ready to Deploy
 
-**1. {Story name}** — {key number}
+**1. {Story name}**: {key number}
 - Bridge: {one-line bridge to company}
 
-**2. {Story name}** — {key number}
+**2. {Story name}**: {key number}
 - Bridge: {one-line bridge}
 
-**3. {Story name}** — {key number}
+**3. {Story name}**: {key number}
 - Bridge: {one-line bridge}
 
 **Backup:** {story name} (for follow-ups or unexpected angles)
@@ -89,7 +94,7 @@ Read `story_bank.json` `canonical_numbers` and `canonical_provenance` and print 
 ---
 
 ### Patterns to Watch (from practice)
-- {pattern from progress.json patterns_to_fix — most relevant 3-4}
+- {pattern from progress.json patterns_to_fix, most relevant 3-4}
 - {pattern}
 - {pattern}
 
@@ -104,7 +109,7 @@ Read `story_bank.json` `canonical_numbers` and `canonical_provenance` and print 
 
 ### Lessons from Prior Rounds
 {If debriefs exist for this company, pull key lessons}
-{If no prior rounds, show "First round — no prior data"}
+{If no prior rounds, show "First round, no prior data"}
 
 **From {interviewer} ({date}):**
 - {lesson 1}
@@ -113,8 +118,8 @@ Read `story_bank.json` `canonical_numbers` and `canonical_provenance` and print 
 ---
 
 ### What They're Looking For
-{From insights file — top 3-4 things this company evaluates}
-{From rubric — the company-specific scoring dimensions}
+{From insights file, top 3-4 things this company evaluates}
+{From rubric, the company-specific scoring dimensions}
 
 ---
 
@@ -143,7 +148,8 @@ Read `story_bank.json` `canonical_numbers` and `canonical_provenance` and print 
 - [ ] STAR sticky note on monitor
 - [ ] Read TMAY aloud once
 - [ ] Read Why {Company} aloud once
-- [ ] Take 30-60 sec before answering — pick the RIGHT story
+- [ ] Pick the RIGHT story before speaking, and narrate the pause ("Let me pick the best example for that"); silent pauses read as uncertainty (`interview_lessons.md`, Still Learning #6)
+- [ ] The question names the story: LLM or system asked, lead with that system and its result
 
 ---
 
@@ -157,7 +163,7 @@ Minimal briefing for when you have 1 minute before the call. Just the essentials
 1. Read cheat sheet and progress.json only (speed over completeness)
 2. Display using **markdown — NEVER code blocks**:
 
-## QUICK CARD — {COMPANY}
+## QUICK CARD: {COMPANY}
 **{format} | {interviewer}**
 
 **TMAY:** {first sentence of TMAY}..."[career thesis hook for company]"
@@ -175,13 +181,13 @@ Minimal briefing for when you have 1 minute before the call. Just the essentials
 
 **Watch:** {top pattern to fix} | {top red flag word to avoid}
 
-**Rules:** {Summarize pre-interview rules from CLAUDE.md}
+**Rules:** {Summarize pre-interview rules from CLAUDE.md} Pick the RIGHT story (the one the question names) and narrate the pause.
 
 ## Handling Missing Artifacts
 
 If any artifact is missing, note it clearly but don't block the briefing:
 
-**No cheat sheet found for {company}** — Run `/company-prep {company}` to create one. Using general prep data instead.
+**No cheat sheet found for {company}**: Run `/company-prep {company}` to create one. Using general prep data instead.
 
 For missing artifacts, fall back to:
 - No cheat sheet → use Why script from why_company_role_scripts.md + general TMAY

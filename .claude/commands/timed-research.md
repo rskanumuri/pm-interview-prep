@@ -1,5 +1,6 @@
 ---
 description: "Launch a time-boxed background research agent that writes findings incrementally. Usage is /timed-research topic [10m]."
+argument-hint: "<topic> [10m]"
 ---
 
 # /timed-research — Time-Constrained Background Research
@@ -48,7 +49,7 @@ The line is `<seconds> <epoch>` and is APPENDED (a queue): the SubagentStart hoo
 Use the Agent tool with these parameters:
 - `run_in_background: true`
 - `subagent_type: "general-purpose"`
-- `model: "sonnet"`
+- `model`: a cheaper, faster model than the session's, if the Agent tool offers one (this is gathering work; see `interview_prep/reference/skills_core.md` §8). Pick from the model options the Agent tool lists at run time; do not rely on a name written here.
 - `description: "Timed research: <topic>"`
 
 The agent prompt MUST include this preamble:
@@ -64,13 +65,11 @@ Your time budget: <time>. Work efficiently.
 
 Research topic: <topic>
 
-Research checklist:
-1. Company overview & recent news
-2. Key products and competitive positioning
-3. Financial data (revenue, growth, funding)
-4. Leadership and org structure
-5. Strategic initiatives and market trends
-6. Relevant connections to the user's background (from CLAUDE.md)
+Research checklist (use the one that fits the topic; write the chosen list into the prompt):
+- Company topic: overview and recent news; key products and competitive positioning; financial data (revenue, growth, funding); leadership and org structure; strategic initiatives.
+- Market or concept topic: definition and scope; size and growth with sources; main players and how they differ; trends and open debates; primary sources worth reading.
+- Person or team topic: public role and history; public writing or talks; what they have said about the subject at hand. Public sources only.
+Every claim carries its source URL and date. Mark single-source claims as unverified. Do not add a "connections to the user's background" section; the main session does that with the story bank.
 
 Write findings to: <output_path>
 ```

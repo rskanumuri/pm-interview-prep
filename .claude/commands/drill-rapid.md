@@ -1,5 +1,6 @@
 ---
 description: "Quick Q&A drill that pulls a question, shows the prepped answer, rates delivery, and saves progress."
+argument-hint: "<company> [q<N> | weak | speed | lp <principle>] | recall <story> | gaps"
 ---
 
 # Drill Rapid — Quick Q&A Without Full Mock
@@ -15,15 +16,14 @@ Lightweight practice: pull a question, show the prepped answer first, accept the
 - Round Scripts: `sources/{company}/` (company-specific round scripts, e.g., round1.md through round4.md)
 - Master Story Repository: `interview_prep/scripts/master_story_repository.md`
 - Progress: `interview_prep/progress.json`
-- Session Data: `interview_prep/session_data.json` is a stale cache that may include another user's stories. Do NOT use it for the active user's prepped answers unless it demonstrably belongs to them.
 
 ## Multi-Role File Keying
 
-When reading company-keyed files for context, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, use role-keyed artifacts, else fall back to `{company}_*`. Read-order on lookups: try role-keyed first, fall back to company-only.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Accepts an optional `<role>` arg.
 
 ## Active user guard
 
-Check `progress.json` `active_user`. Draw stories only from `story_bank.json` and `sources/{active_user}/`. Never show stories that belong to another user (for example a shared `star_stories.json` that holds someone else's stories).
+Rule: `interview_prep/reference/skills_core.md` §4. Read `progress.json` `active_user`; personal material comes only from `sources/{active_user}/` and `interview_prep/story_bank.json`. Never show stories that belong to another user.
 
 ## Scoring (read this once)
 
@@ -41,6 +41,8 @@ Score each delivery /10 (the user's preference). Anchors, so the number means so
 Parse `$ARGUMENTS` to determine the command:
 
 ### `<company>` — Random Question Drill
+
+**Step 0 — Clock check.** Run `interview_prep/reference/skills_core.md` §1 once per session. If the interview is under 2 hours away, drill only the questions most likely for that round.
 
 **Step 1 — Pick a Question**
 
@@ -60,7 +62,6 @@ Search for the prepped answer in this order:
 4. `story_bank.json` `scripted_versions` / `company_angles` for the matching story
 5. Master story repository (match by LP/theme). If a story is matched ONLY by theme and not by this specific question, label it "Closest story by theme, not a prepped answer".
 
-Do not use `session_data.json` for the user.
 
 **Canon check BEFORE displaying (mandatory).** Scan the prepped answer text against `story_bank.json` `canonical_numbers`, `canonical_provenance` and `purged_stories` (the `/story-check` rules). If it contains a stale number, a provenance violation (a number said without its unit or denominator, a metric attributed to the wrong product, an outcome stated stronger than its basis), or a purged story, show a warning block ABOVE the answer: "DRIFT IN PREP: {line} -> {canonical wording}". Never present drifted text under "Internalize it". If a number is marked OPEN in provenance, print "do not quote: {number}" next to it.
 
@@ -119,7 +120,7 @@ Drill questions mapped to a specific LP (e.g., `/drill-rapid amazon lp customer-
 
 5 questions back-to-back. Show prepped answer, user delivers opener only (30 seconds), quick 1-line score, immediately move to next. At the end, show summary:
 
-**SPEED ROUND — {Company}**
+**SPEED ROUND, {Company}**
 
 - **Q1:** {score}/10 -- {1-word verdict}
 - **Q2:** {score}/10 -- {1-word verdict}
@@ -129,9 +130,30 @@ Drill questions mapped to a specific LP (e.g., `/drill-rapid amazon lp customer-
 - **AVG:** {avg}/10
 (Scores are computed from the anchors, never copied from an example.)
 
+### `recall <story>` — Rebuild Memory of the Work From Primary Sources
+
+For when the work behind a story is months old and the scripts feel memorized instead of remembered. Polished answers store conclusions; memory hooks on the path (what broke, the options, the decision, the cost, the result). This mode rebuilds the path, then drills it.
+
+**Build (once per story, or refresh):**
+1. Find primary documents for the story in `sources/{active_user}/` (decision docs, architecture overviews, strategy docs, engineer Q&A), plus the story's entry in `master_story_repository.md` and any transcripts where it was told live. Grep by product and story name; read the matches.
+2. Write `sources/{active_user}/{story_short_name}_memory_timeline.md` with a `**Source:**` line and these parts:
+   - **The path, in order:** what existed before the user arrived, then each decision as problem, options, what was decided, cost, result. Every line tagged with its source file. Dates only where a source states them.
+   - **Angles:** which decisions each interview angle starts from.
+   - **Technical recall:** details to recognize when an interviewer raises them, not to recite.
+   - **Where sources disagree with canon:** every conflict with `canonical_numbers` or `canonical_provenance`, including ownership and dates. Canon is what gets said; this list is so a probe does not surprise the user. Never change canon from here.
+   - **Recall questions:** 10 to 12, one per decision.
+   - **Gaps only the user can fill.**
+3. Nothing is invented. A detail found only in the user's own telling is marked as such. A detail in no source is a GAP. Leave out colleague names and internal ticket numbers; if a source is marked confidential by a former employer, say so in the header and keep the file at the level of what the user already says in interviews.
+
+**Drill (each session):**
+1. Ask the recall questions one at a time. No prepped answer is shown first in this mode; the point is retrieval. (This is the one exception to "show answer first".)
+2. After each answer: show the source line, say what matched, what was missing, and what differed from canon. No score.
+3. When the user supplies a fact that fills a gap, add it to the Gaps section with the date and "per the user". If they cannot recall, the interview answer is "I don't recall the exact figure"; record that.
+4. End with the three decisions the user recalled least well; those go first next time. Then offer `/drill-rapid {company}` on the story's scripted answers.
+
 ### `gaps` — Fill Story-Bank Coverage Gaps (elicit real stories, never invent)
 
-The story bank has known coverage holes (audit, Oct 2026): people management / hiring / coaching an underperformer, a quantified failure with real damage, disagree-and-commit, killing a project or feature against stakeholder anger, and a conflict with a peer PM or engineering that the user did NOT fully win. One employer or project may also be over-represented across the bank. This mode builds real stories for those gaps from what the user actually did.
+The story bank has known coverage holes: people management / hiring / coaching an underperformer, a quantified failure with real damage, disagree-and-commit, killing a project or feature against stakeholder anger, and a conflict with a peer PM or engineering that the user did NOT fully win. One employer or project may also be over-represented across the bank. This mode builds real stories for those gaps from what the user actually did.
 
 1. Read `story_bank.json` `stories[].themes` and `question_types`; list which of the five gap types above have 0 or 1 stories, plus any theme tagged on fewer than 2 stories.
 2. Pick one gap type (the user chooses, or start with the emptiest). Ask ONE question at a time to elicit a real story: when, what was the situation, what did YOU decide or do (not the team), what was the stake, what happened (a number only if the user supplies one and knows its basis), what would you do differently. Ask for the unit and the measurement basis of any number.
@@ -142,10 +164,10 @@ The story bank has known coverage holes (audit, Oct 2026): people management / h
 
 ## Key Rules
 
-- **Show answer first, ALWAYS** — the user learns by reading then delivering. Never quiz cold without showing prep.
+- **Show answer first, ALWAYS** — the user learns by reading then delivering. Never quiz cold without showing prep. Only exception: `recall` mode, which tests retrieval of the underlying work.
 - **Keep feedback short.** Rapid drill, not deep coaching.
 - **Score on /10**
 - **Don't repeat questions** already drilled in this session
-- **Track progress** — update progress.json (this company's drill entries only; show the entry before writing): `{date, company, question_id, score_10, score_5, note}`
+- **Track progress**: update progress.json (this company's drill entries only; show the entry before writing): `{date, company, question_id, score_10, score_5, note}`
 - **"Next?"** — always offer to continue. Keep momentum.
 - **No fabrication** — if there's no prepped answer, say so. Don't make one up and present it as prepped.

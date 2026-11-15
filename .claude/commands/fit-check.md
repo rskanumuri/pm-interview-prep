@@ -1,14 +1,29 @@
 ---
 description: "Role fit scorecard and gap-bridging scripts for a company. Use for fit for role."
+argument-hint: "<company> [role] [gaps | jd | evolution] | compare"
 ---
 
 # Fit Check — Role Fit Assessment & Gap-Bridging
 
 Unified fit assessment tool. Answers "should I pursue this?" and "how do I bridge my gaps?" for any company. Reads existing artifacts, synthesizes a structured fit scorecard, and generates gap-bridging scripts.
 
+## Rules that must hold (kept at the top because a context compaction keeps only the start of a skill)
+
+- **Role Taxonomy pass and HM-lens MSN come before any user data is read.** If the role is ambiguous, stop and ask about the role; never use the user's profile to resolve it.
+- **Score honestly; no inflation.** A transferable-skill 4 needs a NAMED story from `story_bank.json` or the resume in the evidence column, else the cap is 3. Debrief evidence overrides a hypothetical bridge. The verdict follows the average, never the reverse.
+- **Overall = average of dimensions 1 to 6.** Conversation Shiftability (7) is reported separately.
+- **Gaps:** any dimension or requirement at 3 or below gets a bridge; HM-inferred Musts at 2 or below are HIDDEN-MUST GAPs with the verify question.
+- **Bridge scripts are speakable,** max 3 proof points, no hedging, never open with what the candidate lacks.
+- **Numbers come from canon** (`interview_prep/reference/skills_core.md` §5).
+- **Never credit current-employer internals** as evidence in a passive-pipeline fit-check.
+- **Every score ships with a confidence (1-10) and its core assumption.**
+- **Writes:** `fit_*` keys in progress.json only, after a before/after and a yes (`skills_core.md` §2). Never touch `eval_*`.
+- For a closed company, its rubric, insights and debriefs are in `sources/{company}/`.
+- The display layouts further down are layouts. Their sample figures (years, scores, company names) are not data; never copy one into output.
+
 ## Active User
 
-Check `progress.json` for the `active_user` field. Load personal info from `sources/{active_user}/`.
+Rule: `interview_prep/reference/skills_core.md` §4. Read `progress.json` `active_user`; personal material comes only from `sources/{active_user}/` and `interview_prep/story_bank.json`.
 
 ## Data Files
 
@@ -30,7 +45,7 @@ Check `progress.json` for the `active_user` field. Load personal info from `sour
 - Gap-Bridging Scripts: `interview_prep/scripts/{company}_gap_bridging.md` (if exists)
 - Debriefs: `interview_prep/answers/{company}_*_debrief_*.md`
 - Why Scripts: `interview_prep/scripts/why_company_role_scripts.md`
-- Evaluation: `interview_prep/evaluations/{company}_*_eval.json` (if exists — use Block B for JD requirements)
+- Evaluation: `interview_prep/evaluations/{company}_*_eval.json` (if exists, use Block B for JD requirements)
 
 ### Write (optional)
 - Gap-Bridging Scripts: `interview_prep/scripts/{company}_gap_bridging.md`
@@ -91,16 +106,7 @@ Score based on what the user CAN DO, not just what they DID. When assessing fit:
 
 ## Multi-Role File Keying
 
-When a company has multiple roles being tracked, files are keyed by `{company}_{role_slug}` instead of `{company}` alone.
-
-**`{company_key}` resolution:**
-- `role_slug` = role string lowercased, non-alphanumeric → underscores, collapsed (e.g., "Senior PM, Data Governance" → `senior_pm_data_governance`)
-- If `<role>` argument is provided: `{company_key}` = `{company}_{role_slug}`
-- If `<role>` argument is NOT provided: `{company_key}` = `{company}` (legacy single-role back-compat)
-
-**Read order for file lookups:** try `{company}_{role_slug}_*` first if role provided; fall back to `{company}_*` if role-keyed files don't exist. This keeps existing single-role pipelines working without migration.
-
-**All `{company}` references in file paths below should be interpreted as `{company_key}` per this rule.**
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Accepts an optional `<role>` arg. Every `{company}` in a file path below means `{company_key}`.
 
 
 
@@ -119,7 +125,7 @@ Comprehensive fit assessment for a specific company/role.
    - **Craft or Domain?** Is the primary skill the craft (platform building, ML, experimentation, CI) or domain knowledge?
    - **Day-30 Deliverable?** What will this PM actually ship in their first month?
 
-   **If any answer is ambiguous, STOP and ask the user about the role.** Frame as: "I'm reading this as {X}. Confirm or correct?" Never cross-reference user profile to calibrate — that corrupts the assessment.
+   **If any answer is ambiguous, STOP and ask the user about the role.** Frame as: "I'm reading this as {X}. Confirm or correct?" Never cross-reference user profile to calibrate, that corrupts the assessment.
 
    **Platform PM JDs describe what the platform SERVES, not what the PM OWNS.** Don't conflate the customers of the platform with the PM's scope.
 
@@ -144,88 +150,9 @@ Comprehensive fit assessment for a specific company/role.
 
 **Display:**
 
-## FIT CHECK — {COMPANY} — {Role Title}
+**Layout:** `interview_prep/reference/skill_templates/fit-check.md`, section "Fit scorecard display". Read it when producing this output; its sample values are placeholders.
 
-**VERDICT:** {STRONG FIT / FIT WITH GAPS / STRETCH / PASS} ({X.X}/5.0)
-
----
-
-### JD Requirement Mapping
-
-| Requirement | Source | Score | Evidence |
-|-------------|--------|-------|----------|
-| {8+ years B2B SaaS PM} | JD | 5/5 | {specific proof} |
-| {Cloud platform experience} | JD | 5/5 | {specific proof} |
-| {Developer tools experience} | JD | 3/5 | {adjacent, bridge needed} |
-| {Industry domain knowledge} | JD | 2/5 | {no direct experience; bridge needed} |
-| {Must from MSN, e.g. migration-under-deadline} | HM-inferred | 2/5 | HIDDEN-MUST GAP; verify: "{question}" |
-
----
-
-### Fit Dimensions
-
-| Dimension | Score | Rationale |
-|-----------|-------|-----------|
-| Domain Expertise | {X}/5 | {one-line rationale} |
-| Technical Match | {X}/5 | {one-line rationale} |
-| Seniority / Scope | {X}/5 | {one-line rationale} |
-| Story Arsenal | {X}/5 | {N stories mapped, N themes covered} |
-| Culture / Values Fit | {X}/5 | {one-line rationale} |
-| Unique Angle | {X}/5 | {what user brings that others likely don't} |
-| Conv. Shiftability | {X}/5 | {can user shift HM convo to problem-solving? why/why not} |
-
----
-
-### Strengths -- Lead With These
-
-1. **{Strength}** -- {proof point with number}
-2. **{Strength}** -- {proof point with number}
-3. **{Strength}** -- {proof point with number}
-
----
-
-### Gaps -- Bridge Required
-
-**Gap 1: {gap name}** (severity: {HIGH/MEDIUM/LOW})
-- **Bridge:** "{one-sentence bridge strategy}"
-- **Best story:** {story name}
-- **Script:** {Yes -- see `scripts/{company}_gap_bridging.md` / No -- run `/fit-check {company} gaps`}
-
-**Gap 2: {gap name}** (severity: {HIGH/MEDIUM/LOW})
-- **Bridge:** "{one-sentence bridge strategy}"
-- **Best story:** {story name}
-- **Script:** {Yes/No}
-
----
-
-### Debrief Evidence
-
-*If debriefs exist:*
-**From {interviewer} ({date}):**
-- Strength confirmed: {what landed}
-- Gap exposed: {what didn't land}
-- Lesson: {actionable lesson}
-
-*If no debriefs:* No interview data yet -- pre-interview assessment only.
-
----
-
-### Pipeline Comparison
-
-- **Stronger fit than:** {company X} ({X.X}/5)
-- **Weaker fit than:** {company Y} ({Y.Y}/5)
-- **Similar to:** {company Z} ({Z.Z}/5)
-- *(Only shown if 2+ companies have fit_score in progress.json)*
-
----
-
-### Recommended Actions
-
-- `/fit-check {company} gaps` -- Generate gap-bridging scripts
-- `/story-map {company}` -- Map stories to themes
-- `/prep-check {company}` -- Readiness briefing
-
-**progress.json update** — add/update these fields under `company_readiness.{company}`:
+**progress.json update**: add/update these fields under `company_readiness.{company}`:
 ```json
 {
   "fit_score": 4.2,
@@ -272,46 +199,7 @@ Focused deep-dive on gaps. Generates full gap-bridging scripts.
 
 **Display:**
 
-## GAP ANALYSIS — {COMPANY}
-
-**{N} gaps identified** | **{N} bridge scripts generated**
-
----
-
-### Gap 1: {Gap Name} ({severity})
-
-**Prompt:** "You don't have {X} experience. How would you handle that?"
-
-> {Full scripted bridge answer -- 3-4 paragraphs}
-> {Adjacent STAR -> Bridge -> How I'd think -> First steps}
-
-**Key line:** "{The memorable one-liner to anchor this answer}"
-
-**Rules:**
-- {Rule 1}
-- {Rule 2}
-- {Rule 3}
-
-### Gap 2: {Gap Name} ({severity})
-
-*(same structure)*
-
----
-
-### Unified Gap Answer -- "What gaps do you see?" (60-90 sec)
-
-> {Full unified response naming gaps upfront, then pivoting to proof points}
-
----
-
-### Universal Rules
-
-1. Never introduce with what you lack. Lead with what you bring.
-2. Max 3 items in any list.
-3. No hedging words: "I would like to think", "hopefully"
-4. Don't name the gap at the end.
-5. Read the user's ramp-up proof points from CLAUDE.md or story_bank.json — use these as the anchor for all gap bridges.
-6. Bridge pattern: Adjacent experience -> What's the same -> How I'd think about the new domain -> Specific first actions
+**Layout:** `interview_prep/reference/skill_templates/fit-check.md`, section "Gap analysis display". Read it when producing this output; its sample values are placeholders. The Universal Rules for gap-bridging are part of this section and must be included in the saved file.
 
 ---
 
@@ -326,39 +214,14 @@ Compare fit scores across all active pipeline companies. Read-only — no writes
 3. **For each active company**, check for `fit_score` in progress.json
    - If exists, use it
    - If not, read insights file for ad-hoc fit rating and convert to 1-5 scale
-   - If no fit data exists at all, show "Not assessed — run /fit-check {company}"
+   - If no fit data exists at all, show "Not assessed, run /fit-check {company}"
 4. **Filter out closed/rejected/dropped companies**
 5. **Sort by fit score descending**
 6. **Display comparison**
 
 **Display:**
 
-## FIT COMPARISON — Active Pipeline — {today's date}
-
-| Company | Role | Fit | Stage | Verdict |
-|---------|------|-----|-------|---------|
-| {Company 1} | {Role Title} | 4.8/5 | {stage} | STRONG FIT |
-| {Company 2} | {Role Title} | 4.3/5 | {stage} | STRONG FIT |
-| {Company 3} | {Role Title} | 3.5/5 | {stage} | FIT WITH GAPS |
-
----
-
-### Top Investment Priorities (next 7 days)
-
-1. **{Company}** ({date}) -- {verdict}, {N} gaps need bridge scripts
-   - -> `/fit-check {company} gaps`
-2. **{Company}** ({date}) -- {verdict}, {issue}
-   - -> {recommended action}
-
----
-
-### Cross-Company Patterns
-
-**Strongest themes across pipeline:**
-- {themes the user covers well across multiple companies}
-
-**Weakest themes across pipeline:**
-- {themes that are gaps across multiple companies}
+**Layout:** `interview_prep/reference/skill_templates/fit-check.md`, section "Comparison display". Read it when producing this output; its sample values are placeholders.
 
 ---
 
@@ -409,36 +272,7 @@ Track how fit assessment has changed across interview rounds. Read-only — no w
 
 **Display:**
 
-## FIT EVOLUTION — {COMPANY} — {N rounds completed}
-
----
-
-### Timeline
-
-| Stage | Score | Notes |
-|-------|-------|-------|
-| Pre-interview | {X.X}/5 | Based on: JD mapping |
-| Round 1 | {X.X}/5 | {interviewer, date} |
-| Round 2 | {X.X}/5 | {interviewer, date} |
-| Current | {X.X}/5 | Adjusted for debrief evidence |
-
----
-
-### Gap Tracking
-
-| Gap | Pre-Interview | Reality |
-|-----|--------------|---------|
-| {Gap name} | HIGH concern | Did not come up (Round 1) |
-| {Gap name} | Not flagged | EXPOSED in Round 2 |
-| {Gap name} | MEDIUM concern | Bridge landed well |
-
----
-
-### Updated Bridge Needs
-
-- **{gap exposed}** -- needs new/revised bridge script
-- **{gap resolved}** -- bridge worked well, keep as-is
-- **{new insight}** -- adjust approach for next round
+**Layout:** `interview_prep/reference/skill_templates/fit-check.md`, section "Evolution display". Read it when producing this output; its sample values are placeholders.
 
 ---
 
@@ -473,7 +307,7 @@ Always show what's missing and what command would fix it:
   - Universal rules section at the end
 
 ### Updates (on full assessment)
-- `interview_prep/progress.json` — adds/updates fit fields in `company_readiness.{company}`
+- `interview_prep/progress.json`: adds/updates fit fields in `company_readiness.{company}`
 
 ### Never Overwrites Without Asking
 - Existing gap-bridging scripts — ask user: "File exists. Overwrite / Merge / Skip?"
@@ -509,7 +343,7 @@ Always show what's missing and what command would fix it:
 - **Max 3 proof points per bridge** — "Brain can't hold more in a conversation."
 - **Read the user's ramp-up proof points from CLAUDE.md or story_bank.json** — use these as the universal anchor for all gap bridges.
 - **Career thesis** (from CLAUDE.md) must connect to the company somehow — if it doesn't, flag as a culture fit signal.
-- **Pre-interview rules** (from CLAUDE.md) are automatic checks on all generated scripts.
+- **Pre-interview rules:** the pre-interview rules in `interview_prep/reference/skills_core.md` §6 are automatic checks on everything this skill writes
 - **No hedging in bridge scripts**: "I would like to think", "hopefully", "if not the same" — NEVER
 - **Debrief evidence overrides pre-interview estimates** — if a gap was exposed in a real interview, escalate its severity regardless of initial assessment
 - **Company key in filenames**: lowercase, underscores for spaces (e.g., `palo_alto_networks`)

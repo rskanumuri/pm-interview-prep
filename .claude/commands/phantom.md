@@ -1,5 +1,6 @@
 ---
 description: "Generate the competing candidate for a role from company and market data only, then compare with the gap subcommand."
+argument-hint: "<company> [role] [gap | performance | update]"
 ---
 
 # /phantom — The Invisible Competitor You're Up Against
@@ -12,10 +13,10 @@ The phantom sharpens over rounds: V1 from JD → V2 from recruiter intel → V3 
 
 - Company Insights: `interview_prep/insights/{company}.md`
 - Company Rubric: `interview_prep/rubrics/{company}.md`
-- Company Cheat Sheet: `interview_prep/scripts/{company}_cheat_sheet.md` (company/team intel ONLY — skip story maps, skip TMAY, skip anything about the user)
-- JD/Eval: `interview_prep/evaluations/{company}_*_eval.json` (JD requirements ONLY — skip resume match block)
+- Company Cheat Sheet: `interview_prep/scripts/{company}_cheat_sheet.md` (company/team intel ONLY, skip story maps, skip TMAY, skip anything about the user)
+- JD/Eval: `interview_prep/evaluations/{company}_*_eval.json` (JD requirements ONLY, skip resume match block)
 - CLAUDE.md: Company section only (NOT career thesis, NOT key numbers, NOT pipeline status)
-- Debriefs: `interview_prep/answers/{company}_*_debrief_*.md` (for updates — read "New Intel" section only, NOT scores or performance)
+- Debriefs: `interview_prep/answers/{company}_*_debrief_*.md` (for updates, read "New Intel" section only, NOT scores or performance)
 
 ## NEVER READ (for phantom generation)
 
@@ -28,16 +29,7 @@ The phantom is the objective benchmark. Your data enters ONLY in the `gap` subco
 
 ## Multi-Role File Keying
 
-When a company has multiple roles being tracked, files are keyed by `{company}_{role_slug}` instead of `{company}` alone, so each role's phantom is distinct.
-
-**`{company_key}` resolution:**
-- `role_slug` = role string lowercased, non-alphanumeric → underscores, collapsed (e.g., "Senior PM, Data Governance" → `senior_pm_data_governance`)
-- If `<role>` argument is provided: `{company_key}` = `{company}_{role_slug}`
-- If `<role>` argument is NOT provided: `{company_key}` = `{company}` (legacy single-role back-compat)
-
-**Read order for file lookups:** try `{company}_{role_slug}_*` first if role provided; fall back to `{company}_*` if role-keyed files don't exist.
-
-**All `{company}` references in file paths below should be interpreted as `{company_key}` per this rule.**
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Each role gets its own phantom, `{company_key}_phantom.md`. Every `{company}` in a file path below means `{company_key}`.
 
 
 
@@ -86,7 +78,7 @@ Parse `$ARGUMENTS`:
 **Output format:**
 
 ```markdown
-# The Phantom — {Company} {Role Title}
+# The Phantom: {Company} {Role Title}
 **Generated:** {date} | **Version:** V{N} | **Based on:** {JD / JD + recruiter intel / JD + HM intel / etc.}
 
 ---
@@ -94,7 +86,7 @@ Parse `$ARGUMENTS`:
 ## Dimension 1: Experience Profile
 
 ### What's on their resume
-{Specific prior roles, companies, scope — NOT generic. "5 years at a Snowflake competitor like Databricks or Confluent as a CI analyst, plus 3 years in product marketing at an enterprise data company."}
+{Specific prior roles, companies, scope, NOT generic. "5 years at a Snowflake competitor like Databricks or Confluent as a CI analyst, plus 3 years in product marketing at an enterprise data company."}
 
 ### The numbers they'd cite
 {Specific metrics this person would have: "Improved competitive win rate from 42% to 58% over 18 months", "Built battle card program used by 500+ sellers", "Owned positioning for 3 product lines against 5 key competitors"}
@@ -110,10 +102,10 @@ Parse `$ARGUMENTS`:
 {What research, what artifacts they'd build before the interview}
 
 ### The 5 stories they'd have ready
-{Specific story THEMES with the kind of proof points they'd cite — not generic "a time I led a team"}
+{Specific story THEMES with the kind of proof points they'd cite, not generic "a time I led a team"}
 
 ### Domain phrases they'd deploy naturally
-{10 phrases that signal insider knowledge — specific to this company and role}
+{10 phrases that signal insider knowledge, specific to this company and role}
 
 ### Questions they'd ask that signal insider thinking
 {5 questions that make the HM think "this person already understands our problems"}
@@ -126,10 +118,10 @@ Parse `$ARGUMENTS`:
 ## Dimension 3: Interview Performance
 
 ### How their TMAY sounds
-{Energy, pacing, hooks — what the first 60 seconds feel like to the interviewer}
+{Energy, pacing, hooks, what the first 60 seconds feel like to the interviewer}
 
 ### How they handle follow-ups
-{Depth without rambling — 30-second follow-up answers, not 3-minute restarts}
+{Depth without rambling, 30-second follow-up answers, not 3-minute restarts}
 
 ### How they handle gaps
 {One sentence acknowledging, immediate pivot to adjacent strength, no dwelling}
@@ -138,10 +130,10 @@ Parse `$ARGUMENTS`:
 {Hold position with evidence. Adapt when the interviewer has a point. No collapsing, no defensiveness.}
 
 ### What the interviewer writes in their debrief
-{The actual debrief notes — "Strong hire. Deep domain knowledge. Crisp communicator. Already thinking about our problems."}
+{The actual debrief notes, "Strong hire. Deep domain knowledge. Crisp communicator. Already thinking about our problems."}
 
 ### What they do NOT do
-{Anti-patterns — what the phantom avoids that weaker candidates fall into}
+{Anti-patterns, what the phantom avoids that weaker candidates fall into}
 
 ---
 
@@ -162,7 +154,7 @@ Parse `$ARGUMENTS`:
 ---
 
 ## The Phantom's Edge — Why They Win
-{2-3 sentences on what makes this person beat every other candidate. Not skills — positioning. Not experience — narrative.}
+{2-3 sentences on what makes this person beat every other candidate. Not skills, positioning. Not experience, narrative.}
 ```
 
 5. **Report:**
@@ -184,7 +176,7 @@ Parse `$ARGUMENTS`:
 4. Display:
 
 ```markdown
-## PHANTOM GAP ANALYSIS — {Company}
+## PHANTOM GAP ANALYSIS: {Company}
 
 | Dimension | The Phantom | You | Delta | How to Close |
 |-----------|-------------|-----|-------|-------------|
@@ -198,9 +190,9 @@ Parse `$ARGUMENTS`:
 {Dimensions where the user is actually stronger than the typical competitor}
 
 ### The 3 Gaps That Matter Most
-1. {gap} — {why it matters for THIS role} — {fix}
-2. {gap} — {why} — {fix}
-3. {gap} — {why} — {fix}
+1. {gap}: {why it matters for THIS role}, {fix}
+2. {gap}: {why}, {fix}
+3. {gap}: {why}, {fix}
 ```
 
 ### `<company> performance` — Interview Performance Card Only
@@ -219,8 +211,8 @@ Read the latest debrief for this company. Update the phantom with new intelligen
 
 ### Trigger 1: Recruiter call scheduled → generate V1
 **Where:** `.claude/commands/interview-prep.md` — when Stage 1 (Recruiter) prep is run
-**What:** Auto-generate `{company}_phantom.md` V1 from JD + company research
-**Show:** "Phantom V1 generated for {company}."
+**What:** OFFER `/phantom <company> [role]` V1 from JD + company research (interview-prep Stage 1, deliverable 6, offers it and skips if one exists; it is not generated without a yes)
+**Show:** "Phantom V1 generated for {company}." (after the yes)
 
 ### Trigger 2: After each debrief → sharpen
 **Where:** `.claude/commands/debrief.md` — Step 6.5
@@ -239,7 +231,7 @@ If yes: run `/phantom <company> update`
 - **The phantom must be realistic.** Someone who could actually exist and apply for this role. Not a fantasy composite of every possible strength.
 - **Use the rubric.** If `rubrics/{company}.md` exists, the phantom scores 5 on every dimension. Describe what that looks like concretely.
 - **On the Job must reference real company challenges.** Pull from insights, cheat sheet intel, and web research. "Day 30: ships a Fabric competitive teardown" not "Day 30: builds relationships."
-- **Use Opus** for this skill — it requires judgment, synthesis, and nuance. Never route to Sonnet.
+- **Judgment skill: run it in the main session on the session's own model.** It requires synthesis and nuance; never hand it to a cheaper model or a gathering agent (`interview_prep/reference/skills_core.md` §8).
 - **Version tracking.** Every phantom has a version number (V1, V2, V3...) and a "Based on" line showing what intel informed it.
 - **Confidence calibration.** Every phantom ships with a confidence score (1-10) and the core assumption that drives it. Example: "Confidence 7/10, assumes this is a platform build role. If strategy/owner role, archetype flips entirely." If the Role Taxonomy was ambiguous and required user clarification, flag this in the confidence line.
 - **Role ambiguity is a stop condition, not a guess trigger.** If the Role Taxonomy pass flags ambiguity, the skill MUST ask the user about the role before proceeding. Never generate a phantom on a guessed framing.

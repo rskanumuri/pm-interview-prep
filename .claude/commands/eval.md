@@ -1,14 +1,27 @@
 ---
 description: "Score a JD against the target archetypes with a 6-block A-F evaluation to decide whether to apply. Use for evaluate role or check this JD."
+argument-hint: "<jd-url-or-text> | history | batch"
 ---
 
 # Eval — JD Evaluation & Role Scoring
 
 Evaluate a job description against your experience using a 6-block A-F scoring framework. Answers "should I apply?" before committing prep time. This is top-of-funnel triage — complementary to `/fit-check` (which is deeper, interview-prep-oriented).
 
+## Rules that must hold (kept at the top because a context compaction keeps only the start of a skill)
+
+- **Never invent experience.** Evidence comes from the resume, `story_bank.json` and source docs only. No evidence scores 0, not "probably".
+- **Gates run before scoring.** Title gate and H1B gate (step 4). FAIL_TITLE and BLOCKED stop the eval after Block A unless the user says "override" in this run. H1B UNKNOWN is never a pass: verdict capped at FIT WITH GAPS and labeled CONDITIONAL. "Raised, no objection" is still UNKNOWN.
+- **HM-lens MSN is written before the user's profile is read for scoring** and feeds Block G only; it never changes the Block B list or the formula.
+- **Block B:** requirement list verbatim from the JD, required = weight 2, nice-to-have = weight 1, show the math. Overall = (A + 2B + C + D + E + F) / 7; thresholds apply to the unrounded value; Block F counts only evidence not already counted in B.
+- **Numbers come from canon** (`interview_prep/reference/skills_core.md` §5), exact, worded per provenance.
+- **applications.json:** never overwrite `applied`, `interviewing`, `offer` or a `closed` reason; inbound roles follow the inbound rule in step 9. progress.json: write `eval_*` keys only, never `fit_*`, and only if the entry exists.
+- **State writes** follow `skills_core.md` §2 (text edits, no re-serializing).
+- **Triage, not deep prep.** No bridge scripts here.
+- The display layouts further down are layouts. Their sample figures are not data; never copy one into output.
+
 ## Active User
 
-Check `progress.json` for the `active_user` field. Load personal info from `sources/{active_user}/`.
+Rule: `interview_prep/reference/skills_core.md` §4. Read `progress.json` `active_user`; personal material comes only from `sources/{active_user}/` and `interview_prep/story_bank.json`.
 
 ## Data Files
 
@@ -72,7 +85,7 @@ The map is strictly monotonic on purpose (no two grades share a number, and an a
 
 ## Multi-Role File Keying
 
-When writing eval artifacts, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, eval files are named `evaluations/{company}_{role_slug}_*_eval.json`, else fall back to `evaluations/{company}_*_eval.json` (legacy single-role). Read-order on lookups: try role-keyed first, fall back to company-only.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Accepts an optional `<role>` arg. Eval files are `evaluations/{company_key}_eval.json`; the MSN is `evaluations/{company_key}_hm_msn.md`.
 
 
 
@@ -125,10 +138,10 @@ Evaluate a JD by URL or pasted text.
 | Role | {title} |
 | Archetype(s) | {which archetypes match, comma-separated} |
 | Archetype overlap | {count}/{total} |
-| Level | {IC5/IC6/Lead/Manager — detected from JD signals} |
-| Scope | {team size, revenue, products owned — from JD or inferred} |
+| Level | {IC5/IC6/Lead/Manager, detected from JD signals} |
+| Scope | {team size, revenue, products owned, from JD or inferred} |
 | Location | {remote/hybrid/onsite, city} |
-| H1B Gate | {SPONSORS / UNKNOWN / BLOCKED} — {evidence + source} |
+| H1B Gate | {SPONSORS / UNKNOWN / BLOCKED}: {evidence + source} |
 | Title Gate | {PASS / FAIL_TITLE} |
 | TL;DR | {one-sentence verdict} |
 
@@ -218,105 +231,7 @@ From the MSN artifact (step 4.5): the HM synthesis (trigger, promotion outcome, 
 
 7. **Display the evaluation:**
 
-## EVAL — {COMPANY} — {Role Title}
-
-**VERDICT:** {STRONG FIT / FIT WITH GAPS / STRETCH / PASS} ({X.X}/5.0)
-**Archetypes:** {matched archetypes} ({N}/{total} overlap)
-
----
-
-### Block A — Role Summary — Grade: {X}
-
-- **Company:** {name}
-- **Role:** {title}
-- **Level:** {detected} | **Location:** {loc}
-- **Scope:** {scope} | **H1B gate:** {SPONSORS/UNKNOWN/BLOCKED} | **Title gate:** {PASS/FAIL_TITLE}
-- **TL;DR:** {one-liner}
-
----
-
-### Block B — Resume Match — Grade: {X}
-
-| Requirement | Score | Evidence |
-|-------------|-------|----------|
-| {requirement} | {X}/5 | {proof with numbers} |
-| {requirement} | {X}/5 | {proof or gap} |
-
-**Gaps:** {list of requirements scoring 2 or below}
-
----
-
-### Block C — Level & Comp Strategy — Grade: {X}
-
-- **Detected level:** {level}
-- **Comp estimate:** {range} | **Target:** {from CLAUDE.md}
-- {strategy note}
-
----
-
-### Block D — Comp Research — Grade: {X}
-
-| Source | Data | Confidence |
-|--------|------|------------|
-| {source} | {data} | {level} |
-
----
-
-### Block E — Application Strategy — Grade: {X}
-
-**Cover letter angles:**
-1. {angle with proof point}
-2. {angle with proof point}
-3. {angle with proof point}
-
-**Outreach:** "{3-sentence LinkedIn message}"
-**Key differentiator:** {what user brings that others don't}
-
----
-
-### Block F — Interview Plan — Grade: {X}
-
-**Predicted format:** {stages}
-
-**Key stories:**
-1. {story name} — maps to {JD requirement}
-2. {story name} — maps to {JD requirement}
-3. {story name} — maps to {JD requirement}
-4. {story name} — maps to {JD requirement}
-5. {story name} — maps to {JD requirement}
-
-**Gap preview:**
-- {gap} — {severity} — {bridge available? Y/N}
-
----
-
-### Block G — HM Lens (not scored) — MSN confidence {N}/10
-
-**Trigger:** {why the req is open now} | **HM wins if:** {promotion outcome} | **HM fears:** {feared failure}
-
-| Must / Should | Tier | You | Evidence or gap |
-|---------------|------|-----|-----------------|
-| M1 {must} | {Stated/Inferred-strong} | {X}/5 | {proof or HIDDEN-MUST GAP + verify question} |
-| S1 {should} | {tier} | {X}/5 | {proof} |
-
-**Unwritten deal-breakers:** {list or none}
-**HM lens shifts the read:** {one line, or "no, JD matches HM need"}
-
----
-
-### Recommended Actions
-
-**If score >= 4.0:**
-- Apply now. Run `/company-prep {company}` to build prep scaffold.
-- Run `/fit-check {company}` for deep gap analysis.
-- Run `/cv-gen {company}` to generate tailored resume.
-
-**If score 3.0-3.9:**
-- Worth pursuing with prep. Run `/fit-check {company} gaps` first.
-- Check for referral/warm intro before cold applying.
-
-**If score < 3.0:**
-- Skip unless you have a champion. Time better spent elsewhere.
+**Layout:** `interview_prep/reference/skill_templates/eval.md`, section "Full evaluation display". Read it when producing this output; its sample values are placeholders.
 
 8. **Save evaluation:**
    - Write to `interview_prep/evaluations/{company}_{role_slug}_eval.json`
@@ -351,6 +266,8 @@ From the MSN artifact (step 4.5): the HM synthesis (trigger, promotion outcome, 
 9. **Update applications.json:**
    - Add or update entry with key `{company}_{role_slug}`
    - Only set status from `evaluating` or no entry. NEVER overwrite `applied`, `interviewing`, `offer`, or an existing `closed` reason; on a re-eval of those, update eval fields only.
+   - **Inbound role (a recruiter reached out, or a screen is already booked):** set `source: "inbound_recruiter"` and status `applied` if the user applied earlier or `interviewing` once a call is scheduled; the gates still run and are recorded, but they do not move an inbound role back to `evaluating`. If mail tools are connected, search for the original application or confirmation and record `applied_date` and which resume was sent; if nothing is found, write "no application trail found" in `notes` and leave `applied_date` null. Never guess the date.
+   - **Gate updates after a conversation:** when a recruiter or HM call gives evidence on sponsorship, level or location, update `gates.h1b` and `h1b_evidence` in the eval JSON with the quote and date (the debrief proposes this; see `debrief_core.md` §4). "Raised, no objection" stays UNKNOWN; only an explicit yes is SPONSORS.
    - `ready_to_apply`: score >= 3.0 (unrounded) AND title gate PASS AND H1B gate SPONSORS. H1B UNKNOWN stays `evaluating` with a note. Any FAIL gate or score < 3.0 → `closed` with the reason (`title`, `h1b`, or `score`).
    - Set eval_score, eval_file, discovered_date
 
@@ -375,7 +292,7 @@ List all evaluations from `interview_prep/evaluations/`, sorted by score descend
 2. Read `interview_prep/applications.json` for current status
 3. Display:
 
-## EVALUATION HISTORY — {N} roles evaluated
+## EVALUATION HISTORY: {N} roles evaluated
 
 | Score | Company | Role | Date | Status |
 |-------|---------|------|------|--------|
@@ -410,7 +327,7 @@ Process multiple JDs at once. Input: list of URLs or files in `sources/inbox/jds
 
 3. **After all complete, display summary:**
 
-## BATCH EVALUATION COMPLETE — {N} roles evaluated
+## BATCH EVALUATION COMPLETE: {N} roles evaluated
 
 | Score | Company | Role | Verdict |
 |-------|---------|------|---------|
@@ -421,8 +338,8 @@ Process multiple JDs at once. Input: list of URLs or files in `sources/inbox/jds
 
 ### Next Steps
 
-- **{N} roles scored 3.0+** — run `/company-prep` for each to build prep
-- **Top pick:** {Company} ({score}/5) — {why}
+- **{N} roles scored 3.0+**: run `/company-prep` for each to build prep
+- **Top pick:** {Company} ({score}/5): {why}
 
 4. Offer: "Run `/save-push` to save all evaluations?"
 

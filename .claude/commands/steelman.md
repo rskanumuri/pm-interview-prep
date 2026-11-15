@@ -1,5 +1,6 @@
 ---
 description: "Pressure-test interview stories for attribution, numbers, opener, probe resilience, and senior-level signal."
+argument-hint: "<story> | all | round <N> | <company> | fix <story>"
 ---
 
 # Steelman — Pressure Test Stories
@@ -17,7 +18,7 @@ Rigorously pressure-test interview stories against specific criteria. Finds weak
 
 ## Multi-Role File Keying
 
-When pressure-testing stories tied to a specific company+role and writing results back, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, store steelman results against the role-keyed angle entries (e.g., "Stripe / ML Foundations") in master_story_repository.md.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Accepts an optional `<role>` arg. Store results against the role-qualified angle entry (for example "Stripe / ML Foundations") in `master_story_repository.md`.
 
 
 

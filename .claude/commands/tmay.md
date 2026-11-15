@@ -1,8 +1,9 @@
 ---
 description: "Practice loop for the Tell Me About Yourself answer that shows it, rates it, fixes it, and updates the cheat sheet."
+argument-hint: "<company> [role] | compare | base"
 ---
 
-# TMAY — Tell Me About Yourself Practice Loop
+# TMAY: Tell Me About Yourself Practice Loop
 
 Focused TMAY iteration for any company. Show current version, accept the user's verbal attempt, rate it, suggest fixes, update the file.
 
@@ -18,7 +19,7 @@ Focused TMAY iteration for any company. Show current version, accept the user's 
 
 ## Multi-Role File Keying
 
-When reading company-keyed files to surface a company-specific TMAY hook, follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". Accept an optional `<role>` arg; when provided, use role-keyed artifacts, else fall back to `{company}_*`. Read-order on lookups: try role-keyed first, fall back to company-only.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). Accepts an optional `<role>` arg.
 
 
 
@@ -26,24 +27,32 @@ Parse `$ARGUMENTS` to determine the command:
 
 ### `<company>` — TMAY Practice for Company
 
+**Step 0 — Clock, stage and target length**
+
+Run the clock and schedule check (`interview_prep/reference/skills_core.md` §1). Then set the target length from the next round, not from a fixed number:
+- Recruiter screen or any 30-minute call: 60 seconds (about 140-160 spoken words)
+- Hiring manager, loop or final: 90 seconds (about 190-225 spoken words)
+- If the cheat sheet's TMAY section states its own target or timer rules, those win.
+Say which target is in use and why. If the role is AI, platform or technical, add one line: "This screen may skip the TMAY for a system walkthrough; `/interview-prep {company} recruiter` deliverable 7 covers it."
+
 **Step 1 — Show Current TMAY**
 
 Search for the company's TMAY in this order:
-1. Company cheat sheet (`scripts/{company}_cheat_sheet.md`) — look for TMAY section
+1. Company cheat sheet (`scripts/{company}_cheat_sheet.md`): look for TMAY section
 2. Why scripts (`scripts/why_company_role_scripts.md`) — look for company entry
 3. Source materials in `sources/{active_user}/` — base TMAY
 
-**Canon check BEFORE displaying (mandatory).** Scan the TMAY text against `story_bank.json` `canonical_numbers`, `canonical_provenance` and `purged_stories` (the `/story-check` rules). On any drift, print "DRIFT IN PREP: {line} -> {canonical wording}" above the TMAY and show the corrected wording. Never display drifted text as the version to internalize. If a number is marked OPEN in provenance, print "do not quote".
+**Canon check BEFORE displaying (mandatory).** Scan the TMAY text against `story_bank.json` `canonical_numbers`, `canonical_provenance` and `purged_stories` (the `/story-check` rules). On any drift, print "DRIFT IN PREP: {line} -> {canonical wording}" above the TMAY and show the corrected wording. Never display drifted text as the version to internalize. Then offer, right away, to write the corrected wording into the source file (show the before and after); do not wait for a practice rep, because the file is what gets opened before the call. If a number is marked OPEN in provenance, print "do not quote".
 
 Display:
 
-## TMAY — {Company} (current version)
+## TMAY: {Company} (current version)
 
 {Full TMAY text}
 
 ---
 
-**Target:** about 90 seconds (roughly 190-225 spoken words) | **Key numbers:** {3-4 from `canonical_numbers`, each with its provenance phrasing}
+**Target:** {60 or 90} seconds ({word range from Step 0}) | **Key numbers:** {3-4 from `canonical_numbers`, each with its provenance phrasing}
 
 *Your turn -- deliver it and I'll rate.*
 
@@ -58,7 +67,7 @@ After the user delivers (pasted text or described), score on these dimensions:
 | Numbers & Impact | X | Specific, memorable, correct? |
 | Company Tailoring | X | Bridges to THIS role specifically? |
 | Closing Offer | X | Ends with what the user brings to THEM? |
-| Length | X | Word count of the pasted text vs about 190-225 words. State the count. Judge from text only; delivery pace and pauses cannot be scored from pasted text. |
+| Length | X | Word count of the pasted text vs the Step 0 word range. State the count. Judge from text only; delivery pace and pauses cannot be scored from pasted text. |
 | **Overall** | **X** | |
 
 Anchors (same as `/drill-rapid`): 9-10 usable in a real loop as-is; 7-8 solid with one or two fixes; 5-6 right content but weak delivery or missing numbers; under 5 wrong or rambling. **Number cap:** a number that breaks canon or a provenance ruling caps Overall at 6 and is named. Scores are computed, never copied from an example. Save `score_10` and `score_5 = score_10 / 2`.

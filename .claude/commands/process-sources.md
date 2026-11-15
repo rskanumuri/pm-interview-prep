@@ -1,10 +1,21 @@
 ---
 description: "Classify and extract insights from files in sources/ into insights, rubrics, and questions."
+argument-hint: "[<company> | list | add-company <name>]"
 ---
 
 # Process Source Materials
 
 Scan source folders and extract insights into the insights files.
+
+## Rules that must hold (kept at the top because a context compaction keeps only the start of a skill)
+
+- **Confidentiality guard runs before any file is read for extraction** (full text in the "Confidentiality guard" section): never process a confidential workspace folder, any git-ignored file, or anything that looks like current-employer internal material. Skipped files are listed as SKIPPED (confidential), never summarized, never recorded as processed. If unsure, skip and ask.
+- **Company list comes from `companies.json`,** never a hardcoded list. Ask before adding a new company.
+- **Role-keyed targets:** write to `{company_key}` files when a role is clear (`interview_prep/reference/skills_core.md` §3). If the insights or rubric file already exists, keep its headings and append under "Collected Tips" or "Collected Criteria" with a dated source block; do not replace a stage-based rubric with the template below.
+- **Personal folders (`sources/{active_user}/`) are not processed as insights.**
+- **No session cache.** `session_data.json` (an old cache) is no longer used. Do not rebuild it; `/pm-practice` reads the live files this skill writes.
+- **Manifest prevents re-processing;** files stay in the inbox.
+- The templates, manifest examples and example company names further down (Stripe, Meta, DoorDash, Google) are format illustrations, not data.
 
 ## Data Files
 - Sources Directory: `sources/`
@@ -14,12 +25,11 @@ Scan source folders and extract insights into the insights files.
 - Base Rubric File: `interview_prep/rubric.md`
 - **Company Rubrics Directory**: `interview_prep/rubrics/`
 - Questions File: `interview_prep/questions.json`
-- Session Data (consolidated cache): `interview_prep/session_data.json`
 - **Companies Registry**: `interview_prep/companies.json`
 
 ## Multi-Role File Keying
 
-When reading/writing company-keyed files (insights, rubrics), follow the `{company_key}` convention documented in `CLAUDE.md` under "Multi-Role File Keying". If a source file's content references a specific role at a company, classify and write to `{company}_{role_slug}_*` artifacts. If role is unclear, fall back to `{company}_*` and flag for the user to confirm.
+Rule: `interview_prep/reference/skills_core.md` §3 (how `{company_key}` is formed, role-keyed lookup first, where closed-company files live). If a source file clearly concerns one role, write to `{company_key}` files. If the role is unclear, use the company-only file and flag it for the user to confirm.
 
 
 
@@ -75,7 +85,7 @@ When processing files from `sources/inbox/`, automatically classify by content:
 
 **JD Handling:** When a JD is detected:
 1. Identify the company from content
-2. Ask user: "This looks like a JD for {Company} — {Role}. Run `/eval` on it?"
+2. Ask user: "This looks like a JD for {Company}: {Role}. Run `/eval` on it?"
 3. If yes: save to `sources/{company}/jd_{role_slug}.md` and suggest running `/eval`
 4. If no: route to insights as usual
 
@@ -102,7 +112,7 @@ When a file contains content for multiple companies or types:
 
 ## Confidentiality guard (mandatory, runs before any file is read for extraction)
 
-This command writes distilled content into TRACKED files (`insights/*.md`, `questions.json`, `session_data.json`, `rubric.md`). Anything it distills becomes part of the pushed repo, so it must never touch employer-confidential material.
+This command writes distilled content into TRACKED files (`insights/*.md`, `questions.json`, `rubric.md`). Anything it distills becomes part of the pushed repo, so it must never touch employer-confidential material.
 
 - **Never process** anything in a confidential workspace folder, any file that `git check-ignore` reports as ignored, any file whose name or first lines mark it as an internal transcript, internal doc, price book, or colleague/personnel material, and anything dropped in `sources/inbox/` that looks like current-employer internal content (internal meeting transcripts, internal pricing, named colleagues' performance).
 - For a company folder that mixes interview-era files with the user's current-employer internal files, only the interview-era files (loop transcripts, recruiter/HM debriefs, public research) may be processed.
@@ -144,32 +154,7 @@ This command writes distilled content into TRACKED files (`insights/*.md`, `ques
       - Add new questions to questions.json with auto-assigned IDs
       - Update metadata.total and metadata.last_updated
 7. Update manifest.json with newly processed files
-8. Regenerate session_data.json (a CACHE; it is stale whenever sources change, so stamp `metadata.created` with today's date and tell the user the cache date in the report. It is not a source of truth):
-   - Read interview_prep/companies.json
-   - Read interview_prep/questions.json
-   - Read interview_prep/star_stories.json ONLY if it belongs to the active user (a shared copy may hold another person's stories). Otherwise set `star_stories` to `[]` and note that the active user's stories live in `story_bank.json`.
-   - Read interview_prep/rubric.md (base rubric)
-   - Read interview_prep/rubrics/*.md (all company-specific rubrics)
-   - Read interview_prep/insights/*.md (all insight files, including any new companies)
-   - Merge into session_data.json with structure:
-     ```json
-     {
-       "metadata": { "created": "YYYY-MM-DD", "description": "...", "source_files": [...] },
-       "companies": { /* full contents of companies.json.companies */ },
-       "questions": { /* full contents of questions.json */ },
-       "star_stories": [ /* array from star_stories.json if it belongs to the active user; otherwise [] */ ],
-       "rubric": {
-         "_base": "/* rubric.md as a string */",
-         "{company}": "/* rubrics/{company}.md as a string; one key per registered company */"
-       },
-       "insights": {
-         "_general": "/* _general.md as a string */",
-         "{company}": "/* {company}.md as a string; one key per registered company */"
-       }
-     }
-     ```
-   - Write updated session_data.json
-9. Report summary: X files processed, Y insights added, Z questions added
+8. Report summary: X files processed, Y insights added, Z questions added
 
 ## Extraction Guidelines
 
@@ -279,4 +264,3 @@ When processing files from `sources/questions/`, extract new interview questions
 - Ask before adding new companies
 - Split mixed content appropriately
 - Update manifest to prevent re-processing
-- Regenerate session_data.json after processing to keep cache in sync

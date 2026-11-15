@@ -49,7 +49,7 @@ Stop here.
 ```
 WELCOME TO PM INTERVIEW PREP
 
-This system has 27 AI-powered commands for every stage of your PM interview journey —
+This system has 26 AI-powered commands for every stage of your PM interview journey —
 from job discovery through post-interview debrief.
 
 Let's get you set up. This takes about 5 minutes.
@@ -343,7 +343,7 @@ Base: {base}+ | Total: {total}+{if visa: | Must sponsor H1B}
 - Transcripts are saved locally after first pull to avoid repeat token costs.
 - Saved transcripts live in `sources/<company>/<interviewer>_<type>_transcript_<date>.md`
 - Only call Granola if the transcript doesn't exist locally yet.
-- **Every `/debrief` and `/debrief-live` MUST save the full verbatim transcript locally** before analysis.
+- **Every `/debrief` MUST save the full verbatim transcript (or pasted notes) locally** before analysis.
 - **Always save FULL transcripts. No summaries.** The raw text is the source of truth.
 
 ### Git Behavior
@@ -376,27 +376,31 @@ Base: {base}+ | Total: {total}+{if visa: | Must sponsor H1B}
 
 - **Canonical story index**: `interview_prep/story_bank.json` + `interview_prep/story_bank.md`
 - Before ending any conversation where story-related files were created or modified, offer: "Run `/story-bank sync`?"
-- After any `/debrief`, `/debrief-live`, `/drill-rapid`, or `/pm-practice` session, offer: "Update story bank with this session's data?"
+- After any `/debrief`, `/drill-rapid`, or `/pm-practice` session, offer: "Update story bank with this session's data?"
 - When you tell a story differently (new framing, new bridge), detect and offer to add as a new angle in `story_bank.json`
 - `story_bank.md` is always auto-generated from JSON — never hand-edit it
 
 ### Timed Agents
 
-- When research is requested without using `/timed-research`, ask: "Want it timed? (default: 10 min)"
+- Research runs inline in the main session by default (see "Working Style Preferences"). A background agent is started only when the user asks for one or runs `/timed-research`.
+- When background research is requested without using `/timed-research`, ask: "Want it timed? (default: 10 min)"
 - All background research agents MUST use the timed-research pattern
 - Never launch untimed background agents for research tasks
 
 ### Cost Optimization: Agent Model Routing
 
-- **Background research agents** → use `model: "sonnet"` (web search, company research, competitive analysis)
-- **Scaffold/file generation agents** → use `model: "sonnet"` (company-prep scaffolding, process-sources)
-- **Keep Opus for**: scoring, debrief analysis, interview coaching, fit-check judgment, story integrity, drill evaluation
-- Rule of thumb: if the agent is gathering/organizing info, use Sonnet. If it's making judgment calls about fit or performance, keep Opus.
+- Route by the kind of work, not by a model name (names go out of date; rule in `interview_prep/reference/skills_core.md` §8).
+- **Gathering and organizing** (web search, company research, competitive analysis, scaffolding, source processing): when an agent is used, it may run on a cheaper, faster model than the session's.
+- **Judgment** (scoring, debrief analysis, interview coaching, fit-check, story integrity, drill evaluation, phantom): stays in the main session on the session's own model. Never hand it to a cheaper model.
+
+### Shared Skill Rules
+
+Rules that apply across skills (clock and schedule check, JSON state writes, file keys, canon, pre-interview rules, writing style, agents and models) live in `interview_prep/reference/skills_core.md`. Debrief rules live in `interview_prep/reference/debrief_core.md`. A skill that conflicts with either file loses.
 
 ### Skill Nudges
 
 When asked to do something a skill handles, nudge with `(tip: /skill-name does this)`:
-- "save to git" → `/save-push` | "pressure test" → `/steelman` | "paste transcript" → `/debrief-live`
+- "save to git" → `/save-push` | "pressure test" → `/steelman` | "paste transcript" → `/debrief` (paste it with the command)
 - "show TMAY" → `/tmay` | "drill me" → `/drill-rapid` | "check numbers" → `/story-check`
 - "look up company" → `/research` | "plan today" → `/battle-plan` | "fit for role" → `/fit-check`
 - "debrief interview" → `/debrief` | "prep progress" → `/battle-plan progress`
@@ -406,6 +410,8 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 - "prep for company" / "company prep" → `/company-prep` | "build prep for interview" / "stage prep" → `/interview-prep`
 - "who am I up against" / "competitor for this role" → `/phantom` | "map stories to company" → `/story-map`
 - "show pipeline" / "interview dashboard" → `/pipeline` | "mock interview" / "practice PM question" → `/pm-practice`
+- "I forgot what I did" / "can't remember the details" / "rebuild my memory of {project}" → `/drill-rapid recall <story>`
+- "got the reject" / "they passed" / "I withdrew" / "close out {company}" → `/pipeline drop` (the one close-out path) | "they moved the call" / "rescheduled" → `/pipeline schedule`
 - "pre-interview check" / "am I ready" → `/prep-check`
 
 ### Working Style Preferences
@@ -419,7 +425,7 @@ When asked to do something a skill handles, nudge with `(tip: /skill-name does t
 
 ### Career Learning Hooks
 
-- After any `/debrief` or `/debrief-live`, automatically compare this round's patterns against `interview_prep/interview_lessons.md` and PROPOSE specific updates (extract from debrief data, show the proposed change, don't ask the user to generate).
+- After any `/debrief`, automatically compare this round's patterns against `interview_prep/interview_lessons.md` and PROPOSE specific updates (extract from debrief data, show the proposed change, don't ask the user to generate).
 - When archiving a rejected company, read all debriefs for that company, cross-reference with `interview_prep/career_takeaways.md`, and PROPOSE a specific career takeaway. User reviews and approves.
 - When archiving a rejected company, if `{company}_phantom.md` exists, update it with post-mortem: "The candidate who got this job probably had X." Final version becomes a learning artifact.
 - Living docs: `interview_prep/career_takeaways.md` (career wisdom) + `interview_prep/interview_lessons.md` (learned vs still learning)
@@ -627,6 +633,6 @@ When extracting from a resume:
 - **Never ask more than 2 questions at a time.** Keep the conversation flowing.
 - **Show extracted data for confirmation, don't make users type everything.** The resume does the heavy lifting.
 - **Phase 4 (fit check) is the wow moment.** The personalized fit score + gap-bridging answer is the surprise — not the research package. If the user pastes a JD, run the full chain (company-prep silent → eval silent → fit-check displayed). Research alone is not the wow; tying the user's resume from Phase 2 to a tailored interview answer is.
-- **Every file written must be compatible with all 26 other skills.** Follow exact schemas.
+- **Every file written must be compatible with all 25 other skills.** Follow exact schemas.
 - **If anything fails, degrade gracefully.** Skip the phase, note what's missing, keep going.
 - **End with clear next steps.** Don't leave the user wondering what to do.
